@@ -1623,6 +1623,11 @@
 				editor.focus(callbackHandler);
 			}
 
+			function addBlurEvent(editorId, callbackHandler) {
+				var editor = $('#' + editorId);
+				editor.blur(callbackHandler);
+			}
+
 			zss_editor.setTitleFocusHandler = function() {
 				addFocusEvent('zss_editor_title', function() {
 					WebViewBridge.send(JSON.stringify({type: 'TITLE_FOCUSED'}))
@@ -1632,6 +1637,12 @@
 			zss_editor.setContentFocusHandler = function() {
 				addFocusEvent('zss_editor_content', function() {
 					WebViewBridge.send(JSON.stringify({type: 'CONTENT_FOCUSED'}))
+				});
+			}
+
+			zss_editor.setContentBlurHandler = function() {
+				addBlurEvent('zss_editor_content', function() {
+					WebViewBridge.send(JSON.stringify({type: 'CONTENT_BLURED'}))
 				});
 			}
 
@@ -1663,8 +1674,8 @@
 			}
 
 			body {
-				padding-left:10px;
-				padding-right:10px;
+				padding-left:24px;
+				padding-right:24px;
 				padding-top: 0px;
 				padding-bottom: 0px;
 				overflow-y: scroll;
@@ -1690,6 +1701,7 @@
 			div.zss_editor_content {
 				font-family: Arial, Helvetica, sans-serif;
 				color: #000;
+				font-size: 17;
 				width: 100%;
 				height: 100%;
 				-webkit-overflow-scrolling: touch;
@@ -1698,8 +1710,8 @@
 			}
 
 			#zss_editor_content {
-				padding-left: 10px;
-				padding-right: 10px;
+				/* padding-left: 10px;
+				padding-right: 10px; */
 			}
 
 			div.zss_editor_title {
@@ -1707,6 +1719,7 @@
 				font-size: 23px;
 				line-height: 31px;
 				color: #2d4150;
+				display: none;
 			}
 
 			#zss_editor_title {
@@ -1716,12 +1729,12 @@
 
 			[placeholder]:empty:before {
 				content: attr(placeholder);
-				color: #e0e0e0;
+				color: #aaa;
 			}
 
 			[placeholder]:empty:focus:before {
 				content: attr(placeholder);
-				color: #e0e0e0;
+				color: #aaa;
 			}
 
 			hr {
@@ -1746,7 +1759,7 @@
 	<body>
 		<!-- ZSSRichTextEditor Editable Content -->
 		<div id="zss_editor_title" class="zss_editor_title" contenteditable="true" placeholder="" disableLineBreaks="true"></div>
-		<div id="separatorContainer"><hr></div>
+		<!-- <div id="separatorContainer"><hr></div> -->
 		<div id="zss_editor_content" class="zss_editor_content" contenteditable="true" placeholder=""></div>
 		<div id="zss_editor_footer"></div>
 	</body>

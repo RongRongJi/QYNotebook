@@ -11,16 +11,36 @@ import {Platform, StyleSheet, Text, View} from 'react-native';
 import RichText from '../../config/richtext';
 import '../../config/global';
 import { Width, Height } from '../../config/global';
+import FloatingAction from '../../config/floating-action-component/FloatingAction';
 
+const actions = [{
+    text: 'MarkDown',
+    icon: require('../main/images/markdown.png'),
+    name: 'Markdown_button',
+    color: '#fff',
+    position: 2
+  },{
+    text: 'NoteBook',
+    icon: require('../main/images/notebook.png'),
+    name: 'Notebook_button',
+    color: '#fff',
+    position: 3
+  }
+];
 
 export default class ComponentTest extends Component {
+
+
   render() {
     return (
       <View style={styles.container}>
-        <RichText 
-          componentWidth={Width}
-          componentHeight={Height}
-          navigation={this.props.navigation}/>
+        <FloatingAction
+          actions={actions}
+          color={'#049F9A'}
+          floatingIcon = {require('../main/images/logo.png')}
+          iconWidth={40}
+          iconHeight={40}
+        />
       </View>
     );
   }

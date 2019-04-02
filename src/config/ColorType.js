@@ -1,9 +1,9 @@
 import './global'
 
 const dayType={
-    Background : '#F2F4F7',
+    Background : '#FFFFFF',
     TextColor : '#000000',
-    ItemBackground : '#ffffff',
+    ItemBackground : '#049F9A',
 };
 
 const nightType={

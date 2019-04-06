@@ -8,39 +8,22 @@
 
 import React, {Component} from 'react';
 import {Platform, StyleSheet, Text, View} from 'react-native';
-import RichText from '../../config/richtext';
-import '../../config/global';
-import { Width, Height } from '../../config/global';
-import FloatingAction from '../../config/floating-action-component/FloatingAction';
 
-const actions = [{
-    text: 'MarkDown',
-    icon: require('../main/images/markdown.png'),
-    name: 'Markdown_button',
-    color: '#fff',
-    position: 2
-  },{
-    text: 'NoteBook',
-    icon: require('../main/images/notebook.png'),
-    name: 'Notebook_button',
-    color: '#fff',
-    position: 3
-  }
-];
+const instructions = Platform.select({
+  ios: 'Press Cmd+R to reload,\n' + 'Cmd+D or shake for dev menu',
+  android:
+    'Double tap R on your keyboard to reload,\n' +
+    'Shake or press menu button for dev menu',
+});
+
 
 export default class ComponentTest extends Component {
-
-
   render() {
     return (
       <View style={styles.container}>
-        <FloatingAction
-          actions={actions}
-          color={'#049F9A'}
-          floatingIcon = {require('../main/images/logo.png')}
-          iconWidth={40}
-          iconHeight={40}
-        />
+        <Text style={styles.welcome}>Welcome to React Native!</Text>
+        <Text style={styles.instructions}>To get started, edit App.js</Text>
+        <Text style={styles.instructions}>{instructions}</Text>
       </View>
     );
   }

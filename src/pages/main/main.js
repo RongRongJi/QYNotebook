@@ -9,6 +9,7 @@ import React, {Component} from 'react';
 import {Platform, StyleSheet, Text, View} from 'react-native';
 import TopTab from './tab';
 import FloatButton from './floatbutton';
+import NotebookList from './notebooklist';
 
 export default class MainView extends Component {
 
@@ -54,11 +55,27 @@ export default class MainView extends Component {
     }
   }
 
+  //获取笔记列表
+  renderNotebookList = () =>{
+    let alldata=[
+      {key:'1',title:'笔记1',content:'wrnm',date:'2月13'},
+      {key:'2',title:'笔记2',content:'wrnm',date:'3月4'},
+      {key:'3',title:'笔记3',content:'wrnm',date:'6月5'},
+    ];
+    return(
+      <NotebookList
+        data={alldata}
+        navigation={this.props.navigation}
+      />
+    )
+  }
+
 
   render() {
     return (
       <View style={styles.container}>
         <this.renderHeader/>
+        {this.state.currentPage=='note'?this.renderNotebookList():<View></View>}
         <FloatButton/>
       </View>
     );

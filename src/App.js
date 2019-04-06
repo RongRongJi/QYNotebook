@@ -26,6 +26,7 @@ const TestStack = createStackNavigator({
 
 const AppNavigator = createStackNavigator({
   'init': {
+    //screen: TestStack,
     screen: MainStack,
   },  
 },

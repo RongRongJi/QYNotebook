@@ -7,4 +7,5 @@ module.exports={
     image_picker : "react-native-image-picker",//相机、相册启动组件
     floating_action : "react-native-floating-button",//悬浮按钮组件
     refresh_list : 'react-native-refresh-list-view',//列表组件
+    popup_menu : 'react-native-popup-menu',//弹窗菜单
 }

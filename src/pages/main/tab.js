@@ -45,7 +45,10 @@ export default class TopTab extends Component {
                   {color:this.state.color}]
                   }>{this.state.title}</Text>
                 <View style={[
-                 this.state.onFocus?styles.selected:{}, 
+                 this.state.onFocus?{
+                  borderBottomWidth: 5,
+                  borderBottomColor: this.state.color,
+                }:{}, 
                  {width: this.state.width-30,alignItems:'center'}
                 ]}></View>
             </View>

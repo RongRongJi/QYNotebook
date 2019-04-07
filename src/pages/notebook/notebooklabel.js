@@ -25,14 +25,8 @@ export default class NotebookLabel extends Component {
         return (
             <View style={styles.container}>
                 <Text style={styles.titlefont}>{title}</Text>
-                <Text>{content}</Text>
-                <Text style={
-                    {
-                        position:'absolute',
-                        left:0,
-                        bottom:0,
-                    }
-                }>{date}</Text>
+                <Text numberOfLines={2} style={{width:Dimensions.get('window').width-56}}>{content}</Text>
+                <Text style={{ position:'absolute',left:0,bottom:0,}}>{date}</Text>
             </View>
         );
     }
@@ -49,7 +43,8 @@ export default class NotebookLabel extends Component {
 const styles = StyleSheet.create({
     container:{
         width:Dimensions.get('window').width-16,
-        height:80,
+        height:85,
+        marginLeft:20
     },
     titlerow: {
         alignItems: 'center',
@@ -62,6 +57,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
       },
       titlefont: {
+        marginTop:10,
         fontSize: 16,
         color: 'black',
         marginRight: 5,

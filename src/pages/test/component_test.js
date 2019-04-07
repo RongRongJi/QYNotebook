@@ -1,49 +1,63 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- * @flow
- */
+import {
+  Menu,
+  MenuProvider,
+  MenuOptions,
+  MenuTrigger,
+  renderers,
+} from 'react-native-popup-menu';
+import { Text, View, StyleSheet, Image } from 'react-native';
+import React from 'react';
 
-import React, {Component} from 'react';
-import {Platform, StyleSheet, Text, View} from 'react-native';
+const { Popover } = renderers
 
-const instructions = Platform.select({
-  ios: 'Press Cmd+R to reload,\n' + 'Cmd+D or shake for dev menu',
-  android:
-    'Double tap R on your keyboard to reload,\n' +
-    'Shake or press menu button for dev menu',
-});
+const MyPopover = () => (
+  <Menu renderer={Popover} rendererProps={{placement: 'bottom', preferredPlacement: 'bottom' }}>
+    <MenuTrigger style={styles.menuTrigger} >
+      <Image style={{width:30,height:30}} source={require('../main/images/setting_main.png')}/>
+    </MenuTrigger>
+    <MenuOptions style={styles.menuOptions}>
+      <Text style={styles.contentText}>Hello world!</Text>
+    </MenuOptions>
+  </Menu>
+)
 
+const Row = () => (
+  <View style={styles.row}>
+    <MyPopover />
+  </View>
+)
 
-export default class ComponentTest extends Component {
-  render() {
-    return (
-      <View style={styles.container}>
-        <Text style={styles.welcome}>Welcome to React Native!</Text>
-        <Text style={styles.instructions}>To get started, edit App.js</Text>
-        <Text style={styles.instructions}>{instructions}</Text>
-      </View>
-    );
-  }
-}
+const ComponentTest = () => (
+  <MenuProvider style={styles.container} customStyles={{ backdrop: styles.backdrop }}>
+    <Row />
+  </MenuProvider>
+);
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#F5FCFF',
+    padding: 10,
+    flexDirection: 'column',
+    justifyContent: 'space-between',
+    backgroundColor: 'rgba(0, 0, 0, 0.05)',
   },
-  welcome: {
+  row: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  backdrop: {
+  },
+  menuOptions: {
+    padding: 50,
+  },
+  menuTrigger: {
+    padding: 5,
+  },
+  triggerText: {
     fontSize: 20,
-    textAlign: 'center',
-    margin: 10,
   },
-  instructions: {
-    textAlign: 'center',
-    color: '#333333',
-    marginBottom: 5,
+  contentText: {
+    fontSize: 18,
   },
-});
+})
+
+export default ComponentTest;

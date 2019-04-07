@@ -14,13 +14,13 @@ import FloatingAction from '../../config/floating-action-component/FloatingActio
 import { getColorType } from '../../config/ColorType';
 
 const actions = [{
-    text: 'MarkDown',
+    text: '新建markdown',
     icon: require('./images/markdown.png'),
     name: 'Markdown_button',
     color: '#fff',
     position: 1
   },{
-    text: 'NoteBook',
+    text: '新建笔记',
     icon: require('./images/notebook.png'),
     name: 'Notebook_button',
     color: '#fff',
@@ -28,13 +28,35 @@ const actions = [{
   }
 ];
 
-export default class FloatButton extends Component {
+const actions1 = [
+  {
+    text: '新建待办',
+    icon: require('./images/notebook.png'),
+    name: 'Notebook_button',
+    color: '#fff',
+    position: 1
+  }
+]
 
+export default class FloatButton extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      type: this.props.type ? this.props.type : 'notebook',
+    };
+  }
+
+  changeState(flag){
+    if(flag)
+      this.setState({type:'notebook'});
+    else
+      this.setState({type:'todo'});
+  }
 
   render() {
     return (
         <FloatingAction
-          actions={actions}
+          actions={this.state.type=='notebook'?actions:actions1}
           color={getColorType()["ItemBackground"]}
           floatingIcon = {require('./images/logo.png')}
           iconWidth={40}

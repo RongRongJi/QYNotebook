@@ -55,7 +55,7 @@ export default class NotebookList extends Component {
           refreshState={this.state.refreshState}
           onHeaderRefresh={this.onRefresh.bind(this)}
           footerFailureText="数据加载失败，下拉刷新"
-          footerEmptyDataText="没s有更多笔记啦~"
+          footerEmptyDataText="没有更多笔记啦~"
         />
 
       </View>
@@ -89,7 +89,6 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#F5FCFF',
   },
   listcontainer: {
     flex: 1,
@@ -99,9 +98,7 @@ const styles = StyleSheet.create({
     marginTop: 10,
     backgroundColor: 'white',
     borderRadius: 10,
-    paddingTop: 15,
-    paddingBottom: 15,
-    paddingLeft: 20,
-    paddingRight: 20,
+    borderBottomWidth: 2,
+    borderBottomColor: '#bdbdbd',
   },
 });

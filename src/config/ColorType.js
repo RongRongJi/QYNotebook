@@ -2,7 +2,7 @@ import './global'
 
 const dayType={
     Background : '#FFFFFF',
-    TextColor : '#000000',
+    TextColor : '#FFFFFF',
     ItemBackground : '#049F9A',
 };
 

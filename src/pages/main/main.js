@@ -101,7 +101,8 @@ export default class MainView extends Component {
       <MenuProvider style={styles.container}>
         <this.renderHeader/>
         {this.state.currentPage=='note'?this.renderNotebookList():this.renderTodoList()}
-        <FloatButton ref={(r) => this.floatbutton = r}/>
+        <FloatButton ref={(r) => this.floatbutton = r}
+          navigation={this.props.navigation}/>
       </MenuProvider>
     );
   }

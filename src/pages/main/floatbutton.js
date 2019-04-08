@@ -61,6 +61,16 @@ export default class FloatButton extends Component {
           floatingIcon = {require('./images/logo.png')}
           iconWidth={40}
           iconHeight={40}
+          onPressItem={
+            (name)=>{
+              //alert(name);
+              if(this.state.type=='notebook'){
+                if(name=='Notebook_button'){
+                  this.props.navigation.navigate('notebook');
+                }
+              }
+            }
+          }
         />
     );
   }

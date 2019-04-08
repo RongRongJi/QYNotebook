@@ -97,18 +97,18 @@ export default class RichTextToolbar extends Component {
     const icon = this._getButtonIcon(action);
     return (
       <TouchableOpacity
-          key={action}
-          style={[
-            {
-              width: 42,
-              height: 50,
-              flex: 1,
-              alignItems: 'center',
-              justifyContent: 'center',
-              marginRight: action === actions.insertImage ? 10 : 0
-            }
-          ]}
-          onPress={() => this._onPress(action, selected)}
+        key={action}
+        style={[
+          {
+            width: 42,
+            height: 50,
+            flex: 1,
+            alignItems: 'center',
+            justifyContent: 'center',
+            marginRight: action === actions.insertImage ? 10 : 0
+          }
+        ]}
+        onPress={() => this._onPress(action, selected)}
       >
         {icon ? <Image source={icon} style={{tintColor: selected ? this.props.selectedIconTint : this.props.iconTint}}/> : null}
       </TouchableOpacity>
@@ -117,20 +117,20 @@ export default class RichTextToolbar extends Component {
 
   _renderAction(action, selected) {
     return this.props.renderAction ?
-        this.props.renderAction(action, selected) :
-        this._defaultRenderAction(action, selected);
+      this.props.renderAction(action, selected) :
+      this._defaultRenderAction(action, selected);
   }
 
   render() {
     return (
       <View
-          style={[{height: 50, alignItems: 'center'}, this.props.style]}
+        style={[{height: 50, alignItems: 'center'}, this.props.style]}
       >
         <ListView
-            horizontal
-            contentContainerStyle={{flexDirection: 'row'}}
-            dataSource={this.state.ds}
-            renderRow={(row) => this._renderAction(row.action, row.selected)}
+          horizontal
+          contentContainerStyle={{flexDirection: 'row'}}
+          dataSource={this.state.ds}
+          renderRow={(row) => this._renderAction(row.action, row.selected)}
         />
       </View>
     );
@@ -138,52 +138,52 @@ export default class RichTextToolbar extends Component {
 
   _onPress(action, selected) {
     switch(action) {
-      case actions.setBold:
-      case actions.setItalic:
-      case actions.insertBulletsList:
-      case actions.insertOrderedList:
-      case actions.setUnderline:
-      case actions.heading1:
-      case actions.heading2:
-      case actions.heading3:
-      case actions.heading4:
-      case actions.heading5:
-      case actions.heading6:
-      case actions.setParagraph:
+    case actions.setBold:
+    case actions.setItalic:
+    case actions.insertBulletsList:
+    case actions.insertOrderedList:
+    case actions.setUnderline:
+    case actions.heading1:
+    case actions.heading2:
+    case actions.heading3:
+    case actions.heading4:
+    case actions.heading5:
+    case actions.heading6:
+    case actions.setParagraph:
       // case actions.setBlockquote:
-      case actions.removeFormat:
-      case actions.alignLeft:
-      case actions.alignCenter:
-      case actions.alignRight:
-      case actions.alignFull:
-      case actions.setSubscript:
-      case actions.setSuperscript:
-      case actions.setStrikethrough:
-      case actions.setHR:
-      case actions.setIndent:
-      case actions.setOutdent:
-        this.props.selectedAction(action, selected ? 0 : 1, this.state.selectedItems)
-        this.state.editor._sendAction(action);
-        break;
-      case actions.insertLink:
-        this.state.editor.prepareInsert();
-        if(this.props.onPressAddLink) {
-          this.props.onPressAddLink();
-        } else {
-          this.state.editor.getSelectedText().then(selectedText => {
-            this.state.editor.showLinkDialog(selectedText);
-          });
-        }
-        break;
-      case actions.insertImage:
-        this.state.editor.prepareInsert();
-        if (this.props.onPressAddImage) {
-            this.props.onPressAddImage();
-        }
-        break;
-      case actions.identifyDiary:
-        this.props.onPressIdentifyDiary();
-        break;
+    case actions.removeFormat:
+    case actions.alignLeft:
+    case actions.alignCenter:
+    case actions.alignRight:
+    case actions.alignFull:
+    case actions.setSubscript:
+    case actions.setSuperscript:
+    case actions.setStrikethrough:
+    case actions.setHR:
+    case actions.setIndent:
+    case actions.setOutdent:
+      this.props.selectedAction(action, selected ? 0 : 1, this.state.selectedItems);
+      this.state.editor._sendAction(action);
+      break;
+    case actions.insertLink:
+      this.state.editor.prepareInsert();
+      if(this.props.onPressAddLink) {
+        this.props.onPressAddLink();
+      } else {
+        this.state.editor.getSelectedText().then(selectedText => {
+          this.state.editor.showLinkDialog(selectedText);
+        });
+      }
+      break;
+    case actions.insertImage:
+      this.state.editor.prepareInsert();
+      if (this.props.onPressAddImage) {
+        this.props.onPressAddImage();
+      }
+      break;
+    case actions.identifyDiary:
+      this.props.onPressIdentifyDiary();
+      break;
     }
   }
 }

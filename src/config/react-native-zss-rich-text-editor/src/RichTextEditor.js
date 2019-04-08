@@ -99,103 +99,103 @@ export default class RichTextEditor extends Component {
       const message = JSON.parse(str);
 
       switch (message.type) {
-        case messages.TITLE_HTML_RESPONSE:
-          if (this.titleResolve) {
-            this.titleResolve(message.data);
-            this.titleResolve = undefined;
-            this.titleReject = undefined;
-            if (this.pendingTitleHtml) {
-              clearTimeout(this.pendingTitleHtml);
-              this.pendingTitleHtml = undefined;
-            }
+      case messages.TITLE_HTML_RESPONSE:
+        if (this.titleResolve) {
+          this.titleResolve(message.data);
+          this.titleResolve = undefined;
+          this.titleReject = undefined;
+          if (this.pendingTitleHtml) {
+            clearTimeout(this.pendingTitleHtml);
+            this.pendingTitleHtml = undefined;
           }
-          break;
-        case messages.TITLE_TEXT_RESPONSE:
-          if (this.titleTextResolve) {
-            this.titleTextResolve(message.data);
-            this.titleTextResolve = undefined;
-            this.titleTextReject = undefined;
-            if (this.pendingTitleText) {
-              clearTimeout(this.pendingTitleText);
-              this.pendingTitleText = undefined;
-            }
+        }
+        break;
+      case messages.TITLE_TEXT_RESPONSE:
+        if (this.titleTextResolve) {
+          this.titleTextResolve(message.data);
+          this.titleTextResolve = undefined;
+          this.titleTextReject = undefined;
+          if (this.pendingTitleText) {
+            clearTimeout(this.pendingTitleText);
+            this.pendingTitleText = undefined;
           }
-          break;
-        case messages.CONTENT_HTML_RESPONSE:
-          if (this.contentResolve) {
-            this.contentResolve(message.data);
-            this.contentResolve = undefined;
-            this.contentReject = undefined;
-            if (this.pendingContentHtml) {
-              clearTimeout(this.pendingContentHtml);
-              this.pendingContentHtml = undefined;
-            }
+        }
+        break;
+      case messages.CONTENT_HTML_RESPONSE:
+        if (this.contentResolve) {
+          this.contentResolve(message.data);
+          this.contentResolve = undefined;
+          this.contentReject = undefined;
+          if (this.pendingContentHtml) {
+            clearTimeout(this.pendingContentHtml);
+            this.pendingContentHtml = undefined;
           }
-          break;
-        case messages.SELECTED_TEXT_RESPONSE:
-          if (this.selectedTextResolve) {
-            this.selectedTextResolve(message.data);
-            this.selectedTextResolve = undefined;
-            this.selectedTextReject = undefined;
-            if (this.pendingSelectedText) {
-              clearTimeout(this.pendingSelectedText);
-              this.pendingSelectedText = undefined;
-            }
+        }
+        break;
+      case messages.SELECTED_TEXT_RESPONSE:
+        if (this.selectedTextResolve) {
+          this.selectedTextResolve(message.data);
+          this.selectedTextResolve = undefined;
+          this.selectedTextReject = undefined;
+          if (this.pendingSelectedText) {
+            clearTimeout(this.pendingSelectedText);
+            this.pendingSelectedText = undefined;
           }
-          break;
-        case messages.ZSS_INITIALIZED:
-          if (this.props.customCSS) {
-            this.setCustomCSS(this.props.customCSS);
-          }
-          this.setTitlePlaceholder(this.props.titlePlaceholder);
-          this.setContentPlaceholder(this.props.contentPlaceholder);
-          this.setTitleHTML(this.props.initialTitleHTML);
-          this.setContentHTML(this.props.initialContentHTML);
+        }
+        break;
+      case messages.ZSS_INITIALIZED:
+        if (this.props.customCSS) {
+          this.setCustomCSS(this.props.customCSS);
+        }
+        this.setTitlePlaceholder(this.props.titlePlaceholder);
+        this.setContentPlaceholder(this.props.contentPlaceholder);
+        this.setTitleHTML(this.props.initialTitleHTML);
+        this.setContentHTML(this.props.initialContentHTML);
 
-          this.props.hiddenTitle && this.hideTitle();
-          this.props.enableOnChange && this.enableOnChange();
+        this.props.hiddenTitle && this.hideTitle();
+        this.props.enableOnChange && this.enableOnChange();
 
-          this.props.editorInitializedCallback && this.props.editorInitializedCallback();
+        this.props.editorInitializedCallback && this.props.editorInitializedCallback();
 
-          break;
-        case messages.LINK_TOUCHED:
-          this.prepareInsert();
-          const {title, url} = message.data;
-          this.showLinkDialog(title, url);
-          break;
-        case messages.LOG:
-          console.log('FROM ZSS', message.data);
-          break;
-        case messages.SCROLL:
-          this.webviewBridge.setNativeProps({contentOffset: {y: message.data}});
-          break;
-        case messages.TITLE_FOCUSED:
-          this.titleFocusHandler && this.titleFocusHandler();
-          break;
-        case messages.CONTENT_FOCUSED:
-          this.contentFocusHandler && this.contentFocusHandler();
-          break;
-        case messages.CONTENT_BLURED: 
+        break;
+      case messages.LINK_TOUCHED:
+        this.prepareInsert();
+        const {title, url} = message.data;
+        this.showLinkDialog(title, url);
+        break;
+      case messages.LOG:
+        console.log('FROM ZSS', message.data);
+        break;
+      case messages.SCROLL:
+        this.webviewBridge.setNativeProps({contentOffset: {y: message.data}});
+        break;
+      case messages.TITLE_FOCUSED:
+        this.titleFocusHandler && this.titleFocusHandler();
+        break;
+      case messages.CONTENT_FOCUSED:
+        this.contentFocusHandler && this.contentFocusHandler();
+        break;
+      case messages.CONTENT_BLURED: 
         this.contentBlurHandler && this.contentBlurHandler();
-        case messages.SELECTION_CHANGE: {
-          const items = message.data.items;
-          this.state.selectionChangeListeners.map((listener) => {
-            listener(items);
-          });
-          break;
-        }
-        case messages.CONTENT_CHANGE: {
-          const content = message.data.content;
-          this.state.onChange.map((listener) => listener(content));
-          break;
-        }
-        case messages.SELECTED_TEXT_CHANGED: {
-          const selectedText = message.data;
-          this._selectedTextChangeListeners.forEach((listener) => {
-            listener(selectedText);
-          });
-          break;
-        }
+      case messages.SELECTION_CHANGE: {
+        const items = message.data.items;
+        this.state.selectionChangeListeners.map((listener) => {
+          listener(items);
+        });
+        break;
+      }
+      case messages.CONTENT_CHANGE: {
+        const content = message.data.content;
+        this.state.onChange.map((listener) => listener(content));
+        break;
+      }
+      case messages.SELECTED_TEXT_CHANGED: {
+        const selectedText = message.data;
+        this._selectedTextChangeListeners.forEach((listener) => {
+          listener(selectedText);
+        });
+        break;
+      }
       }
     } catch(e) {
       //alert('NON JSON MESSAGE');
@@ -204,38 +204,38 @@ export default class RichTextEditor extends Component {
 
   _renderLinkModal() {
     return (
-        <Modal
-            animationType={"fade"}
-            transparent
-            visible={this.state.showLinkDialog}
-            onRequestClose={() => this.setState({showLinkDialog: false})}
-        >
-          <View style={styles.modal}>
-            <View style={[styles.innerModal, {marginBottom: PlatformIOS ? this.state.keyboardHeight : 0}]}>
-              <Text style={styles.inputTitle}>Title</Text>
-              <View style={styles.inputWrapper}>
-                <TextInput
-                    style={styles.input}
-                    onChangeText={(text) => this.setState({linkTitle: text})}
-                    value={this.state.linkTitle}
-                />
-              </View>
-              <Text style={[styles.inputTitle ,{marginTop: 10}]}>URL</Text>
-              <View style={styles.inputWrapper}>
-                <TextInput
-                    style={styles.input}
-                    onChangeText={(text) => this.setState({linkUrl: text})}
-                    value={this.state.linkUrl}
-                    keyboardType="url"
-                    autoCapitalize="none"
-                    autoCorrect={false}
-                />
-              </View>
-              {PlatformIOS && <View style={styles.lineSeparator}/>}
-              {this._renderModalButtons()}
+      <Modal
+        animationType={'fade'}
+        transparent
+        visible={this.state.showLinkDialog}
+        onRequestClose={() => this.setState({showLinkDialog: false})}
+      >
+        <View style={styles.modal}>
+          <View style={[styles.innerModal, {marginBottom: PlatformIOS ? this.state.keyboardHeight : 0}]}>
+            <Text style={styles.inputTitle}>Title</Text>
+            <View style={styles.inputWrapper}>
+              <TextInput
+                style={styles.input}
+                onChangeText={(text) => this.setState({linkTitle: text})}
+                value={this.state.linkTitle}
+              />
             </View>
+            <Text style={[styles.inputTitle ,{marginTop: 10}]}>URL</Text>
+            <View style={styles.inputWrapper}>
+              <TextInput
+                style={styles.input}
+                onChangeText={(text) => this.setState({linkUrl: text})}
+                value={this.state.linkUrl}
+                keyboardType="url"
+                autoCapitalize="none"
+                autoCorrect={false}
+              />
+            </View>
+            {PlatformIOS && <View style={styles.lineSeparator}/>}
+            {this._renderModalButtons()}
           </View>
-        </Modal>
+        </View>
+      </Modal>
     );
   }
 
@@ -245,7 +245,7 @@ export default class RichTextEditor extends Component {
       linkInitialUrl: '',
       linkTitle: '',
       linkUrl: ''
-    })
+    });
   }
 
   _renderModalButtons() {
@@ -256,24 +256,24 @@ export default class RichTextEditor extends Component {
       <View style={[{alignSelf: 'stretch', flexDirection: 'row'}, containerPlatformStyle]}>
         {!PlatformIOS && <View style={{flex: 1}}/>}
         <TouchableOpacity
-            onPress={() => this._hideModal()}
-            style={buttonPlatformStyle}
+          onPress={() => this._hideModal()}
+          style={buttonPlatformStyle}
         >
           <Text style={[styles.button, {paddingRight: 10}]}>
             {this._upperCaseButtonTextIfNeeded('Cancel')}
           </Text>
         </TouchableOpacity>
         <TouchableOpacity
-            onPress={() => {
-              if (this._linkIsNew()) {
-                this.insertLink(this.state.linkUrl, this.state.linkTitle);
-              } else {
-                this.updateLink(this.state.linkUrl, this.state.linkTitle);
-              }
-              this._hideModal();
-            }}
-            disabled={insertUpdateDisabled}
-            style={buttonPlatformStyle}
+          onPress={() => {
+            if (this._linkIsNew()) {
+              this.insertLink(this.state.linkUrl, this.state.linkTitle);
+            } else {
+              this.updateLink(this.state.linkUrl, this.state.linkTitle);
+            }
+            this._hideModal();
+          }}
+          disabled={insertUpdateDisabled}
+          style={buttonPlatformStyle}
         >
           <Text style={[styles.button, {opacity: insertUpdateDisabled ? 0.5 : 1}]}>
             {this._upperCaseButtonTextIfNeeded(this._linkIsNew() ? 'Insert' : 'Update')}
@@ -300,7 +300,7 @@ export default class RichTextEditor extends Component {
           {...this.props}
           hideKeyboardAccessoryView={true}
           keyboardDisplayRequiresUserAction={false}
-          ref={(r) => {this.webviewBridge = r}}
+          ref={(r) => {this.webviewBridge = r;}}
           onBridgeMessage={(message) => this.onBridgeMessage(message)}
           injectedJavaScript={injectScript}
           source={pageSource}
@@ -551,7 +551,7 @@ export default class RichTextEditor extends Component {
 
       this.pendingTitleHtml = setTimeout(() => {
         if (this.titleReject) {
-          this.titleReject('timeout')
+          this.titleReject('timeout');
         }
       }, 5000);
     });
@@ -579,7 +579,7 @@ export default class RichTextEditor extends Component {
 
       this.pendingContentHtml = setTimeout(() => {
         if (this.contentReject) {
-          this.contentReject('timeout')
+          this.contentReject('timeout');
         }
       }, 5000);
     });
@@ -593,7 +593,7 @@ export default class RichTextEditor extends Component {
 
       this.pendingSelectedText = setTimeout(() => {
         if (this.selectedTextReject) {
-          this.selectedTextReject('timeout')
+          this.selectedTextReject('timeout');
         }
       }, 5000);
     });

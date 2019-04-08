@@ -1,14 +1,14 @@
-import { Dimensions } from 'react-native'
+import { Dimensions } from 'react-native';
 //import ExtraDimensions from 'react-native-extra-dimensions-android';
 
-export const WIDTH = Dimensions.get('window').width
+export const WIDTH = Dimensions.get('window').width;
 // export const HEIGHT = Platform.OS=='android'?
 //   ExtraDimensions.get('REAL_WINDOW_HEIGHT'):Dimensions.get('window').height
-export const HEIGHT = Dimensions.get('window').height
-export const INNERWIDTH = WIDTH - 16
+export const HEIGHT = Dimensions.get('window').height;
+export const INNERWIDTH = WIDTH - 16;
 
-const iPhone6Width = 375
-const iPhone6Height = 667
+const iPhone6Width = 375;
+const iPhone6Height = 667;
 
 
 /**
@@ -19,7 +19,7 @@ const iPhone6Height = 667
  * @returns {number}
  */
 export function getResponsiveHeight(height) {
-  return height / iPhone6Height * HEIGHT
+  return height / iPhone6Height * HEIGHT;
 }
 
 /**
@@ -29,7 +29,7 @@ export function getResponsiveHeight(height) {
  * @returns
  */
 export function getResponsiveWidth(width) {
-  return width / iPhone6Width * WIDTH
+  return width / iPhone6Width * WIDTH;
 }
 
 /**
@@ -46,7 +46,7 @@ export function font(color, size, weight, family) {
     fontSize: size || 16,
     fontWeight: weight || '400',
     fontFamily: family || 'PingFang SC',
-  }
+  };
 }
 
 export const Colors = {
@@ -73,4 +73,4 @@ export const Colors = {
     LINE: '#F1F1F1', //分割线
     TINT_BUTTON: '#F5F5F5', //浅色按钮
   }
-}
+};

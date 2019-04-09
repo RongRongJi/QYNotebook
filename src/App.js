@@ -5,7 +5,7 @@ import ComponentTest from './pages/test/component_test';
 import MainView from './pages/main/main';
 
 import styles from './config/header';
-import NotebookView from './pages/notebook/notebookview';
+import NotebookView from './pages/notebook/notebook_view';
 
 const MainStack = createStackNavigator(
   {

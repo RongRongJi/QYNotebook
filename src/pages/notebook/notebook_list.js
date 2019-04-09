@@ -9,7 +9,7 @@
 import React, {Component} from 'react';
 import {Platform, StyleSheet, Text, View, TouchableOpacity} from 'react-native';
 import RefreshListView,{RefreshState} from 'react-native-refresh-list-view';
-import NotebookLabel from './notebooklabel';
+import NotebookLabel from './notebook_label';
 
 
 

@@ -15,7 +15,7 @@ import {
   TouchableOpacity
 } from 'react-native';
 import RefreshListView, { RefreshState } from 'react-native-refresh-list-view';
-import Todolabel from './todolabel';
+import Todolabel from './todo_label';
 
 export default class TodoList extends Component {
   constructor(props) {

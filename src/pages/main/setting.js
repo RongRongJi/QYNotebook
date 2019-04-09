@@ -6,7 +6,7 @@
 
 import React, {Component} from 'react';
 import {Platform, StyleSheet, Text, View, TouchableOpacity, Image, Dimensions} from 'react-native';
-import { getColorType } from '../../config/ColorType';
+import { getColorType } from '../../config/color_type';
 import {
   Menu,
   MenuProvider,

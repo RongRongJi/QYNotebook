@@ -9,9 +9,9 @@ import React, { Component } from 'react';
 import { Platform, StyleSheet, Text, View } from 'react-native';
 import TopTab from './tab';
 import FloatButton from './floatbutton';
-import NotebookList from '../notebook/notebooklist';
-import TodoList from '../todolist/todolist';
-import { getColorType } from '../../config/ColorType';
+import NotebookList from '../notebook/notebook_list';
+import TodoList from '../todolist/todo_list';
+import { getColorType } from '../../config/color_type';
 import Setting from './setting';
 import { MenuProvider } from 'react-native-popup-menu';
 

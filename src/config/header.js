@@ -1,5 +1,5 @@
 import {InnerNaviBar} from 'react-native-pure-navigation-bar';
-import { getColorType } from './ColorType';
+import { getColorType } from './color_type';
 
 InnerNaviBar.defaultProps.style.safeView ={
   flex:0,

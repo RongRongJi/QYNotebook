@@ -8,10 +8,10 @@
 
 import React, { Component } from 'react';
 import { Platform, StyleSheet, Text, View } from 'react-native';
-import '../../config/ColorType';
+import '../../config/color_type';
 import '../../config/global';
 import FloatingAction from '../../config/floating-action-component/FloatingAction';
-import { getColorType } from '../../config/ColorType';
+import { getColorType } from '../../config/color_type';
 
 const actions = [
   {

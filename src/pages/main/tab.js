@@ -6,8 +6,8 @@
 
 import React, {Component} from 'react';
 import {Platform, StyleSheet, Text, View, TouchableOpacity} from 'react-native';
-import '../../config/ColorType';
-import { getColorType } from '../../config/ColorType';
+import '../../config/color_type';
+import { getColorType } from '../../config/color_type';
 
 export default class TopTab extends Component {
 

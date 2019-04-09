@@ -7,10 +7,10 @@ import {
   PixelRatio,
 } from 'react-native';
 
-import './ColorType';
+import './color_type';
 import ImagePicker from 'react-native-image-picker';
 import { RichTextEditor, RichTextToolbar, actions } from './react-native-zss-rich-text-editor';
-import { getColorType } from './ColorType';
+import { getColorType } from './color_type';
 import { WIDTH, getResponsiveWidth } from './styles';
 
 const Actions = [

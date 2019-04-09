@@ -25,9 +25,13 @@ export function getColorType(){
     colorType['TextColor']=dayType.TextColor;
     colorType['ItemBackground']=dayType.ItemBackground;
   }else if(global.colorType && global.colorType =='night'){
-    colorType = nightType;
+    colorType['Background']=nightType.Background;
+    colorType['TextColor']=nightType.TextColor;
+    colorType['ItemBackground']=nightType.ItemBackground;
   }else if(global.colorType && global.colorType =='eyeprotect'){
-    colorType = eyeprotectType;
+    colorType['Background']=eyeprotectType.Background;
+    colorType['TextColor']=eyeprotectType.TextColor;
+    colorType['ItemBackground']=eyeprotectType.ItemBackground;
   }
   //alert(colorType[Background]);
   return colorType;

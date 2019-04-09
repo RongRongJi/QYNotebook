@@ -39,12 +39,12 @@ export default class ImagePickerComp extends Component {
         <View style={styles.item}>
           <Text style={styles.font}>拍照</Text>
         </View>
-      )
+      );
     }
     else {
       return (
         <Image style={styles.image} source={this.state.source} resizeMode='contain' />
-      )
+      );
     }
   }
 
@@ -66,7 +66,7 @@ export default class ImagePickerComp extends Component {
         console.log('Cancel');
       } else if (response.error) {
         console.log('Error: ', response.error);
-        ToastShort("拍照失败：", response.error);
+        ToastShort('拍照失败：', response.error);
       } else {
         this.props.picture(response.uri);
         this.setState({

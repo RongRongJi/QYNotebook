@@ -4,4 +4,4 @@ import {actions} from './src/const';
 
 module.exports = {
   RichTextEditor, RichTextToolbar, actions
-}
+};

@@ -23,11 +23,11 @@ export default class ComponentTest extends Component {
   render() {
     return (
       <RichTextEditor
-      ref={(r) => this.richtext = r}
-      initialTitleHTML={'Title!!'}
-      initialContentHTML={'Hello <b>World</b> <p>this is a new paragraph</p> <p>this is another new paragraph</p>'}
+        ref={(r) => this.richtext = r}
+        initialTitleHTML={'Title!!'}
+        initialContentHTML={'Hello <b>World</b> <p>this is a new paragraph</p> <p>this is another new paragraph</p>'}
       
-    />
+      />
     );
   }
 }

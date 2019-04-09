@@ -1,17 +1,17 @@
-import React, { Component } from 'react'
+import React, { Component } from 'react';
 
 import {
   View,
   TextInput,
   StyleSheet,
   PixelRatio,
-} from 'react-native'
+} from 'react-native';
 
-import './ColorType'
-import ImagePicker from 'react-native-image-picker'
-import { RichTextEditor, RichTextToolbar, actions } from './react-native-zss-rich-text-editor'
+import './ColorType';
+import ImagePicker from 'react-native-image-picker';
+import { RichTextEditor, RichTextToolbar, actions } from './react-native-zss-rich-text-editor';
 import { getColorType } from './ColorType';
-import { WIDTH, getResponsiveWidth } from './styles'
+import { WIDTH, getResponsiveWidth } from './styles';
 
 const Actions = [
   actions.insertImage,
@@ -22,7 +22,7 @@ const Actions = [
   actions.insertBulletsList,
   actions.insertOrderedList,
   actions.setStrikethrough
-]
+];
 
 const Images = {
   [actions.insertImage]: [require('./images/icon-editor-photo-active.png')],
@@ -33,7 +33,7 @@ const Images = {
   [actions.insertBulletsList]: [require('./images/icon-editor-ul.png'), require('./images/icon-editor-ul-active.png')],
   [actions.insertOrderedList]: [require('./images/icon-editor-ol.png'), require('./images/icon-editor-ol-active.png')],
   [actions.setStrikethrough]: [require('./images/icon-editor-strikethrough.png'), require('./images/icon-editor-strikethrough-active.png')]
-}
+};
 
 export default class RichText extends Component {
   state = {
@@ -52,19 +52,19 @@ export default class RichText extends Component {
     }
   }
   onEditorInitialized = () => {
-    this.setFocusOrBlur()
+    this.setFocusOrBlur();
   }
   setFocusOrBlur() {
     this.richtext.setContentFocusHandler(() => {
       this.setState({
         onFocus: true
-      })
-    })
+      });
+    });
     this.richtext.setContentBlurHandler(() => {
       this.setState({
         onFocus: false
-      })
-    })
+      });
+    });
   }
   addImage = async () => {
     const options = {
@@ -83,7 +83,7 @@ export default class RichText extends Component {
         cameraRoll: true,
         waitUntilSaved: true
       }
-    }
+    };
     ImagePicker.showImagePicker(options, async res => {
       if (!res.didCancel) {
         
@@ -91,9 +91,9 @@ export default class RichText extends Component {
           src:   'data:image/jpeg;base64,' + res.data ,
           // src: image.replace('https:', 'http:')
           //src: 'http://airing.ursb.me/2life/user/1/img_1551536283892.png-2life_note.jpg'
-        })
+        });
       }
-    })
+    });
   }
   identifyDiary = () => {
     // TODO: OCR 识别日记
@@ -103,14 +103,14 @@ export default class RichText extends Component {
       this.props.saveDiary({
         title: await this.richtext.getTitleHtml(),
         content: await this.richtext.getContentHtml()
-      })
+      });
     }
   }
   render() {
     return (
       <View style={
-          styles.container}>
-         <View style={styles.line_separator} />
+        styles.container}>
+        <View style={styles.line_separator} />
         <RichTextEditor
           ref={(r) => this.richtext = r}
           style={styles.richText}
@@ -120,7 +120,7 @@ export default class RichText extends Component {
         />
         <RichTextToolbar
           style={{
-            backgroundColor: getColorType()["Background"],
+            backgroundColor: getColorType()['Background'],
             //height: this.state.onFocus ? 50 : 0
           }}
           actions={Actions}
@@ -129,20 +129,20 @@ export default class RichText extends Component {
           onPressAddImage={this.addImage}
           onPressIdentifyDiary={this.identifyDiary}
           selectedAction={(action, selected, selectedItems) => {
-            let addtion = {}
+            let addtion = {};
             if (
               action === actions.insertOrderedList && selectedItems.includes(actions.insertBulletsList)
             ) {
               addtion = {
                 [actions.insertBulletsList]: Images[actions.insertBulletsList][0]
-              }
+              };
             }
             if (
               action === actions.insertBulletsList && selectedItems.includes(actions.insertOrderedList)
             ) {
               addtion = {
                 [actions.insertOrderedList]: Images[actions.insertOrderedList][0]
-              }
+              };
             }
             this.setState({
               preload: {
@@ -150,18 +150,18 @@ export default class RichText extends Component {
                 ...addtion,
                 [action]: Images[action][selected],
               }
-            })
+            });
           }}
         />
         
       </View>
-    )
+    );
   }
 }
 
 const styles = StyleSheet.create({
 
-    container: {
+  container: {
 	    flex: 1,
 	    flexDirection: 'column',
 	    backgroundColor: '#fff',
@@ -187,4 +187,4 @@ const styles = StyleSheet.create({
 	    marginBottom: getResponsiveWidth(20)
 	  }
 
-})
+});

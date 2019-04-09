@@ -19,7 +19,7 @@ export default class NotebookList extends Component {
     this.state = {
       data: this.props.data,
       refreshState: RefreshState.Idle,
-    }
+    };
     this.refresh = this.props.refresh;
   }
 
@@ -36,14 +36,14 @@ export default class NotebookList extends Component {
       {key:'1',title:'笔记1',content:'wrnm',date:'2月13'},
       {key:'2',title:'笔记2',content:'wrnm',date:'3月4'},
       {key:'3',title:'笔记3',content:'wrnm',date:'6月5'},
-    ]
+    ];
     this.setState({
       data:alldata,
-    })
+    });
     //结束刷新
     this.setState({
       refreshState: RefreshState.Idle,
-    })
+    });
   }
 
   renderList(){
@@ -59,7 +59,7 @@ export default class NotebookList extends Component {
         />
 
       </View>
-    )
+    );
   }
 
   renderItem({item}){
@@ -71,7 +71,7 @@ export default class NotebookList extends Component {
           navigation={this.props.navigation}
         />
       </TouchableOpacity>
-    )
+    );
   }
 
 

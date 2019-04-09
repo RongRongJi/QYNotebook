@@ -1,44 +1,47 @@
-
-
-import React from "react";
-import { createStackNavigator, createAppContainer } from "react-navigation";
+import React from 'react';
+import { createStackNavigator, createAppContainer } from 'react-navigation';
 
 import ComponentTest from './pages/test/component_test';
 import MainView from './pages/main/main';
 
 import styles from './config/header';
-import NotebookView from "./pages/notebook/notebookview";
+import NotebookView from './pages/notebook/notebookview';
 
-const MainStack = createStackNavigator({
-  'main':{
-    screen: MainView,
+const MainStack = createStackNavigator(
+  {
+    main: {
+      screen: MainView
+    },
+    notebook: {
+      screen: NotebookView
+    }
   },
-  'notebook':{
-    screen: NotebookView,
-  },
-},
-{
-  headerMode:'none',
-});
+  {
+    headerMode: 'none'
+  }
+);
 
-const TestStack = createStackNavigator({
-  'test':{
-    screen: ComponentTest,
+const TestStack = createStackNavigator(
+  {
+    test: {
+      screen: ComponentTest
+    }
   },
-},
-{
-  headerMode:'none',
-})
+  {
+    headerMode: 'none'
+  }
+);
 
-const AppNavigator = createStackNavigator({
-  'init': {
-    //screen: TestStack,
-    screen: MainStack,
-  },  
-},
-{
-  headerMode:'none',
-}
+const AppNavigator = createStackNavigator(
+  {
+    init: {
+      //screen: TestStack,
+      screen: MainStack
+    }
+  },
+  {
+    headerMode: 'none'
+  }
 );
 
 export default createAppContainer(AppNavigator);

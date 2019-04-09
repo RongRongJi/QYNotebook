@@ -1,7 +1,7 @@
 /*
  * Toast提示函数
  */
-"use strict";
+'use strict';
 
 import Toast from 'react-native-root-toast';
 

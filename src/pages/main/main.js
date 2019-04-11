@@ -15,6 +15,7 @@ import { getColorType } from '../../config/color_type';
 import Setting from './setting';
 import { MenuProvider } from 'react-native-popup-menu';
 
+
 export default class MainView extends Component {
   constructor(props) {
     super(props);
@@ -23,7 +24,8 @@ export default class MainView extends Component {
       currentPage: 'note'
     };
   }
-
+  
+  
     //界面顶部导航栏
     renderHeader = () => (
       <View
@@ -51,7 +53,7 @@ export default class MainView extends Component {
           }}
         />
         <View style={{ position: 'absolute', right: 20 }}>
-          <Setting />
+          <Setting navigation={this.props.navigation}/>
         </View>
       </View>
     );

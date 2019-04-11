@@ -8,4 +8,5 @@ module.exports={
   floating_action : 'react-native-floating-button',//悬浮按钮组件
   refresh_list : 'react-native-refresh-list-view',//列表组件
   popup_menu : 'react-native-popup-menu',//弹窗菜单
+  storage : 'react-native-storage',//数据持久化
 };

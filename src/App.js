@@ -1,11 +1,11 @@
 import React from 'react';
-import { createStackNavigator, createAppContainer } from 'react-navigation';
+import { createStackNavigator, createAppContainer, createSwitchNavigator } from 'react-navigation';
 
 import ComponentTest from './pages/test/component_test';
 import MainView from './pages/main/main';
 
-import styles from './config/header';
 import NotebookView from './pages/notebook/notebook_view';
+import Init from './pages/test/init';
 
 const MainStack = createStackNavigator(
   {
@@ -14,6 +14,20 @@ const MainStack = createStackNavigator(
     },
     notebook: {
       screen: NotebookView
+    }
+  },
+  {
+    headerMode: 'none'
+  }
+);
+
+const InitStack = createSwitchNavigator(
+  {
+    init: {
+      screen: Init
+    },
+    mainstack:{
+      screen: MainStack,
     }
   },
   {
@@ -36,7 +50,8 @@ const AppNavigator = createStackNavigator(
   {
     init: {
       //screen: TestStack,
-      screen: MainStack
+      //screen: MainStack
+      screen: InitStack,
     }
   },
   {

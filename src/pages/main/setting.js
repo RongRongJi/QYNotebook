@@ -14,6 +14,7 @@ import {
   MenuTrigger,
   renderers,
 } from 'react-native-popup-menu';
+import { changeColorMode } from '../../utils/color_util';
 
 const { Popover } = renderers;
 
@@ -22,12 +23,18 @@ export default class Setting extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      color: this.props.color ? this.props.color : getColorType()['ItemBackground'],
+      color: getColorType()['ItemBackground'],
       width: this.props.width ? this.props.width : 30,
       height: this.props.height ? this.props.height : 30,
+      mode: global.colorType =='day' ? '夜间模式' : '晨间模式',
     };
   }
     
+  _changeColorMode(){
+    changeColorMode();
+    this.props.navigation.navigate('init');
+  }
+
 
     Popver = () =>(
       <Menu renderer={Popover} rendererProps={{placement:'bottom',preferredPlacement:'bottom'}}>
@@ -43,17 +50,26 @@ export default class Setting extends Component {
 
     MenuList = () =>(
       <View>
-        <TouchableOpacity style={styles.row}>
+        <TouchableOpacity style={styles.row}  onPress={()=>this._changeColorMode()}>
           <Image style={styles.icon} source={require('./images/eye.png')}/>
-          <Text style={styles.fontmenu}>夜间模式</Text>
+          <Text style={{
+            marginLeft:5,
+            color:getColorType()['ItemBackground'],
+          }}>{this.state.mode}</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.row}>
           <Image style={styles.icon} source={require('./images/manager.png')}/>
-          <Text style={styles.fontmenu}>批量管理</Text>
+          <Text style={{
+            marginLeft:5,
+            color:getColorType()['ItemBackground'],
+          }}>批量管理</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.row}>
           <Image style={styles.icon} source={require('./images/about.png')}/>
-          <Text style={styles.fontmenu}>关于我们</Text>
+          <Text style={{
+            marginLeft:5,
+            color:getColorType()['ItemBackground'],
+          }}>关于我们</Text>
         </TouchableOpacity>
       </View>
     )

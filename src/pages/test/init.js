@@ -7,23 +7,42 @@
  */
 
 import React, {Component} from 'react';
-import {Platform, StyleSheet, Text, View} from 'react-native';
+import {Platform, StyleSheet, Text, View, Image} from 'react-native';
+import { setHeader } from '../../config/header';
+import { setColorState } from '../../utils/color_util';
 
-const instructions = Platform.select({
-  ios: 'Press Cmd+R to reload,\n' + 'Cmd+D or shake for dev menu',
-  android:
-    'Double tap R on your keyboard to reload,\n' +
-    'Shake or press menu button for dev menu',
-});
 
 
 export default class Init extends Component {
+  constructor(props){
+    super(props);
+  }
+
+  async init(){
+    //初始化
+    try{
+      //初始化颜色
+      let a = await setColorState();
+      setHeader();
+      //global.colorType='night';
+      //界面跳转
+      setTimeout(()=>{
+        this.props.navigation.navigate('main');
+      },2000);
+    }catch(e){
+      alert(e);
+    }
+
+  }
+
   render() {
+    this.init();
+    //setTimeout(this.init.then(this.props.navigation.navigate('main')),2000);
     return (
       <View style={styles.container}>
-        <Text style={styles.welcome}>Welcome to React Native!</Text>
-        <Text style={styles.instructions}>To get started, edit App.js</Text>
-        <Text style={styles.instructions}>{instructions}</Text>
+        <Image style={{width:100,height:100}}
+          source={require('../main/images/logo.png')}/>
+        <Text style={{fontSize:40,color:'#fff'}}>QYNotebook</Text>
       </View>
     );
   }
@@ -34,7 +53,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#F5FCFF',
+    backgroundColor: '#049F9A',
   },
   welcome: {
     fontSize: 20,

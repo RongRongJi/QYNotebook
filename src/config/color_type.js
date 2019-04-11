@@ -1,4 +1,4 @@
-import './global';
+//import './global';
 
 const dayType={
   Background : '#FFFFFF',
@@ -18,21 +18,16 @@ const eyeprotectType={
   ItemBackground : '#ffffff',
 };
 
+
 export function getColorType(){
-  const colorType = {};
+  //alert(global.colorType);
   if(global.colorType && global.colorType=='day'){
-    colorType['Background']=dayType.Background;
-    colorType['TextColor']=dayType.TextColor;
-    colorType['ItemBackground']=dayType.ItemBackground;
+    return dayType;
   }else if(global.colorType && global.colorType =='night'){
-    colorType['Background']=nightType.Background;
-    colorType['TextColor']=nightType.TextColor;
-    colorType['ItemBackground']=nightType.ItemBackground;
+    return nightType;
   }else if(global.colorType && global.colorType =='eyeprotect'){
-    colorType['Background']=eyeprotectType.Background;
-    colorType['TextColor']=eyeprotectType.TextColor;
-    colorType['ItemBackground']=eyeprotectType.ItemBackground;
+    return eyeprotectType;
   }
   //alert(colorType[Background]);
-  return colorType;
+  return dayType;
 }

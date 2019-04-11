@@ -46,6 +46,13 @@ export default class NotebookList extends Component {
     });
   }
 
+  //获取数据并跳转
+  _getItemData(){
+    this.props.navigation.navigate('nbpreview');
+  }
+
+
+
   renderList(){
     return(
       <View>
@@ -64,7 +71,8 @@ export default class NotebookList extends Component {
 
   renderItem({item}){
     return(
-      <TouchableOpacity style={styles.itemcontainer}>
+      <TouchableOpacity style={styles.itemcontainer}
+        onPress={()=>{this._getItemData();}}>
         <NotebookLabel
           key={item.key}
           item={item}

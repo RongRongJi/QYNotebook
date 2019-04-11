@@ -6,6 +6,7 @@ import MainView from './pages/main/main';
 
 import NotebookView from './pages/notebook/notebook_view';
 import Init from './pages/test/init';
+import NotebookPreview from './pages/notebook/notebook_preview';
 
 const MainStack = createStackNavigator(
   {
@@ -14,6 +15,9 @@ const MainStack = createStackNavigator(
     },
     notebook: {
       screen: NotebookView
+    },
+    nbpreview:{
+      screen: NotebookPreview,
     }
   },
   {

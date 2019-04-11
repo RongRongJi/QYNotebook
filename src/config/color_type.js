@@ -3,18 +3,21 @@
 const dayType={
   Background : '#FFFFFF',
   TextColor : '#FFFFFF',
+  Modal : 'rgba(0,0,0,0.5)',
   ItemBackground : '#049F9A',
 };
 
 const nightType={
   Background : '#263238',
   TextColor : '#ffffff',
+  Modal : 'rgba(38,50,56,0.5)',
   ItemBackground : '#37474f',
 };
 
 const eyeprotectType={
   Background : '#C7EDCC',
   TextColor : '#000000',
+  Modal : 'rgba(199,237,204,0.5)',
   ItemBackground : '#ffffff',
 };
 

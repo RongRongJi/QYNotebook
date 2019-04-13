@@ -1,138 +1,141 @@
-import React, {
-  Component,
-} from 'react';
-import {
-  StyleSheet,
-  Alert,
-  View,
-  Text,
-  Dimensions,
-} from 'react-native';
+import React, { Component } from 'react';
+import { Button, View, Text, StyleSheet } from 'react-native';
+import Dialog, {
+  DialogTitle,
+  DialogContent,
+  DialogFooter,
+  DialogButton,
+} from 'react-native-popup-dialog';
 
-import GesturePassword from '../../config/react-native-smart-gesture-password';
-import {getColorType} from '../../config/color_type';
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  dialogContentView: {
+    // flex: 1,
+    paddingLeft: 18,
+    paddingRight: 18,
+    // backgroundColor: '#000',
+    // opacity: 0.4,
+    // alignItems: 'center',
+    // justifyContent: 'center',
+  },
+  navigationBar: {
+    borderBottomColor: '#b5b5b5',
+    borderBottomWidth: 0.5,
+    backgroundColor: '#ffffff',
+  },
+  navigationTitle: {
+    padding: 10,
+  },
+  navigationButton: {
+    padding: 10,
+  },
+  navigationLeftButton: {
+    paddingLeft: 20,
+    paddingRight: 40,
+  },
+  navigator: {
+    flex: 1,
+    // backgroundColor: '#000000',
+  },
+  customBackgroundDialog: {
+    opacity: 0.5,
+    backgroundColor: '#000',
+  },
+});
 
 export default class ComponentTest extends Component {
+  state = {
+    customBackgroundDialog: false,
+    defaultAnimationDialog: false,
+    scaleAnimationDialog: false,
+    slideAnimationDialog: false,
+  };
 
-  // 构造
-  constructor (props) {
+  constructor(props){
     super(props);
-    // 初始状态
-    this.state = {
-      isWarning: false,
-      message: 'Verify your gesture password',
-      messageColor: getColorType()['ItemBackground'],
-      password: '',
-      thumbnails: [],
-    };
-    this._cachedPassword = '';
+    this.changeState = this.changeState.bind(this);
   }
 
-  componentDidMount () {
-    this._cachedPassword = '13457'; //get cached gesture password
-  }
-
-  render () {
-    return (
-      <GesturePassword
-        style={{paddingTop: 20 + 44,}}
-        pointBackgroundColor={'#F4F4F4'}
-        isWarning={this.state.isWarning}
-        color={getColorType()['ItemBackground']}
-        activeColor={getColorType()['ItemBackground']}
-        warningColor={'red'}
-        warningDuration={1500}
-        allowCross={true}
-        topComponent={this._renderDescription()}
-        bottomComponent={this._renderActions()}
-        onFinish={this._onFinish}
-        onReset={this._onReset}
-      />
-    );
-  }
-
-  _renderThumbnails () {
-    let thumbnails = [];
-    for (let i = 0; i < 9; i++) {
-      let active = ~this.state.password.indexOf(i);
-      thumbnails.push((
-        <View
-          key={'thumb-' + i}
-          style={[
-            {width: 8, height: 8, margin: 2, borderRadius: 8, },
-            active ? {backgroundColor: '#00AAEF'} : {borderWidth: 1, borderColor: '#A9A9A9'}
-          ]}
+  renderDialog = (title,leftText,leftFunc,rightText,rightFunc,Content) =>(
+    <Dialog
+      onDismiss={() => {
+        this.setState({ defaultAnimationDialog: false });
+      }}
+      width={0.9}
+      visible={this.state.defaultAnimationDialog}
+      rounded
+      actionsBordered
+      // actionContainerStyle={{
+      //   height: 100,
+      //   flexDirection: 'column',
+      // }}
+      dialogTitle={
+        <DialogTitle
+          title={title}
+          style={{
+            backgroundColor: '#F7F7F8',
+          }}
+          hasTitleBar={false}
+          align="left"
         />
-      ));
-    }
-    return (
-      <View style={{width: 38, flexDirection: 'row', flexWrap: 'wrap'}}>
-        {thumbnails}
-      </View>
-    );
-  }
+      }
+      footer={
+        <DialogFooter>
+          <DialogButton
+            text={leftText}
+            bordered
+            onPress={leftFunc}
+            key="button-1"
+          />
+          <DialogButton
+            text={rightText}
+            bordered
+            onPress={rightFunc}
+            key="button-2"
+          />
+        </DialogFooter>
+      }
+    >
+      <DialogContent
+        style={{
+          backgroundColor: '#F7F7F8',
+        }}
+      >
+        {Content}
+      </DialogContent>
+    </Dialog>
+  )
 
-  _renderDescription = () => {
-    return (
-      <View style={{height: 158, paddingBottom: 10, justifyContent: 'flex-end', alignItems: 'center',}}>
-        
-        <Text
-          style={{fontFamily: '.HelveticaNeueInterface-MediumP4', fontSize: 14, marginVertical: 6, color: this.state.messageColor}}>{this.state.message}</Text>
-      </View>
-    );
-  }
-
-  _renderActions = () => {
-    return (
-      <View
-        style={{position: 'absolute', bottom: 0, flex:1, justifyContent: 'space-between', flexDirection: 'row', width: Dimensions.get('window').width, }}>
-      </View>
-    );
-  }
-
-  _onReset = () => {
-    let isWarning = false;
-    //let password = ''
-    let message = 'Verify your gesture password';
-    let messageColor = '#A9A9A9';
+  changeState(){
     this.setState({
-      isWarning,
-      //password,
-      message,
-      messageColor,
+      defaultAnimationDialog: false,
     });
   }
 
-  _onFinish = (password) => {
-    if (password === this._cachedPassword) {
-      let isWarning = false;
-      let message = 'Verify succeed';
-      let messageColor = '#00AAEF';
-      this.setState({
-        isWarning,
-        password,
-        message,
-        messageColor,
-      });
-    }
-    else {
-      let isWarning = true;
-      let message;
-      let messageColor = 'red';
-      if (password.length < 4) {
-        message = 'Need to link at least 4 points';
-      }
-      else {
-        message = 'Verify failed';
-      }
-      this.setState({
-        isWarning,
-        password,
-        message,
-        messageColor,
-      });
-    }
-    Alert.alert('password is ' + password);
-  }
+  render() {
+    return (
+      <View style={{ flex: 1 }}>
+        <View style={styles.container}>
+          <Button
+            title="Show Dialog - Default Animation"
+            onPress={() => {
+              this.setState({
+                defaultAnimationDialog: true,
+              });
+            }}
+          />
 
+          
+        </View>
+        {this.renderDialog('','取消',this.changeState,'删除',this.changeState,<Text>你确定要删除该篇笔记吗？</Text>)}
+        
+
+        
+      </View>
+    );
+  }
 }

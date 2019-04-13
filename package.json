@@ -16,6 +16,7 @@
     "react-native-image-picker": "^0.28.0",
     "react-native-keyboard-spacer": "^0.4.1",
     "react-native-modal-popover": "0.0.12",
+    "react-native-popup-dialog": "^0.18.2",
     "react-native-popup-menu": "^0.15.5",
     "react-native-pure-navigation-bar": "^1.4.9",
     "react-native-refresh-list-view": "^1.0.10",

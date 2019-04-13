@@ -9,4 +9,6 @@ module.exports={
   refresh_list : 'react-native-refresh-list-view',//列表组件
   popup_menu : 'react-native-popup-menu',//弹窗菜单
   storage : 'react-native-storage',//数据持久化
+  password : 'react-native-smart-gesture-password',//手势密码
+  dialog : 'react-native-popup-dialog',//弹窗
 };

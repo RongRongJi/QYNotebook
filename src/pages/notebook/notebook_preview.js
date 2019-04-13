@@ -17,6 +17,12 @@ import {
   TouchableOpacity,
   Modal
 } from 'react-native';
+import Dialog, {
+  DialogTitle,
+  DialogContent,
+  DialogFooter,
+  DialogButton,
+} from 'react-native-popup-dialog';
 import NaviBar from 'react-native-pure-navigation-bar';
 import { getColorType } from '../../config/color_type';
 import SideMenu from 'react-native-side-menu';
@@ -33,6 +39,8 @@ export default class NotebookPreview extends Component {
     this.state = {
       isOpen: false,
       selectedItem: 'About',
+      deleteDialog: false,
+      lockDialog: false,
     };
   }
 
@@ -51,6 +59,11 @@ export default class NotebookPreview extends Component {
       isOpen: false,
       selectedItem: item,
     });
+    if(item=='Delete'){
+      this.setState({deleteDialog:true});
+    }else if(item=='Lock'){
+      this.setState({lockDialog: true});
+    }
   }
 
   renderHeader = () =>(
@@ -105,9 +118,103 @@ export default class NotebookPreview extends Component {
 
           </ScrollView>
         </View>
+        <this.renderDeleteDialog/>
+        <this.renderLockDialog/>
       </SideMenu>
     );
   }
+
+  renderDeleteDialog = () =>(
+    <Dialog
+      onDismiss={() => {
+        this.setState({ deleteDialog: false });
+      }}
+      width={0.9}
+      visible={this.state.deleteDialog}
+      rounded
+      actionsBordered
+      dialogTitle={
+        <DialogTitle
+          title="删除笔记"
+          style={{
+            backgroundColor: '#F7F7F8',
+          }}
+          hasTitleBar={false}
+          align="left"
+        />
+      }
+      footer={
+        <DialogFooter>
+          <DialogButton
+            text="取消"
+            bordered
+            onPress={() => {
+              this.setState({ deleteDialog: false });
+            }}
+            key="button-1"
+          />
+          <DialogButton
+            text="删除"
+            bordered
+            onPress={() => {
+              this.setState({ deleteDialog: false });
+            }}
+            key="button-2"
+          />
+        </DialogFooter>
+      }
+    >
+      <DialogContent
+        style={{
+          backgroundColor: '#F7F7F8',
+        }}
+      >
+        <Text>你确定要删除该篇笔记吗？</Text>
+      </DialogContent>
+    </Dialog>
+  )
+
+  renderLockDialog = () =>(
+    <Dialog
+      onDismiss={() => {
+        this.setState({ lockDialog: false });
+      }}
+      width={0.9}
+      visible={this.state.lockDialog}
+      rounded
+      actionsBordered
+      dialogTitle={
+        <DialogTitle
+          title="加密笔记"
+          style={{
+            backgroundColor: '#F7F7F8',
+          }}
+          hasTitleBar={false}
+          align="left"
+        />
+      }
+      footer={
+        <DialogFooter>
+          <DialogButton
+            text="确定"
+            bordered
+            onPress={() => {
+              this.setState({ lockDialog: false });
+            }}
+            key="button-1"
+          />
+        </DialogFooter>
+      }
+    >
+      <DialogContent
+        style={{
+          backgroundColor: '#F7F7F8',
+        }}
+      >
+        <Text>您还未设置加密笔记密码，请前往设置！</Text>
+      </DialogContent>
+    </Dialog>
+  )
 }
 
 const styles = StyleSheet.create({
@@ -118,5 +225,37 @@ const styles = StyleSheet.create({
     flexDirection:'row',
     alignItems: 'center',
     height:50,
-  }
+  },
+  dialogContentView: {
+    // flex: 1,
+    paddingLeft: 18,
+    paddingRight: 18,
+    // backgroundColor: '#000',
+    // opacity: 0.4,
+    // alignItems: 'center',
+    // justifyContent: 'center',
+  },
+  navigationBar: {
+    borderBottomColor: '#b5b5b5',
+    borderBottomWidth: 0.5,
+    backgroundColor: '#ffffff',
+  },
+  navigationTitle: {
+    padding: 10,
+  },
+  navigationButton: {
+    padding: 10,
+  },
+  navigationLeftButton: {
+    paddingLeft: 20,
+    paddingRight: 40,
+  },
+  navigator: {
+    flex: 1,
+    // backgroundColor: '#000000',
+  },
+  customBackgroundDialog: {
+    opacity: 0.5,
+    backgroundColor: '#000',
+  },
 });

@@ -140,6 +140,7 @@ export default class LockView extends Component {
           lock : true,
         });
         setLockType(this._cachedPassword);
+        this.props.navigation.pop();
         this.props.navigation.navigate('locknotebook');
         return;
       }
@@ -171,6 +172,7 @@ export default class LockView extends Component {
         message,
         messageColor,
       });
+      this.props.navigation.pop();
       this.props.navigation.navigate('locknotebook');
       return;
     }

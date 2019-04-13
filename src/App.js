@@ -24,7 +24,10 @@ const MainStack = createStackNavigator(
     },
     locknotebook: {
       screen: LockNotebook,
-    }
+    },
+    lockview: {
+      screen: LockView,
+    },
   },
   {
     headerMode: 'none'
@@ -39,9 +42,7 @@ const InitStack = createSwitchNavigator(
     mainstack:{
       screen: MainStack,
     },
-    lockview: {
-      screen: LockView,
-    },
+
   },
   {
     headerMode: 'none'
@@ -63,7 +64,6 @@ const AppNavigator = createStackNavigator(
   {
     init: {
       //screen: TestStack,
-      //screen: MainStack
       screen: InitStack,
     }
   },

@@ -1,5 +1,4 @@
 import  '../static/async_storage';
-import { setHeader } from '../config/header';
 
 // 主题模式
 // day & night & eyeprotect

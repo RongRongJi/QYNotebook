@@ -6,7 +6,14 @@
  */
 
 import React, { Component } from 'react';
-import { Platform, StyleSheet, Text, View } from 'react-native';
+import { 
+  Platform,
+  StyleSheet, 
+  Text, 
+  View, 
+  TouchableOpacity,
+  Image,
+} from 'react-native';
 import TopTab from './tab';
 import FloatButton from './floatbutton';
 import NotebookList from '../notebook/notebook_list';
@@ -55,6 +62,11 @@ export default class MainView extends Component {
         <View style={{ position: 'absolute', right: 20 }}>
           <Setting navigation={this.props.navigation}/>
         </View>
+        <TouchableOpacity style={{position:'absolute', right: 70}}
+          onPress={()=>this.props.navigation.navigate('lockview')}>
+          <Image style={{width:30,height:30}}
+            source={require('./images/lock.png')}/>
+        </TouchableOpacity>
       </View>
     );
 

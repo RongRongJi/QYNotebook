@@ -1,106 +1,138 @@
-import React, { Component } from 'react';
+import React, {
+  Component,
+} from 'react';
 import {
   StyleSheet,
-  Text,
+  Alert,
   View,
-  Image,
-  TouchableOpacity,
+  Text,
+  Dimensions,
 } from 'react-native';
-import SideMenu from 'react-native-side-menu';
-import Menu from './Menu';
 
-
-const styles = StyleSheet.create({
-  button: {
-    position: 'absolute',
-    top: 20,
-    padding: 10,
-  },
-  caption: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    alignItems: 'center',
-  },
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#F5FCFF',
-  },
-  welcome: {
-    fontSize: 20,
-    textAlign: 'center',
-    margin: 10,
-  },
-  instructions: {
-    textAlign: 'center',
-    color: '#333333',
-    marginBottom: 5,
-  },
-});
+import GesturePassword from '../../config/react-native-smart-gesture-password';
+import {getColorType} from '../../config/color_type';
 
 export default class ComponentTest extends Component {
-  constructor(props) {
+
+  // 构造
+  constructor (props) {
     super(props);
-
-    this.toggle = this.toggle.bind(this);
-
+    // 初始状态
     this.state = {
-      isOpen: false,
-      selectedItem: 'About',
+      isWarning: false,
+      message: 'Verify your gesture password',
+      messageColor: getColorType()['ItemBackground'],
+      password: '',
+      thumbnails: [],
     };
+    this._cachedPassword = '';
   }
 
-  toggle() {
-    this.setState({
-      isOpen: !this.state.isOpen,
-    });
+  componentDidMount () {
+    this._cachedPassword = '13457'; //get cached gesture password
   }
 
-  updateMenuState(isOpen) {
-    this.setState({ isOpen });
-  }
-
-  onMenuItemSelected = item =>
-    this.setState({
-      isOpen: false,
-      selectedItem: item,
-    });
-
-  render() {
-    const menu = <Menu onItemSelected={this.onMenuItemSelected} />;
-
+  render () {
     return (
-      <SideMenu
-        menu={menu}
-        isOpen={this.state.isOpen}
-        onChange={isOpen => this.updateMenuState(isOpen)}
-      >
-        <View style={styles.container}>
-          <Text style={styles.welcome}>
-            Welcome to React Native!
-          </Text>
-          <Text style={styles.instructions}>
-            To get started, edit index.ios.js
-          </Text>
-          <Text style={styles.instructions}>
-            Press Cmd+R to reload,{'\n'}
-            Cmd+Control+Z for dev menu
-          </Text>
-          <Text style={styles.instructions}>
-            Current selected menu item is: {this.state.selectedItem}
-          </Text>
-        </View>
-        <TouchableOpacity
-          onPress={this.toggle}
-          style={styles.button}
-        >
-          <Image
-            source={require('../main/images/logo.png')}
-            style={{ width: 32, height: 32 }}
-          />
-        </TouchableOpacity>
-      </SideMenu>
+      <GesturePassword
+        style={{paddingTop: 20 + 44,}}
+        pointBackgroundColor={'#F4F4F4'}
+        isWarning={this.state.isWarning}
+        color={getColorType()['ItemBackground']}
+        activeColor={getColorType()['ItemBackground']}
+        warningColor={'red'}
+        warningDuration={1500}
+        allowCross={true}
+        topComponent={this._renderDescription()}
+        bottomComponent={this._renderActions()}
+        onFinish={this._onFinish}
+        onReset={this._onReset}
+      />
     );
   }
+
+  _renderThumbnails () {
+    let thumbnails = [];
+    for (let i = 0; i < 9; i++) {
+      let active = ~this.state.password.indexOf(i);
+      thumbnails.push((
+        <View
+          key={'thumb-' + i}
+          style={[
+            {width: 8, height: 8, margin: 2, borderRadius: 8, },
+            active ? {backgroundColor: '#00AAEF'} : {borderWidth: 1, borderColor: '#A9A9A9'}
+          ]}
+        />
+      ));
+    }
+    return (
+      <View style={{width: 38, flexDirection: 'row', flexWrap: 'wrap'}}>
+        {thumbnails}
+      </View>
+    );
+  }
+
+  _renderDescription = () => {
+    return (
+      <View style={{height: 158, paddingBottom: 10, justifyContent: 'flex-end', alignItems: 'center',}}>
+        
+        <Text
+          style={{fontFamily: '.HelveticaNeueInterface-MediumP4', fontSize: 14, marginVertical: 6, color: this.state.messageColor}}>{this.state.message}</Text>
+      </View>
+    );
+  }
+
+  _renderActions = () => {
+    return (
+      <View
+        style={{position: 'absolute', bottom: 0, flex:1, justifyContent: 'space-between', flexDirection: 'row', width: Dimensions.get('window').width, }}>
+      </View>
+    );
+  }
+
+  _onReset = () => {
+    let isWarning = false;
+    //let password = ''
+    let message = 'Verify your gesture password';
+    let messageColor = '#A9A9A9';
+    this.setState({
+      isWarning,
+      //password,
+      message,
+      messageColor,
+    });
+  }
+
+  _onFinish = (password) => {
+    if (password === this._cachedPassword) {
+      let isWarning = false;
+      let message = 'Verify succeed';
+      let messageColor = '#00AAEF';
+      this.setState({
+        isWarning,
+        password,
+        message,
+        messageColor,
+      });
+    }
+    else {
+      let isWarning = true;
+      let message;
+      let messageColor = 'red';
+      if (password.length < 4) {
+        message = 'Need to link at least 4 points';
+      }
+      else {
+        message = 'Verify failed';
+      }
+      this.setState({
+        isWarning,
+        password,
+        message,
+        messageColor,
+      });
+    }
+    Alert.alert('password is ' + password);
+  }
+
 }

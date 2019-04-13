@@ -10,6 +10,7 @@ import React, {Component} from 'react';
 import {Platform, StyleSheet, Text, View, Image} from 'react-native';
 import { setHeader } from '../../config/header';
 import { setColorState } from '../../utils/color_util';
+import { setLockState } from '../../utils/lock_util';
 
 
 
@@ -22,9 +23,10 @@ export default class Init extends Component {
     //初始化
     try{
       //初始化颜色
-      let a = await setColorState();
+      let color = await setColorState();
       setHeader();
-      //global.colorType='night';
+      //加载锁密码
+      let pwd = await setLockState();
       //界面跳转
       setTimeout(()=>{
         this.props.navigation.navigate('main');

@@ -7,6 +7,9 @@ import MainView from './pages/main/main';
 import NotebookView from './pages/notebook/notebook_view';
 import Init from './pages/test/init';
 import NotebookPreview from './pages/notebook/notebook_preview';
+import LockView from './pages/notebook/lock';
+import LockNotebook from './pages/notebook/lock_notebook';
+
 
 const MainStack = createStackNavigator(
   {
@@ -18,6 +21,9 @@ const MainStack = createStackNavigator(
     },
     nbpreview:{
       screen: NotebookPreview,
+    },
+    locknotebook: {
+      screen: LockNotebook,
     }
   },
   {
@@ -32,7 +38,10 @@ const InitStack = createSwitchNavigator(
     },
     mainstack:{
       screen: MainStack,
-    }
+    },
+    lockview: {
+      screen: LockView,
+    },
   },
   {
     headerMode: 'none'

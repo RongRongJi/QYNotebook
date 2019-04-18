@@ -63,8 +63,8 @@ const TestStack = createStackNavigator(
 const AppNavigator = createStackNavigator(
   {
     init: {
-      //screen: TestStack,
-      screen: InitStack,
+      screen: TestStack,
+      //screen: InitStack,
     }
   },
   {

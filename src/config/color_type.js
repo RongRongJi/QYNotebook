@@ -5,6 +5,7 @@ const dayType={
   TextColor : '#FFFFFF',
   Modal : 'rgba(0,0,0,0.5)',
   ItemBackground : '#049F9A',
+  FoldColor : '#C8ECEA',
 };
 
 const nightType={
@@ -12,6 +13,7 @@ const nightType={
   TextColor : '#ffffff',
   Modal : 'rgba(38,50,56,0.5)',
   ItemBackground : '#37474f',
+  FoldColor : '#C8ECEA',
 };
 
 const eyeprotectType={
@@ -19,6 +21,7 @@ const eyeprotectType={
   TextColor : '#000000',
   Modal : 'rgba(199,237,204,0.5)',
   ItemBackground : '#ffffff',
+  FoldColor : '#C8ECEA',
 };
 
 

@@ -12,60 +12,80 @@ import {
   StyleSheet,
   Text,
   View,
-  TouchableOpacity
+  TouchableOpacity,
+  Image,
+  Dimensions,
+  ScrollView,
+  FlatList
 } from 'react-native';
 import RefreshListView, { RefreshState } from 'react-native-refresh-list-view';
 import Todolabel from './todo_label';
+import { getColorType } from '../../config/color_type';
+import { compareDate } from '../../utils/date';
+import Todo_Dao from '../../services/todo';
 
 export default class TodoList extends Component {
   constructor(props) {
     super(props);
     this.state = {
       data: this.props.data,
-      refreshState: RefreshState.Idle
+      refreshState: RefreshState.Idle,
+      today: true,
+      wait: true,
+      done: true,
+      todayTd: [],
+      waitTd: [],
+      doneTd: [],
     };
     this.refresh = this.props.refresh;
-  }
-
-  //刷新
-  async onRefresh() {
-    //开始刷新列表
-    this.setState({
-      data: [],
-      refreshState: RefreshState.HeaderRefreshing
-    });
-    //加载数据
-    //测试数据
-    let alldata = [
-      { key: '1', ifpass: true, content: 'Release v3.1', ddl: '5月4日' },
-      {
-        key: '2',
-        ifpass: false,
-        content: 'Finish React Native GraphQL Todo List App',
-        ddl: '4月10日'
+    //异步分配数据
+    let todoDao = new Todo_Dao();
+    todoDao.getTodo().then((ret)=>{
+      let allData = ret;
+      let todayTd=[],doneTd=[],waitTd=[];
+      for(var i=0;i<allData.length;i++){
+        if(allData[i].type=='everyday' && allData[i].status=='wait-to-do') {
+          todayTd.push(allData[i]);
+          this.setState({todayTd:todayTd});
+        }
+        else if(allData[i].type=='everyday') {
+          doneTd.push(allData[i]);
+          this.setState({doneTd:doneTd});
+        }
+        else if(allData[i].status=='wait-to-do' && compareDate(allData[i].date)) {
+          todayTd.push(allData[i]);
+          this.setState({todayTd:todayTd});
+        }
+        else if(allData[i].status=='wait-to-do') {
+          waitTd.push(allData[i]);
+          this.setState({waitTd:waitTd});
+        }
+        else {
+          doneTd.push(allData[i]);
+          this.setState({doneTd:doneTd});
+        }
       }
-    ];
-    this.setState({
-      data: alldata
-    });
-    //结束刷新
-    this.setState({
-      refreshState: RefreshState.Idle
     });
   }
 
-  renderList() {
+  _openFold(flag){
+    if(flag==1){
+      this.setState({today: !this.state.today});
+    }
+    else if(flag==2){
+      this.setState({wait: !this.state.wait});
+    }
+    else if(flag==3){
+      this.setState({done: !this.state.done});
+    }
+  }
+
+  renderList(listdata) {
     return (
-      <View>
-        <RefreshListView
-          data={this.state.data}
-          renderItem={this.renderItem.bind(this)}
-          refreshState={this.state.refreshState}
-          onHeaderRefresh={this.onRefresh.bind(this)}
-          footerFailureText="数据加载失败，下拉刷新"
-          footerEmptyDataText="没有更多待办啦~"
-        />
-      </View>
+      <FlatList
+        data={listdata}
+        renderItem={this.renderItem.bind(this)}
+      />
     );
   }
 
@@ -81,23 +101,67 @@ export default class TodoList extends Component {
     );
   }
 
+  renderFold = () =>(
+    <View>
+      <View style={styles.foldView}>
+        <Text style={{position:'absolute',left:20}}>今天</Text>
+        <TouchableOpacity style={{position:'absolute',right:20}}
+          onPress={()=>this._openFold(1)}>
+          <Image style={{width:20,height:20}} 
+            source={this.state.today?require('./images/angle_down.png'):
+              require('./images/angle_right.png')}/>
+        </TouchableOpacity>
+      </View>
+      {this.state.today?this.renderList(this.state.todayTd):null}
+      <View style={styles.foldView}>
+        <Text style={{position:'absolute',left:20}}>待办</Text>
+        <TouchableOpacity style={{position:'absolute',right:20}}
+          onPress={()=>this._openFold(2)}>
+          <Image style={{width:20,height:20}} 
+            source={this.state.wait?require('./images/angle_down.png'):
+              require('./images/angle_right.png')}/>
+        </TouchableOpacity>
+      </View>
+      {this.state.wait?this.renderList(this.state.waitTd):null}
+      <View style={styles.foldView}>
+        <Text style={{position:'absolute',left:20}}>已完成</Text>
+        <TouchableOpacity style={{position:'absolute',right:20}}
+          onPress={()=>this._openFold(3)}>
+          <Image style={{width:20,height:20}} 
+            source={this.state.done?require('./images/angle_down.png'):
+              require('./images/angle_right.png')}/>
+        </TouchableOpacity>
+      </View>
+      {this.state.done?this.renderList(this.state.doneTd):null}
+    </View>
+  )
+
   render() {
-    return <View style={styles.container}>{this.renderList()}</View>;
+    return(
+      <ScrollView style={styles.container}>
+        <this.renderFold/>
+      </ScrollView>
+    );
   }
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center'
   },
   listcontainer: {
     flex: 1,
-    marginTop: Platform.OS == 'ios' ? 20 : 0
   },
   itemcontainer: {
-    marginTop: 10,
     backgroundColor: 'white'
+  },
+  foldView:{
+    flexDirection:'row',
+    width:Dimensions.get('window').width,
+    height:30,
+    backgroundColor: getColorType()['FoldColor'],
+    alignItems: 'center',
+    borderBottomWidth: 1,
+    borderBottomColor: '#bdbdbd'
   }
 });

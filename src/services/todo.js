@@ -49,25 +49,32 @@ export default class Todo_Dao {
    * 获取待办列表 
    * 将数据返回给页面
    */
-  async getTodo(){
+  getTodo(){
     //从Storage中获取所有uuid
-    let uuidArray = global.storage.getIdsForKey('todolist');
-    let todomsg = [];
-    for(var i=uuidArray.length-1;i>=0;i--){
-      RNFS.readFile(TodoListDirectoryPath+'/'+uuidArray[2]+'.json','utf8')
-        .then((ret) => {
-          console.log('FILE READ!');
-          todomsg.push(JSON.parse(ret));
-          //alert(JSON.parse(ret));
-        })
-        .catch((err) => {
-          alert(err.message);
-          console.log(err.message);
-        });
-    }
-    setTimeout(()=>{
-      return todomsg;
-    },100);
+    var p = new Promise(function(resolve, reject){
+      let uuidArray = global.storage.getIdsForKey('todolist');
+      let todomsg = [];
+      let check = 0;
+      for(var i=uuidArray.length-1;i>=0;i--){
+        RNFS.readFile(TodoListDirectoryPath+'/'+uuidArray[i]+'.json','utf8')
+          .then((ret) => {
+            console.log('FILE READ!');
+            todomsg.push(JSON.parse(ret));
+            check++;
+            if(check==uuidArray.length){
+              console.log(todomsg);
+              resolve(todomsg);
+            }
+          })
+          .catch((err) => {
+            alert(err.message);
+            console.log(err.message);
+          });
+      }
+    });
+    //console.log(p);
+    return p;
+    
   }
 
 
@@ -131,4 +138,10 @@ export default class Todo_Dao {
    */
 
 
+
+  deleteStorage(){
+    global.storage.clearMapForKey('todolist');
+    let uuidArray = global.storage.getIdsForKey('todolist');
+    alert(uuidArray.length);
+  }
 }

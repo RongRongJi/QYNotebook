@@ -15,6 +15,7 @@ import {
   Image,
   TouchableOpacity
 } from 'react-native';
+import { getDateString } from '../../utils/date';
 
 export default class Todolabel extends Component {
   constructor(props) {
@@ -22,7 +23,7 @@ export default class Todolabel extends Component {
     this.item = this.props.item;
     this.state = {
       Height: 60,
-      ifPass: this.props.item.ifpass
+      ifPass: this.props.item.status=='wait-to-do'?false:true,
     };
   }
 
@@ -38,9 +39,20 @@ export default class Todolabel extends Component {
     if (h > 60) this.setState({ Height: h });
   }
 
+
   render() {
+    /**
+     * {
+     *   "uuid": 唯一uuid标识,
+     *   "type": "everyday" 每日 / "only-once"一次性,
+     *   "status": "done" 已完成 / "wait-to-do" 未完成,
+     *   "content": 待办列表内容,
+     *   "date": "2019-4-18" 一次性待办列表存在
+     * }
+     */
     let content = this.item.content;
-    let ddl = this.item.ddl;
+    let type = this.item.type;
+    let date = type=='everyday'?'今天':this.item.date;
     return (
       <View
         ref={r => (this.label = r)}
@@ -63,7 +75,12 @@ export default class Todolabel extends Component {
           <Text style={this.state.ifPass ? styles.donetext : styles.text}>
             {content}
           </Text>
-          <Text>截止时间: {ddl}</Text>
+          <View style={{flexDirection:'row',alignItems:'center'}}>
+            <Text>{getDateString(date)}</Text>
+            {type=='everyday'?
+              <Image style={{marginLeft:10,width:15,height:15}} source={require('./images/everyday.png')}/>
+              :null}
+          </View>
         </View>
       </View>
     );
@@ -76,7 +93,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-    borderBottomWidth: 2,
+    borderBottomWidth: 1,
     borderBottomColor: '#bdbdbd'
   },
   text: {

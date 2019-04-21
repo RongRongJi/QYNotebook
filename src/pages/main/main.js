@@ -131,8 +131,11 @@ export default class MainView extends Component {
           type: 'once',
         }
       ];
-      return <TodoList data={alldata} navigation={this.props.navigation} />;
+      return <TodoList data={alldata} navigation={this.props.navigation} 
+        ref={r => (this.todolist = r)}
+      />;
     };
+
 
     render() {
       return (
@@ -144,6 +147,7 @@ export default class MainView extends Component {
           <FloatButton
             ref={r => (this.floatbutton = r)}
             navigation={this.props.navigation}
+            openInput={()=>this.todolist._OpenInput()}
           />
         </MenuProvider>
       );

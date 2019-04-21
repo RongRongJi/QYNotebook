@@ -23,6 +23,7 @@ import Todolabel from './todo_label';
 import { getColorType } from '../../config/color_type';
 import { compareDate } from '../../utils/date';
 import Todo_Dao from '../../services/todo';
+import TodoInput from './todo_input';
 
 export default class TodoList extends Component {
   constructor(props) {
@@ -136,10 +137,15 @@ export default class TodoList extends Component {
     </View>
   )
 
+  _OpenInput(){
+    this.todoinput.changeState();
+  }
+
   render() {
     return(
       <ScrollView style={styles.container}>
         <this.renderFold/>
+        <TodoInput ref={r => (this.todoinput = r)}/>
       </ScrollView>
     );
   }

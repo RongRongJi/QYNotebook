@@ -34,7 +34,7 @@ const actions1 = [
   {
     text: '新建待办',
     icon: require('./images/notebook.png'),
-    name: 'Notebook_button',
+    name: 'Todo_button',
     color: '#fff',
     position: 1
   }
@@ -66,6 +66,10 @@ export default class FloatButton extends Component {
           if (this.state.type == 'notebook') {
             if (name == 'Notebook_button') {
               this.props.navigation.navigate('notebook');
+            }
+          }else{
+            if (name == 'Todo_button'){
+              this.props.openInput();
             }
           }
         }}

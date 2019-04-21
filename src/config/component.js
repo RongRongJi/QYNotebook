@@ -11,4 +11,6 @@ module.exports={
   storage : 'react-native-storage',//数据持久化
   password : 'react-native-smart-gesture-password',//手势密码
   dialog : 'react-native-popup-dialog',//弹窗
+  toast : 'react-native-root-toast',//Toast
+  datepick : 'react-native-modal-datetime-picker',//日期选择
 };

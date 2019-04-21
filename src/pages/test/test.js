@@ -22,7 +22,10 @@ export default class ComponentTest extends Component {
   _setText(){
     let todoDao = new Todo_Dao();
     let array;
-    todoDao.finishTodo('b979588a-8d6c-49ba-86f6-2bba5768fc56','done');
+    todoDao.getTodo().then((ret)=>{
+      array=ret;
+      this.setState({text:array[0].content});
+    });
   }
 
   render() {

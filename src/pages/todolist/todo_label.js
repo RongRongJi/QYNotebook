@@ -16,6 +16,9 @@ import {
   TouchableOpacity
 } from 'react-native';
 import { getDateString } from '../../utils/date';
+import Todo_Dao from '../../services/todo';
+
+let todoDao = new Todo_Dao();
 
 export default class Todolabel extends Component {
   constructor(props) {
@@ -29,8 +32,14 @@ export default class Todolabel extends Component {
 
   //完成待办
   onPressTodo() {
-    if (this.state.ifPass) this.setState({ ifPass: false });
-    else this.setState({ ifPass: true });
+    if (this.state.ifPass) {
+      todoDao.finishTodo(this.item,'wait-to-do');
+      this.setState({ ifPass: false });
+    }
+    else {
+      todoDao.finishTodo(this.item,'done');
+      this.setState({ ifPass: true });
+    }
   }
 
   //高度适配
@@ -44,7 +53,7 @@ export default class Todolabel extends Component {
     /**
      * {
      *   "uuid": 唯一uuid标识,
-     *   "type": "everyday" 每日 / "only-once"一次性,
+     *   "type": "everyday" 每日 / "once"一次性,
      *   "status": "done" 已完成 / "wait-to-do" 未完成,
      *   "content": 待办列表内容,
      *   "date": "2019-4-18" 一次性待办列表存在

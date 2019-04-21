@@ -1,5 +1,6 @@
 import getUUID from './uuid';
 import RNFS from 'react-native-fs';
+import { ToastShort } from '../utils/toast_util';
 
 /*
  * 待办列表的增删改查操作
@@ -8,7 +9,7 @@ import RNFS from 'react-native-fs';
  * 规定待办列表文件内容格式
  * {
  *   "uuid": 唯一uuid标识,
- *   "type": "everyday" 每日 / "only-once"一次性,
+ *   "type": "everyday" 每日 / "once"一次性,
  *   "status": "done" 已完成 / "wait-to-do" 未完成,
  *   "content": 待办列表内容,
  *   "date": "2019-4-18" 一次性待办列表存在
@@ -110,8 +111,9 @@ export default class Todo_Dao {
     let path = TodoListDirectoryPath+'/'+uuidStr+'.json';
     RNFS.writeFile(path,tdJson,'utf8')
       .then((success) => {
-        alert(path);
+        ToastShort('待办添加成功！');
         console.log('FILE WRITTEN!');
+        console.log(tdJson);
       })
       .catch((err) => {
         alert(err.message);
@@ -132,10 +134,38 @@ export default class Todo_Dao {
   /**
    * 完成待办事项
    * 修改json
-   * 单日完成的直接删除
-   * 每日完成的修改状态
    * 并云同步
    */
+  finishTodo(item,statusStr){
+    let path = TodoListDirectoryPath+'/'+item.uuid+'.json';
+    //修改Storage
+    item.status = statusStr;
+    let json = JSON.stringify(item);
+    global.storage.save({
+      key:'todolist',
+      id:item.uuid,
+      data:{
+        uuid:item.uuid,
+        type:item.type,
+        status:statusStr,
+        content:item.content,
+        date:item.date,
+      },
+    });
+    //同步至文件
+    console.log('path:'+path+' json:'+json);
+    RNFS.writeFile(path,json,'utf8')
+      .then((success) => {
+        console.log('FILE WRITTEN!');
+        console.log(json);
+      })
+      .catch((err) => {
+        alert(err.message);
+        console.log(err.message);
+      });
+    //云同步
+  }
+
 
 
 

@@ -52,3 +52,19 @@ export function getDate(d){
   date = date+month+'-'+array[2];
   return date;
 }
+
+//获得当天日期
+export function getToday(){
+  let date = new Date();
+  let year = date.getFullYear();
+  let month = date.getMonth()+1;
+  let day = date.getDate();
+  return year+'-'+month+'-'+day;
+}
+export function getYesterday(){
+  let date = new Date();
+  let year = date.getFullYear();
+  let month = date.getMonth()+1;
+  let day = date.getDate()-1;
+  return year+'-'+month+'-'+day;
+}

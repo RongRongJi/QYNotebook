@@ -1,6 +1,7 @@
 import getUUID from './uuid';
 import RNFS from 'react-native-fs';
 import { ToastShort } from '../utils/toast_util';
+import { getToday, getYesterday } from '../utils/date';
 
 /*
  * 待办列表的增删改查操作
@@ -106,7 +107,10 @@ export default class Todo_Dao {
     tdObj.type=typeStr;
     tdObj.status='wait-to-do';
     tdObj.content=contentStr;
-    tdObj.date=dateStr;
+    if(typeStr == 'everyday')
+      tdObj.date = getToday();
+    else
+      tdObj.date=dateStr;
     let tdJson = JSON.stringify(tdObj);
     let path = TodoListDirectoryPath+'/'+uuidStr+'.json';
     RNFS.writeFile(path,tdJson,'utf8')
@@ -140,6 +144,10 @@ export default class Todo_Dao {
     let path = TodoListDirectoryPath+'/'+item.uuid+'.json';
     //修改Storage
     item.status = statusStr;
+    if(item.type=='everyday'){
+      if(statusStr=='done') item.date=getToday();
+      else item.date=getYesterday();
+    }
     let json = JSON.stringify(item);
     global.storage.save({
       key:'todolist',

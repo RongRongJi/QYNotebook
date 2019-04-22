@@ -16,12 +16,13 @@ import {
   Image,
   Dimensions,
   ScrollView,
-  FlatList
+  FlatList,
+  TouchableNativeFeedback
 } from 'react-native';
 import RefreshListView, { RefreshState } from 'react-native-refresh-list-view';
 import Todolabel from './todo_label';
 import { getColorType } from '../../config/color_type';
-import { compareDate } from '../../utils/date';
+import { compareDate, getToday } from '../../utils/date';
 import Todo_Dao from '../../services/todo';
 import TodoInput from './todo_input';
 
@@ -45,6 +46,9 @@ export default class TodoList extends Component {
       let allData = ret;
       let todayTd=[],doneTd=[],waitTd=[];
       for(var i=0;i<allData.length;i++){
+        if(allData[i].type=='everyday' && allData[i].date!=getToday()){
+          allData[i].status='wait-to-do';
+        }
         if(allData[i].type=='everyday' && allData[i].status=='wait-to-do') {
           todayTd.push(allData[i]);
           this.setState({todayTd:todayTd});
@@ -104,35 +108,32 @@ export default class TodoList extends Component {
 
   renderFold = () =>(
     <View>
-      <View style={styles.foldView}>
-        <Text style={{position:'absolute',left:20}}>今天</Text>
-        <TouchableOpacity style={{position:'absolute',right:20}}
-          onPress={()=>this._openFold(1)}>
-          <Image style={{width:20,height:20}} 
+      <TouchableNativeFeedback onPress={()=>this._openFold(1)}>
+        <View style={styles.foldView}>
+          <Text style={{position:'absolute',left:20}}>今天</Text>
+          <Image style={{width:20,height:20,position:'absolute',right:20}} 
             source={this.state.today?require('./images/angle_down.png'):
               require('./images/angle_right.png')}/>
-        </TouchableOpacity>
-      </View>
+        </View>
+      </TouchableNativeFeedback>
       {this.state.today?this.renderList(this.state.todayTd):null}
-      <View style={styles.foldView}>
-        <Text style={{position:'absolute',left:20}}>待办</Text>
-        <TouchableOpacity style={{position:'absolute',right:20}}
-          onPress={()=>this._openFold(2)}>
-          <Image style={{width:20,height:20}} 
+      <TouchableNativeFeedback onPress={()=>this._openFold(2)}>
+        <View style={styles.foldView}>
+          <Text style={{position:'absolute',left:20}}>待办</Text>
+          <Image style={{width:20,height:20,position:'absolute',right:20}} 
             source={this.state.wait?require('./images/angle_down.png'):
               require('./images/angle_right.png')}/>
-        </TouchableOpacity>
-      </View>
+        </View>
+      </TouchableNativeFeedback>
       {this.state.wait?this.renderList(this.state.waitTd):null}
-      <View style={styles.foldView}>
-        <Text style={{position:'absolute',left:20}}>已完成</Text>
-        <TouchableOpacity style={{position:'absolute',right:20}}
-          onPress={()=>this._openFold(3)}>
-          <Image style={{width:20,height:20}} 
+      <TouchableNativeFeedback onPress={()=>this._openFold(3)}>
+        <View style={styles.foldView}>
+          <Text style={{position:'absolute',left:20}}>已完成</Text> 
+          <Image style={{width:20,height:20,position:'absolute',right:20}} 
             source={this.state.done?require('./images/angle_down.png'):
               require('./images/angle_right.png')}/>
-        </TouchableOpacity>
-      </View>
+        </View>
+      </TouchableNativeFeedback>
       {this.state.done?this.renderList(this.state.doneTd):null}
     </View>
   )
@@ -156,18 +157,23 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   listcontainer: {
-    flex: 1,
+    flex:1
   },
   itemcontainer: {
-    backgroundColor: 'white'
+    backgroundColor: 'white',
+    width:Dimensions.get('window').width-30,
+    marginLeft:15,
   },
   foldView:{
     flexDirection:'row',
-    width:Dimensions.get('window').width,
+    width:Dimensions.get('window').width-26,
     height:30,
     backgroundColor: getColorType()['FoldColor'],
     alignItems: 'center',
     borderBottomWidth: 1,
-    borderBottomColor: '#bdbdbd'
+    borderBottomColor: '#bdbdbd',
+    marginTop:10,
+    marginLeft:13,
+    borderRadius: 4,
   }
 });

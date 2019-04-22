@@ -165,12 +165,12 @@ export default class Todolabel extends Component {
 
 const styles = StyleSheet.create({
   container: {
-    width: Dimensions.get('window').width,
+    width: Dimensions.get('window').width-30,
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
     borderBottomWidth: 1,
-    borderBottomColor: '#bdbdbd'
+    borderBottomColor: '#bdbdbd',
   },
   text: {
     color: 'black',

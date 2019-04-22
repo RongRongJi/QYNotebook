@@ -166,6 +166,31 @@ export default class Todo_Dao {
     //云同步
   }
 
+  /**
+   * 删除待办事项
+   * 删除文件
+   * 删除Storage
+   * 并云同步
+   */
+  deleteTodo(uuid){
+    let path = TodoListDirectoryPath+'/'+uuid+'.json';
+    //删除Storage
+    storage.remove({
+      key:'todolist',
+      id:uuid
+    });
+    //同步至文件
+    RNFS.unlink(path)
+      .then((ret)=>{
+        console.log('FILE DELETION');
+        ToastShort('待办事项已删除');
+      })
+      .catch((err)=>{
+        alert(err.message);
+        console.log(err.message);
+      });
+    //云同步
+  }
 
 
 

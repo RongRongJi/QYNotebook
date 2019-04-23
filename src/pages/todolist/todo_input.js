@@ -23,6 +23,7 @@ export default class TodoInput extends Component {
 
   constructor(props) {
     super(props);
+    this.fatherComponent = this.props.fatherComponent;
     // 记录点击
     this.state = {
       visible: false,
@@ -41,9 +42,14 @@ export default class TodoInput extends Component {
     }else if(this.state.type==''){
       return;
     }else{
-      let todoDao = new Todo_Dao();
-      todoDao.addTodo(this.state.type,this.state.text,this.state.date);
+      global.todoDao.addTodo(this.state.type,this.state.text,this.state.date)
+        .then((ret)=>this.props.public(ret));
       this.changeState();
+      this.setState({
+        text:'',
+        type:'',
+        date:'',
+      });
     }
   }
 

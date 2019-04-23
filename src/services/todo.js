@@ -26,6 +26,11 @@ export default class Todo_Dao {
 
   //构造函数
   constructor(props){
+    //类变量初始化
+    this.todayTd=[];
+    this.doneTd=[];
+    this.waitTd=[];
+    this.init=false;
     /**
      * 是否存在todolist文件夹
      * 如果不存在即创建
@@ -88,43 +93,54 @@ export default class Todo_Dao {
    * 并云同步
    */
   addTodo(typeStr,contentStr,dateStr){
-    let uuidStr = getUUID();
-    //存储入Storage
-    global.storage.save({
-      key:'todolist',
-      id:uuidStr,
-      data:{
-        uuid:uuidStr,
-        type:typeStr,
-        status:'wait-to-do',
-        content:contentStr,
-        date:dateStr,
-      },
-    });
-    //存入本地文件
-    let tdObj = {};
-    tdObj.uuid=uuidStr;
-    tdObj.type=typeStr;
-    tdObj.status='wait-to-do';
-    tdObj.content=contentStr;
-    if(typeStr == 'everyday')
-      tdObj.date = getToday();
-    else
-      tdObj.date=dateStr;
-    let tdJson = JSON.stringify(tdObj);
-    let path = TodoListDirectoryPath+'/'+uuidStr+'.json';
-    RNFS.writeFile(path,tdJson,'utf8')
-      .then((success) => {
-        ToastShort('待办添加成功！');
-        console.log('FILE WRITTEN!');
-        console.log(tdJson);
-      })
-      .catch((err) => {
-        alert(err.message);
-        console.log(err.message);
+    var p = new Promise(function(resolve,reject){
+      let uuidStr = getUUID();
+      //存储入Storage
+      global.storage.save({
+        key:'todolist',
+        id:uuidStr,
+        data:{
+          uuid:uuidStr,
+          type:typeStr,
+          status:'wait-to-do',
+          content:contentStr,
+          date:dateStr,
+        },
       });
-    //云同步
-
+      //存入本地文件
+      let tdObj = {};
+      tdObj.uuid=uuidStr;
+      tdObj.type=typeStr;
+      tdObj.status='wait-to-do';
+      tdObj.content=contentStr;
+      if(typeStr == 'everyday')
+        tdObj.date = getToday();
+      else
+        tdObj.date=dateStr;
+      let tdJson = JSON.stringify(tdObj);
+      let path = TodoListDirectoryPath+'/'+uuidStr+'.json';
+      RNFS.writeFile(path,tdJson,'utf8')
+        .then((success) => {
+          ToastShort('待办添加成功！');
+          console.log('FILE WRITTEN!');
+          console.log(tdJson);
+          if(tdObj.date==getToday()){
+            global.todoDao.todayTd.unshift(tdObj);
+            resolve(1);
+          }
+          else{
+            global.todoDao.waitTd.unshift(tdObj);
+            resolve(2);
+          }
+        })
+        .catch((err) => {
+          alert(err.message);
+          console.log(err.message);
+        });
+      //云同步
+  
+    });
+    return p;
   }
 
   /**
@@ -181,26 +197,53 @@ export default class Todo_Dao {
    * 并云同步
    */
   deleteTodo(uuid){
-    let path = TodoListDirectoryPath+'/'+uuid+'.json';
-    //删除Storage
-    storage.remove({
-      key:'todolist',
-      id:uuid
-    });
-    //同步至文件
-    RNFS.unlink(path)
-      .then((ret)=>{
-        console.log('FILE DELETION');
-        ToastShort('待办事项已删除');
-      })
-      .catch((err)=>{
-        alert(err.message);
-        console.log(err.message);
+    var p = new Promise(function(resolve,reject){
+      let path = TodoListDirectoryPath+'/'+uuid+'.json';
+      //删除Storage
+      storage.remove({
+        key:'todolist',
+        id:uuid
       });
-    //云同步
+      //同步至文件
+      RNFS.unlink(path)
+        .then((ret)=>{
+          console.log('FILE DELETION');
+          ToastShort('待办事项已删除');
+          let num = global.todoDao.deleteData(uuid);
+          resolve(num);
+        })
+        .catch((err)=>{
+          alert(err.message);
+          console.log(err.message);
+        });
+      //云同步
+    });
+    return p;
   }
 
 
+  //刷新列表
+  deleteData(uuid){
+    for(i in this.todayTd){
+      if(this.todayTd[i].uuid==uuid){
+        this.todayTd.splice(i,1);
+        return 1;
+      }
+    }
+    for(i in this.waitTd){
+      if(this.waitTd[i].uuid==uuid){
+        this.waitTd.splice(i,1);
+        return 2;
+      }
+    }
+    for(i in this.doneTd){
+      if(this.doneTd[i].uuid==uuid){
+        this.doneTd.splice(i,1);
+        return 3;
+      }
+    }
+    return 0;
+  }
 
   deleteStorage(){
     global.storage.clearMapForKey('todolist');

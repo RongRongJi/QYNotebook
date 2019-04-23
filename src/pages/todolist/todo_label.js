@@ -31,6 +31,7 @@ export default class Todolabel extends Component {
   constructor(props) {
     super(props);
     this.item = this.props.item;
+    this.fatherComponent = this.props.fatherComponent;
     this.state = {
       Height: 60,
       ifPass: this.props.item.status=='wait-to-do'?false:true,
@@ -41,11 +42,11 @@ export default class Todolabel extends Component {
   //完成待办
   onPressTodo() {
     if (this.state.ifPass) {
-      todoDao.finishTodo(this.item,'wait-to-do');
+      global.todoDao.finishTodo(this.item,'wait-to-do');
       this.setState({ ifPass: false });
     }
     else {
-      todoDao.finishTodo(this.item,'done');
+      global.todoDao.finishTodo(this.item,'done');
       this.setState({ ifPass: true });
     }
   }
@@ -141,7 +142,9 @@ export default class Todolabel extends Component {
             bordered
             onPress={() => {
               this.setState({ deleteDialog: false });
-              todoDao.deleteTodo(this.item.uuid);
+              global.todoDao.deleteTodo(this.item.uuid).then((ret)=>{
+                this.props.delete(ret);
+              });
             }}
             key="button-2"
           />
@@ -165,7 +168,7 @@ export default class Todolabel extends Component {
 
 const styles = StyleSheet.create({
   container: {
-    width: Dimensions.get('window').width-30,
+    width: Dimensions.get('window').width,
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',

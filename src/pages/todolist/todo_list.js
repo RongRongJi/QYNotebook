@@ -25,6 +25,7 @@ import { getColorType } from '../../config/color_type';
 import { compareDate, getToday } from '../../utils/date';
 import Todo_Dao from '../../services/todo';
 import TodoInput from './todo_input';
+import TodoDataManager from '../../services/todo_data_manager';
 
 export default class TodoList extends Component {
   constructor(props) {
@@ -41,36 +42,18 @@ export default class TodoList extends Component {
     };
     this.refresh = this.props.refresh;
     //异步分配数据
-    let todoDao = new Todo_Dao();
-    todoDao.getTodo().then((ret)=>{
-      let allData = ret;
-      let todayTd=[],doneTd=[],waitTd=[];
-      for(var i=0;i<allData.length;i++){
-        if(allData[i].type=='everyday' && allData[i].date!=getToday()){
-          allData[i].status='wait-to-do';
-        }
-        if(allData[i].type=='everyday' && allData[i].status=='wait-to-do') {
-          todayTd.push(allData[i]);
-          this.setState({todayTd:todayTd});
-        }
-        else if(allData[i].type=='everyday') {
-          doneTd.push(allData[i]);
-          this.setState({doneTd:doneTd});
-        }
-        else if(allData[i].status=='wait-to-do' && compareDate(allData[i].date)) {
-          todayTd.push(allData[i]);
-          this.setState({todayTd:todayTd});
-        }
-        else if(allData[i].status=='wait-to-do') {
-          waitTd.push(allData[i]);
-          this.setState({waitTd:waitTd});
-        }
-        else {
-          doneTd.push(allData[i]);
-          this.setState({doneTd:doneTd});
-        }
-      }
-    });
+    if(!global.todoDao){
+      let tdm = new TodoDataManager();
+      tdm.getInitData().then((ret)=>{
+        this.setState({todayTd:global.todoDao.todayTd});
+        this.setState({doneTd:global.todoDao.doneTd});
+        this.setState({waitTd:global.todoDao.waitTd});
+      });
+    }else{
+      this.state.todayTd=global.todoDao.todayTd;
+      this.state.doneTd=global.todoDao.doneTd;
+      this.state.waitTd=global.todoDao.waitTd;
+    }
   }
 
   _openFold(flag){
@@ -90,6 +73,7 @@ export default class TodoList extends Component {
       <FlatList
         data={listdata}
         renderItem={this.renderItem.bind(this)}
+        extraData={this.state}
       />
     );
   }
@@ -98,9 +82,10 @@ export default class TodoList extends Component {
     return (
       <View style={styles.itemcontainer}>
         <Todolabel
-          key={item.key}
+          key={item.uuid}
           item={item}
           navigation={this.props.navigation}
+          delete={this.delete.bind(this)}
         />
       </View>
     );
@@ -142,11 +127,28 @@ export default class TodoList extends Component {
     this.todoinput.changeState();
   }
 
+  public(ret){
+    if(ret==1)
+      this.setState({todayTd:global.todoDao.todayTd});
+    else if(ret==2)
+      this.setState({waitTd:global.todoDao.waitTd});
+  }
+
+  delete(ret){
+    if(ret==1)
+      this.setState({todayTd:global.todoDao.todayTd});
+    else if(ret==2)
+      this.setState({waitTd:global.todoDao.waitTd});
+    else if(ret==3)
+      this.setState({doneTd:global.todoDao.doneTd});
+  }
+
   render() {
     return(
       <ScrollView style={styles.container}>
         <this.renderFold/>
-        <TodoInput ref={r => (this.todoinput = r)}/>
+        <TodoInput ref={r => (this.todoinput = r)}
+          public={this.public.bind(this)}/>
       </ScrollView>
     );
   }
@@ -161,19 +163,19 @@ const styles = StyleSheet.create({
   },
   itemcontainer: {
     backgroundColor: 'white',
-    width:Dimensions.get('window').width-30,
-    marginLeft:15,
+    width:Dimensions.get('window').width,
+    //marginLeft:15,
   },
   foldView:{
     flexDirection:'row',
-    width:Dimensions.get('window').width-26,
+    width:Dimensions.get('window').width,
     height:30,
     backgroundColor: getColorType()['FoldColor'],
     alignItems: 'center',
     borderBottomWidth: 1,
     borderBottomColor: '#bdbdbd',
     marginTop:10,
-    marginLeft:13,
+    //marginLeft:13,
     borderRadius: 4,
   }
 });

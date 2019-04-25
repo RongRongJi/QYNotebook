@@ -94,7 +94,7 @@ export default class TodoList extends Component {
   renderFold = () =>(
     <View>
       <TouchableNativeFeedback onPress={()=>this._openFold(1)}>
-        <View style={styles.foldView}>
+        <View style={[styles.foldView,{backgroundColor: getColorType()['FoldColor']}]}>
           <Text style={{position:'absolute',left:20}}>今天</Text>
           <Image style={{width:20,height:20,position:'absolute',right:20}} 
             source={this.state.today?require('./images/angle_down.png'):
@@ -103,7 +103,7 @@ export default class TodoList extends Component {
       </TouchableNativeFeedback>
       {this.state.today?this.renderList(this.state.todayTd):null}
       <TouchableNativeFeedback onPress={()=>this._openFold(2)}>
-        <View style={styles.foldView}>
+        <View style={[styles.foldView,{backgroundColor: getColorType()['FoldColor']}]}>
           <Text style={{position:'absolute',left:20}}>待办</Text>
           <Image style={{width:20,height:20,position:'absolute',right:20}} 
             source={this.state.wait?require('./images/angle_down.png'):
@@ -112,7 +112,7 @@ export default class TodoList extends Component {
       </TouchableNativeFeedback>
       {this.state.wait?this.renderList(this.state.waitTd):null}
       <TouchableNativeFeedback onPress={()=>this._openFold(3)}>
-        <View style={styles.foldView}>
+        <View style={[styles.foldView,{backgroundColor: getColorType()['FoldColor']}]}>
           <Text style={{position:'absolute',left:20}}>已完成</Text> 
           <Image style={{width:20,height:20,position:'absolute',right:20}} 
             source={this.state.done?require('./images/angle_down.png'):
@@ -170,12 +170,7 @@ const styles = StyleSheet.create({
     flexDirection:'row',
     width:Dimensions.get('window').width,
     height:30,
-    backgroundColor: getColorType()['FoldColor'],
     alignItems: 'center',
-    borderBottomWidth: 1,
-    borderBottomColor: '#bdbdbd',
-    marginTop:10,
     //marginLeft:13,
-    borderRadius: 4,
   }
 });

@@ -23,7 +23,7 @@ export function setLockState(){
       //alert('err');
       break;
     case 'ExpiredError':
-      console.log('ExpiredError');
+      console.log('ExpiredErrorLock');
       break;
     }
   });

@@ -40,7 +40,7 @@ export default class MainView extends Component {
           styles.row,
           { backgroundColor: getColorType()['Background'] ,
             borderBottomWidth: 1,
-            borderBottomColor: '#dddddd',
+            borderBottomColor: getColorType()['TabShadow'],
           }
         ]}
       >
@@ -68,7 +68,7 @@ export default class MainView extends Component {
         <TouchableOpacity style={{position:'absolute', right: 70}}
           onPress={()=>this.props.navigation.navigate('lockview')}>
           <Image style={{width:30,height:30}}
-            source={require('./images/lock.png')}/>
+            source={global.colorType=='day'?require('./images/lock_day.png'):require('./images/lock_night.png')}/>
         </TouchableOpacity>
       </View>
     );

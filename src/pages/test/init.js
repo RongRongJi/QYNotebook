@@ -23,8 +23,9 @@ export default class Init extends Component {
     //初始化
     try{
       //初始化颜色
-      let color = await setColorState();
-      setHeader();
+      let p =setColorState().then((ret)=>{
+        setHeader();
+      });
       //加载锁密码
       let pwd = await setLockState();
       //界面跳转

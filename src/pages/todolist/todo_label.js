@@ -24,6 +24,7 @@ import Dialog, {
 } from 'react-native-popup-dialog';
 import { getDateString } from '../../utils/date';
 import Todo_Dao from '../../services/todo';
+import { getColorType } from '../../config/color_type';
 
 let todoDao = new Todo_Dao();
 
@@ -75,7 +76,11 @@ export default class Todolabel extends Component {
       <TouchableNativeFeedback onLongPress={()=>this.setState({deleteDialog:true})}>
         <View
           ref={r => (this.label = r)}
-          style={[styles.container, { height: this.state.Height }]}
+          style={[styles.container, 
+            { height: this.state.Height ,
+              borderBottomColor: getColorType()['LineColor'],
+              backgroundColor: getColorType()['Background'],
+            }]}
         >
           <TouchableOpacity
             style={{ position: 'absolute', left: 20 }}
@@ -90,12 +95,12 @@ export default class Todolabel extends Component {
               }
             />
           </TouchableOpacity>
-          <View style={styles.textview} onLayout={this.changeView.bind(this)}>
-            <Text style={this.state.ifPass ? styles.donetext : styles.text}>
+          <View style={[styles.textview,{color:getColorType()['TitleColor']}]} onLayout={this.changeView.bind(this)}>
+            <Text style={[this.state.ifPass ? styles.donetext : styles.text, {color:getColorType()['TextColor']}]}>
               {content}
             </Text>
             <View style={{flexDirection:'row',alignItems:'center'}}>
-              <Text>{getDateString(date)}</Text>
+              <Text style={{color:getColorType()['TextColor']}}>{getDateString(date)}</Text>
               {type=='everyday'?
                 <Image style={{marginLeft:10,width:15,height:15}} source={require('./images/everyday.png')}/>
                 :null}
@@ -173,10 +178,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     borderBottomWidth: 1,
-    borderBottomColor: '#bdbdbd',
   },
   text: {
-    color: 'black',
     width: Dimensions.get('window').width - 80
   },
   donetext: {
@@ -184,11 +187,11 @@ const styles = StyleSheet.create({
     width: Dimensions.get('window').width - 80
   },
   image: {
-    width: 30,
-    height: 30
+    width: 15,
+    height: 15
   },
   textview: {
     position: 'absolute',
-    left: 60
+    left: 50
   }
 });

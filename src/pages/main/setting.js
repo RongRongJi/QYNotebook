@@ -40,7 +40,7 @@ export default class Setting extends Component {
       <Menu renderer={Popover} rendererProps={{placement:'bottom',preferredPlacement:'bottom'}}>
         <MenuTrigger style={StyleSheet.menuTrigger}>
           <Image style={{height:this.state.height,width:this.state.width}}
-            source={require('./images/setting_white.png')}/>
+            source={this.state.mode=='夜间模式'?require('./images/setting_day.png'):require('./images/setting_night.png')}/>
         </MenuTrigger>
         <MenuOptions style={styles.menuOption}>
           <this.MenuList/>
@@ -49,22 +49,22 @@ export default class Setting extends Component {
     )
 
     MenuList = () =>(
-      <View>
-        <TouchableOpacity style={styles.row}  onPress={()=>this._changeColorMode()}>
+      <View style={{backgroundColor:getColorType()['Background']}}>
+        <TouchableOpacity style={[styles.row,{borderBottomColor: getColorType()['LineColor'],}]}  onPress={()=>this._changeColorMode()}>
           <Image style={styles.icon} source={require('./images/eye.png')}/>
           <Text style={{
             marginLeft:5,
             color:getColorType()['ItemBackground'],
           }}>{this.state.mode}</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.row}>
+        <TouchableOpacity style={[styles.row,{borderBottomColor: getColorType()['LineColor'],}]}>
           <Image style={styles.icon} source={require('./images/manager.png')}/>
           <Text style={{
             marginLeft:5,
             color:getColorType()['ItemBackground'],
           }}>批量管理</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.row}>
+        <TouchableOpacity style={[styles.row,{borderBottomColor: getColorType()['LineColor'],}]}>
           <Image style={styles.icon} source={require('./images/about.png')}/>
           <Text style={{
             marginLeft:5,
@@ -103,7 +103,6 @@ const styles = StyleSheet.create({
     width:(Dimensions.get('window').width-16)/3,
     height:50,
     borderBottomWidth: 1,
-    borderBottomColor: '#bdbdbd',
   },
   icon:{
     width:20,

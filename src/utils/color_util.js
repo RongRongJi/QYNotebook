@@ -13,25 +13,28 @@ function setColorType(t){
 
 //初始化颜色
 export function setColorState(){
-  global.storage.load({
-    key:'colorType',
-  }).then((res)=>{
-    console.log(res.type);
-    global.colorType = res.type;
-  }).catch((err)=>{
-    switch(err.name){
-    case 'NotFoundError':
-      console.log('NotFoundError');
-      setColorType('day');
-      global.colorType = 'day';
-      break;
-    case 'ExpiredError':
-      console.log('ExpiredError');
-      setColorType('day');
-      global.colorType = 'day';
-      break;
-    }
+  var p = new Promise(function(resolve,reject){
+    global.storage.load({
+      key:'colorType',
+    }).then((res)=>{
+      console.log(res.type);
+      global.colorType = res.type;
+    }).catch((err)=>{
+      switch(err.name){
+      case 'NotFoundError':
+        console.log('NotFoundError');
+        setColorType('day');
+        global.colorType = 'day';
+        break;
+      case 'ExpiredError':
+        console.log('ExpiredError');
+        setColorType('day');
+        global.colorType = 'day';
+        break;
+      }
+    });
   });
+  return p;
 }
 
 //切换模式

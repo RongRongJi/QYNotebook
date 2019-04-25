@@ -24,10 +24,12 @@ export default class NotebookLabel extends Component {
       let content = this.item.content;
       let date = this.item.date;
       return (
-        <View style={styles.container}>
-          <Text style={[styles.titlefont,{color:getColorType()['TextColor']}]}>{title}</Text>
-          <Text numberOfLines={2} style={{marginLeft:10,width:Dimensions.get('window').width-56}}>{content}</Text>
-          <Text style={{ position:'absolute',left:10,bottom:10,}}>{date}</Text>
+        <View style={[styles.container,
+          {borderBottomColor:getColorType()['LineColor']}  
+        ]}>
+          <Text style={[styles.titlefont,{color:getColorType()['TitleColor']}]}>{title}</Text>
+          <Text numberOfLines={2} style={{color:getColorType()['TextColor'],marginLeft:10,width:Dimensions.get('window').width-56}}>{content}</Text>
+          <Text style={{ position:'absolute',left:10,bottom:10,color:getColorType()['TextColor']}}>{date}</Text>
         </View>
       );
     }
@@ -47,7 +49,6 @@ const styles = StyleSheet.create({
     height:95,
     marginLeft:10,
     borderBottomWidth: 1,
-    borderBottomColor: '#ccc',
   },
   titlerow: {
     marginLeft:10,

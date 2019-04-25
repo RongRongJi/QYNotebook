@@ -42,9 +42,9 @@ export default class LockView extends Component {
 
   render () {
     return (
-      <View style={styles.container}>
+      <View style={[styles.container,{backgroundColor: getColorType()['Background'],}]}>
         <GesturePassword
-          pointBackgroundColor={'#F4F4F4'}
+          pointBackgroundColor={getColorType()['Background']}
           isWarning={this.state.isWarning}
           color={getColorType()['ItemBackground']}
           activeColor={getColorType()['ItemBackground']}
@@ -64,7 +64,19 @@ export default class LockView extends Component {
   _renderDescription = () => {
     return (
       <View>
-        <NaviBar title={this.state.title}/>
+        <NaviBar 
+          style={{
+            safeView:{flex:0,backgroundColor:getColorType()['Background']},
+            title:{
+              fontSize:17,
+              color: getColorType()['ItemBackground'],
+              textAlign:'center',
+              overflow:'hidden',
+              fontWeight: 'bold',
+            }
+          }}
+          navbarHeight={50}
+          title={this.state.title}/>
         <View style={{height: 158, paddingBottom: 10, justifyContent: 'flex-end', alignItems: 'center',}}>
           <Text
             style={{fontSize: 14, marginVertical: 6, color: this.state.messageColor}}>{this.state.message}</Text>
@@ -195,6 +207,5 @@ export default class LockView extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: getColorType()['Background'],
   },
 });

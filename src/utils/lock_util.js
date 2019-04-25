@@ -8,6 +8,7 @@ export function setLockType(pwd){
       password: pwd
     },
   });
+  global.lock_pwd = pwd;
 }
 
 //初始化锁
@@ -16,6 +17,7 @@ export function setLockState(){
     key:'lock',
   }).then((res)=>{
     global.lock_pwd = res.password;
+    console.log(global.lock_pwd);
   }).catch((err)=>{
     switch(err.name){
     case 'NotFoundError':
@@ -29,3 +31,9 @@ export function setLockState(){
   });
 }
 
+//重置锁
+export function resetLock(){
+  storage.remove({
+    key:'lock',
+  });
+}

@@ -145,7 +145,9 @@ export default class TodoList extends Component {
 
   render() {
     return(
-      <ScrollView style={styles.container}>
+      <ScrollView style={styles.container}
+        keyboardShouldPersistTaps = {true}
+      >
         <this.renderFold/>
         <TodoInput ref={r => (this.todoinput = r)}
           public={this.public.bind(this)}/>

@@ -115,10 +115,12 @@ export default class TodoInput extends Component {
         />
         <View style={{    
           flexDirection: 'row',
-          backgroundColor:'rgba(247,247, 250, 1)',
+          backgroundColor:getColorType()['Background'],
           width:Dimensions.get('window').width,
           alignItems: 'center',
           height:45,
+          borderTopWidth: 1,
+          borderTopColor: getColorType()['LineColor'],
         }}>
           <TouchableOpacity style={{position:'absolute',left:15}}
             onPress={this.showDateTimePicker}>
@@ -132,6 +134,9 @@ export default class TodoInput extends Component {
             onPress={this.publishTodo}>
             <Image style={{width:20,height:20,}} source={require('./images/public.png')}/>
           </TouchableOpacity>
+          <Text style={{position:'absolute',left:105,color:getColorType()['ItemBackground']}}>
+            {this.state.type=='everyday'?'类型：每日':(this.state.date==''?'':'截止日期：'+this.state.date)}
+          </Text>
         </View>
       </View>
     </Modal>

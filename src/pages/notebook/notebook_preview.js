@@ -42,6 +42,11 @@ export default class NotebookPreview extends Component {
       deleteDialog: false,
       lockDialog: false,
     };
+
+    this.data = {
+      time: '5月9日',
+      size: '52kb',
+    };
   }
 
   toggle() {
@@ -56,7 +61,7 @@ export default class NotebookPreview extends Component {
 
   onMenuItemSelected = item =>{
     this.setState({
-      isOpen: false,
+      //isOpen: false,
       selectedItem: item,
     });
     if(item=='Delete'){
@@ -98,13 +103,16 @@ export default class NotebookPreview extends Component {
   )
   
   render() {
-    const menu = <Menu onItemSelected={this.onMenuItemSelected} />;
+    const menu = 
+    <Menu onItemSelected={this.onMenuItemSelected} 
+      data={this.data}
+    />;
 
     return (
       <SideMenu
         menu={menu}
         isOpen={this.state.isOpen}
-        openMenuOffset={WIDTH*3/7}
+        openMenuOffset={WIDTH*4/7}
         menuPosition={'right'}
         disableGestures={true}
         onChange={isOpen => this.updateMenuState(isOpen)}
@@ -227,18 +235,8 @@ const styles = StyleSheet.create({
     height:50,
   },
   dialogContentView: {
-    // flex: 1,
     paddingLeft: 18,
     paddingRight: 18,
-    // backgroundColor: '#000',
-    // opacity: 0.4,
-    // alignItems: 'center',
-    // justifyContent: 'center',
-  },
-  navigationBar: {
-    borderBottomColor: '#b5b5b5',
-    borderBottomWidth: 0.5,
-    backgroundColor: '#ffffff',
   },
   navigationTitle: {
     padding: 10,
@@ -249,13 +247,5 @@ const styles = StyleSheet.create({
   navigationLeftButton: {
     paddingLeft: 20,
     paddingRight: 40,
-  },
-  navigator: {
-    flex: 1,
-    // backgroundColor: '#000000',
-  },
-  customBackgroundDialog: {
-    opacity: 0.5,
-    backgroundColor: '#000',
   },
 });

@@ -112,29 +112,7 @@ export default class MainView extends Component {
 
     //获取待办列表
     renderTodoList = () => {
-      let alldata = [
-        {           
-          key: '1',
-          status: 'done',
-          content: 'Release v3.1',
-          date: null,
-          type: 'everyday', },
-        {
-          key: '2',
-          status: 'wait-to-do',
-          content: 'Finish React Native GraphQL Todo List App',
-          date: '2019-3-20',
-          type: 'once',
-        },
-        {
-          key: '3',
-          status: 'done',
-          content: '运动',
-          date: '2019-3-20',
-          type: 'once',
-        }
-      ];
-      return <TodoList data={alldata} navigation={this.props.navigation} 
+      return <TodoList navigation={this.props.navigation} 
         ref={r => (this.todolist = r)}
       />;
     };

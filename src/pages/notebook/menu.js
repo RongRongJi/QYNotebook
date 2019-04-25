@@ -14,27 +14,56 @@ const window = Dimensions.get('window');
 
 
 
-export default function Menu({ onItemSelected }) {
+export default function Menu({ onItemSelected, data }) {
   return (
-    <ScrollView scrollsToTop={false} style={styles.menu}>
-      <TouchableOpacity style={styles.avatarContainer}
-        onPress={()=>onItemSelected('About')}
-      >
-        <Image
-          style={styles.avatar}
-          source={require('./images/about.png')}
-        />
-        <Text style={styles.name}>详细信息</Text>
-      </TouchableOpacity>
+    <ScrollView scrollsToTop={false} style={[styles.menu,
+      {backgroundColor: getColorType()['Background'],}]}>
+      <Text style={{
+        fontSize:17,
+        color:getColorType()['ItemBackground'],
+      }}>笔记信息</Text>
+      <Text style={{
+        marginTop:10,
+        color:getColorType()['ItemBackground'],
+      }}>类型</Text>
+      <Text style={{
+        fontSize:16,
+        color:getColorType()['TitleColor'],
+      }}>笔记</Text>
+      <Text style={{
+        marginTop:15,
+        color:getColorType()['ItemBackground'],
+      }}>大小</Text>
+      <Text style={{
+        fontSize:16,
+        color:getColorType()['TitleColor'],
+      }}>{data.size}</Text>
+      <Text style={{
+        marginTop:15,
+        color:getColorType()['ItemBackground'],
+      }}>创建时间</Text>
+      <Text style={{
+        fontSize:16,
+        color:getColorType()['TitleColor'],
+      }}>{data.time}</Text>
+      <Text style={{
+        marginTop:15,
+        color:getColorType()['ItemBackground'],
+      }}>最近修改时间</Text>
+      <Text style={{
+        fontSize:16,
+        color:getColorType()['TitleColor'],
+      }}>{data.time}</Text>
+      <View style={{height:20}}></View>
 
       <TouchableOpacity style={styles.avatarContainer}
         onPress={()=>onItemSelected('Lock')}
       >
         <Image
           style={styles.avatar}
-          source={require('./images/lock.png')}
+          source={global.colorType=='day'?require('./images/lock_day.png'):require('./images/lock_night.png')}
         />
-        <Text style={styles.name}>加密笔记</Text>
+        <Text style={{marginLeft:15,color:getColorType()['ItemBackground']}}>加密笔记</Text>
       </TouchableOpacity>
 
       <TouchableOpacity style={styles.avatarContainer}
@@ -42,9 +71,9 @@ export default function Menu({ onItemSelected }) {
       >
         <Image
           style={styles.avatar}
-          source={require('./images/del.png')}
+          source={global.colorType=='day'?require('./images/del_day.png'):require('./images/del_night.png')}
         />
-        <Text style={styles.name}>删除笔记</Text>
+        <Text style={{marginLeft:15,color:getColorType()['ItemBackground']}}>删除笔记</Text>
       </TouchableOpacity>
     </ScrollView>
   );
@@ -55,7 +84,6 @@ const styles = StyleSheet.create({
     flex: 1,
     width: window.width,
     height: window.height,
-    backgroundColor: getColorType()['Background'],
     padding: 20,
   },
   avatarContainer: {
@@ -69,6 +97,5 @@ const styles = StyleSheet.create({
   },
   name: {
     marginLeft:15,
-    color: getColorType()['ItemBackground'],
   },
 });

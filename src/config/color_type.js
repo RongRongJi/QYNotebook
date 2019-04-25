@@ -13,16 +13,16 @@ const dayType={
 };
 
 const nightType={
-  Background : '#191919',
-  TitleColor : '#424952',
-  TextColor : '#424952',
-  Modal : 'rgba(38,50,56,0.5)',
+  Background : '#283337',
+  TitleColor : '#9da8ad',
+  TextColor : '#9da8ad',
+  Modal : 'rgba(50,61,65,1)',
   //ItemBackground : '#263238',
-  ItemBackground : '#424952',
+  ItemBackground : '#86959c',
   FoldColor : '#424952',
-  ViewColor : '#191919',
-  LineColor : '#000',
-  TabShadow : '#000',
+  ViewColor : '#283337',
+  LineColor : '#314047',
+  TabShadow : '#314047',
 };
 
 /*const eyeprotectType={

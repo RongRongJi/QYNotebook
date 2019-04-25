@@ -7,11 +7,19 @@
  */
 
 import React, {Component} from 'react';
-import {Platform, StyleSheet, Text, View, Image, TouchableOpacity,Dimensions} from 'react-native';
+import {
+  Platform, 
+  StyleSheet, 
+  Text, 
+  View, 
+  Image, 
+  TouchableOpacity,
+  Dimensions,
+  Button} from 'react-native';
 import GesturePassword from '../../config/react-native-smart-gesture-password';
 import {getColorType} from '../../config/color_type';
 import NaviBar from 'react-native-pure-navigation-bar';
-import { setLockType } from '../../utils/lock_util';
+import { setLockType, resetLock } from '../../utils/lock_util';
 
 
 export default class LockView extends Component {

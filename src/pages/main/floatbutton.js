@@ -13,32 +13,7 @@ import '../../config/color_type';
 import FloatingAction from '../../config/floating-action-component/FloatingAction';
 import { getColorType } from '../../config/color_type';
 
-const actions = [
-  {
-    text: '新建markdown',
-    icon: require('./images/markdown.png'),
-    name: 'Markdown_button',
-    color: '#fff',
-    position: 1
-  },
-  {
-    text: '新建笔记',
-    icon: require('./images/notebook.png'),
-    name: 'Notebook_button',
-    color: '#fff',
-    position: 2
-  }
-];
 
-const actions1 = [
-  {
-    text: '新建待办',
-    icon: require('./images/notebook.png'),
-    name: 'Todo_button',
-    color: '#fff',
-    position: 1
-  }
-];
 
 export default class FloatButton extends Component {
   constructor(props) {
@@ -46,6 +21,39 @@ export default class FloatButton extends Component {
     this.state = {
       type: this.props.type ? this.props.type : 'notebook'
     };
+    this.actions = [
+      {
+        text: '新建markdown',
+        icon: global.colorType=='day'?require('./images/markdown_day.png'):require('./images/markdown_night.png'),
+        name: 'Markdown_button',
+        color: getColorType()['Background'],
+        textBackground: getColorType()['Background'],
+        textColor: getColorType()['TitleColor'],
+        position: 1
+      },
+      {
+        text: '新建笔记',
+        icon: global.colorType=='day'?require('./images/notebook_day.png'):require('./images/notebook_night.png'),
+        name: 'Notebook_button',
+        color: getColorType()['Background'],
+        textBackground: getColorType()['Background'],
+        textColor: getColorType()['TitleColor'],
+        position: 2
+      }
+    ];
+    
+    this.actions1 = [
+      {
+        text: '新建待办',
+        icon: global.colorType=='day'?require('./images/markdown_day.png'):require('./images/markdown_night.png'),
+        name: 'Todo_button',
+        color: getColorType()['Background'],
+        textBackground: getColorType()['Background'],
+        textColor: getColorType()['TitleColor'],
+        position: 1
+      }
+    ];
+  
   }
 
   changeState(flag) {
@@ -56,7 +64,7 @@ export default class FloatButton extends Component {
   render() {
     return (
       <FloatingAction
-        actions={this.state.type == 'notebook' ? actions : actions1}
+        actions={this.state.type == 'notebook' ? this.actions : this.actions1}
         color={getColorType()['ItemBackground']}
         floatingIcon={require('./images/logo.png')}
         iconWidth={40}

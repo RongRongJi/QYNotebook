@@ -95,8 +95,8 @@ export default class Todolabel extends Component {
               }
             />
           </TouchableOpacity>
-          <View style={[styles.textview,{color:getColorType()['TitleColor']}]} onLayout={this.changeView.bind(this)}>
-            <Text style={[this.state.ifPass ? styles.donetext : styles.text, {color:getColorType()['TextColor']}]}>
+          <View style={styles.textview} onLayout={this.changeView.bind(this)}>
+            <Text style={[this.state.ifPass ? styles.donetext : styles.text, {color:getColorType()['TitleColor']}]}>
               {content}
             </Text>
             <View style={{flexDirection:'row',alignItems:'center'}}>

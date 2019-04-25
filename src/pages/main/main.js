@@ -38,13 +38,16 @@ export default class MainView extends Component {
       <View
         style={[
           styles.row,
-          { backgroundColor: getColorType()['ItemBackground'] }
+          { backgroundColor: getColorType()['Background'] ,
+            borderBottomWidth: 1,
+            borderBottomColor: '#dddddd',
+          }
         ]}
       >
         <TopTab
           ref={r => (this.notetab = r)}
           title={'笔记'}
-          color={'white'}
+          color={getColorType()['ItemBackground']}
           onFocus={this.state.currentPage == 'note'}
           onPress={() => {
             this._onPressTab(1);
@@ -53,7 +56,7 @@ export default class MainView extends Component {
         <TopTab
           ref={r => (this.todotab = r)}
           title={'待办'}
-          color={'white'}
+          color={getColorType()['ItemBackground']}
           onFocus={this.state.currentPage == 'todo'}
           onPress={() => {
             this._onPressTab(2);
@@ -139,7 +142,10 @@ export default class MainView extends Component {
 
     render() {
       return (
-        <MenuProvider style={styles.container}>
+        <MenuProvider style={{
+          flex:1,
+          backgroundColor: getColorType()['ViewColor']
+        }}>
           <this.renderHeader />
           {this.state.currentPage == 'note'
             ? this.renderNotebookList()
@@ -155,10 +161,6 @@ export default class MainView extends Component {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: 'rgba(247,247, 250, 1)'
-  },
   row: {
     flexDirection: 'row',
     alignItems: 'center'

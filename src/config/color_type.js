@@ -2,18 +2,20 @@
 
 const dayType={
   Background : '#FFFFFF',
-  TextColor : '#FFFFFF',
+  TextColor : '#000000',
   Modal : 'rgba(0,0,0,0.5)',
   ItemBackground : '#049F9A',
   FoldColor : '#C8ECEA',
+  ViewColor : '#eee',
 };
 
 const nightType={
-  Background : '#263238',
-  TextColor : '#ffffff',
+  Background : '#37474f',
+  TextColor : '#000000',
   Modal : 'rgba(38,50,56,0.5)',
-  ItemBackground : '#37474f',
+  ItemBackground : '#263238',
   FoldColor : '#C8ECEA',
+  ViewColor : '#eee',
 };
 
 const eyeprotectType={
@@ -22,6 +24,7 @@ const eyeprotectType={
   Modal : 'rgba(199,237,204,0.5)',
   ItemBackground : '#ffffff',
   FoldColor : '#C8ECEA',
+  ViewColor : '#eee',
 };
 
 

@@ -7,9 +7,16 @@
  */
 
 import React, {Component} from 'react';
-import {Platform, StyleSheet, Text, View, TouchableOpacity} from 'react-native';
+import {
+  Platform,
+  StyleSheet, 
+  Text, 
+  View, 
+  TouchableOpacity, 
+  TouchableNativeFeedback} from 'react-native';
 import RefreshListView,{RefreshState} from 'react-native-refresh-list-view';
 import NotebookLabel from './notebook_label';
+import { getColorType } from '../../config/color_type';
 
 
 
@@ -71,14 +78,18 @@ export default class NotebookList extends Component {
 
   renderItem({item}){
     return(
-      <TouchableOpacity style={styles.itemcontainer}
+      <TouchableNativeFeedback
         onPress={()=>{this._getItemData();}}>
-        <NotebookLabel
-          key={item.key}
-          item={item}
-          navigation={this.props.navigation}
-        />
-      </TouchableOpacity>
+        <View  style={{
+          backgroundColor: getColorType()['Background']
+        }}>
+          <NotebookLabel
+            key={item.key}
+            item={item}
+            navigation={this.props.navigation}
+          />
+        </View>
+      </TouchableNativeFeedback>
     );
   }
 
@@ -95,18 +106,9 @@ export default class NotebookList extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
   },
   listcontainer: {
     flex: 1,
     marginTop: Platform.OS == 'ios' ? 20 : 0,
-  },
-  itemcontainer: {
-    marginTop: 10,
-    backgroundColor: 'white',
-    borderRadius: 10,
-    borderBottomWidth: 2,
-    borderBottomColor: '#bdbdbd',
   },
 });

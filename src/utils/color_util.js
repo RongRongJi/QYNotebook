@@ -16,17 +16,19 @@ export function setColorState(){
   global.storage.load({
     key:'colorType',
   }).then((res)=>{
+    console.log(res.type);
     global.colorType = res.type;
   }).catch((err)=>{
     switch(err.name){
     case 'NotFoundError':
       console.log('NotFoundError');
       setColorType('day');
-      //alert('err');
       global.colorType = 'day';
       break;
     case 'ExpiredError':
       console.log('ExpiredError');
+      setColorType('day');
+      global.colorType = 'day';
       break;
     }
   });

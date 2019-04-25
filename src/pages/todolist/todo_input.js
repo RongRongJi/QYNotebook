@@ -106,11 +106,13 @@ export default class TodoInput extends Component {
       },this.state.visible?{bottom:0}:{bottom:-120}]}>
         <TextInput ref={(ref)=>{this.myTextInput = ref;}}
           placeholder={' 还有什么事要做?'}
+          placeholderTextColor={getColorType()['LineColor']}
           onChangeText={(text)=>this.setState({text:text})}
           value={this.state.text}
           style={{
             height:55,
             backgroundColor:getColorType()['Background'],
+            color:getColorType()['TitleColor'],
           }}
         />
         <View style={{    

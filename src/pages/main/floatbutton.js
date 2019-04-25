@@ -66,7 +66,7 @@ export default class FloatButton extends Component {
       <FloatingAction
         actions={this.state.type == 'notebook' ? this.actions : this.actions1}
         color={getColorType()['ItemBackground']}
-        floatingIcon={require('./images/logo.png')}
+        floatingIcon={global.colorType=='day'?require('./images/logo.png'):require('./images/logo_night.png')}
         iconWidth={40}
         iconHeight={40}
         onPressItem={name => {

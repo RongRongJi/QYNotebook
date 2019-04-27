@@ -9,6 +9,9 @@ import Init from './pages/test/init';
 import NotebookPreview from './pages/notebook/notebook_preview';
 import LockView from './pages/notebook/lock';
 import LockNotebook from './pages/notebook/lock_notebook';
+import Index from './pages/login';
+import Login from './pages/login/login';
+import Register from './pages/login/register';
 
 
 const MainStack = createStackNavigator(
@@ -34,15 +37,34 @@ const MainStack = createStackNavigator(
   }
 );
 
+const LoginStack = createStackNavigator(
+  {
+    index: {
+      screen: Index
+    },
+    login: {
+      screen: Login
+    },
+    register: {
+      screen: Register
+    }
+  },
+  {
+    headerMode: 'none'
+  }
+);
+
 const InitStack = createSwitchNavigator(
   {
-    init: {
-      screen: Init
+    loginstack:{
+      screen: LoginStack,
     },
     mainstack:{
       screen: MainStack,
     },
-
+    initial: {
+      screen: Init
+    },
   },
   {
     headerMode: 'none'

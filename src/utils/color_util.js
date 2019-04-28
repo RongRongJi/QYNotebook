@@ -3,12 +3,26 @@ import  '../static/async_storage';
 // 主题模式
 // day & night & eyeprotect
 function setColorType(t){
-  global.storage.save({
-    key:'colorType',
-    data:{
-      type: t
-    },
-  });
+  //本地模式
+  if(global.username==''){
+    global.storage.save({
+      key:'colorType',
+      data:{
+        type: t
+      },
+    });
+  }
+  //云同步模式
+  else{
+    global.storage.save({
+      key:global.username,
+      data:{
+        username: global.username,
+        lock: global.lock_pwd,
+        color: t,
+      }  
+    });
+  }
 }
 
 //初始化颜色

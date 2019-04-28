@@ -20,7 +20,7 @@ import { getToday, getYesterday } from '../utils/date';
  */
 const ExternalDirectoryPath = RNFS.ExternalDirectoryPath;
 //todolist文件夹
-const TodoListDirectoryPath = ExternalDirectoryPath+'/todolist';
+let TodoListDirectoryPath;
 
 export default class Todo_Dao {
 
@@ -31,6 +31,12 @@ export default class Todo_Dao {
     this.doneTd=[];
     this.waitTd=[];
     this.init=false;
+    console.log('global.username=='+global.username);
+    if(global.username==''){
+      TodoListDirectoryPath = ExternalDirectoryPath+'/todolist';
+    }else{
+      TodoListDirectoryPath = ExternalDirectoryPath+'/'+global.username+'/todolist';
+    }
     /**
      * 是否存在todolist文件夹
      * 如果不存在即创建
@@ -59,25 +65,32 @@ export default class Todo_Dao {
   getTodo(){
     //从Storage中获取所有uuid
     var p = new Promise(function(resolve, reject){
-      let uuidArray = global.storage.getIdsForKey('todolist');
-      let todomsg = [];
-      let check = 0;
-      for(var i=uuidArray.length-1;i>=0;i--){
-        RNFS.readFile(TodoListDirectoryPath+'/'+uuidArray[i]+'.json','utf8')
-          .then((ret) => {
-            console.log('FILE READ!');
-            todomsg.push(JSON.parse(ret));
-            check++;
-            if(check==uuidArray.length){
-              console.log(todomsg);
-              resolve(todomsg);
-            }
-          })
-          .catch((err) => {
-            alert(err.message);
-            console.log(err.message);
-          });
-      }
+      //let uuidArray = global.storage.getIdsForKey('todolist');
+      console.log(TodoListDirectoryPath);
+      console.log(global.username);
+      RNFS.readdir(TodoListDirectoryPath)
+        .then((ret)=>{
+          console.log(ret);
+          let uuidArray = ret;
+          let todomsg = [];
+          let check = 0;
+          for(var i=uuidArray.length-1;i>=0;i--){
+            RNFS.readFile(TodoListDirectoryPath+'/'+uuidArray[i],'utf8')
+              .then((ret) => {
+                console.log('FILE READ!');
+                todomsg.push(JSON.parse(ret));
+                check++;
+                if(check==uuidArray.length){
+                  //console.log(todomsg);
+                  resolve(todomsg);
+                }
+              })
+              .catch((err) => {
+                alert(err.message);
+                console.log(err.message);
+              });
+          }
+        });
     });
     //console.log(p);
     return p;

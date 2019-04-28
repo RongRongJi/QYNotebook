@@ -32,7 +32,7 @@ export default class Setting extends Component {
     
   _changeColorMode(){
     changeColorMode();
-    this.props.navigation.navigate('init');
+    this.props.navigation.navigate('initial');
   }
 
 

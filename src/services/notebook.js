@@ -20,7 +20,9 @@ import { getToday, getYesterday } from '../utils/date';
  */
 const ExternalDirectoryPath = RNFS.ExternalDirectoryPath;
 //notebook Information文件夹
-const NBInfoDirectoryPath = ExternalDirectoryPath+'/nbInfo';
+const NBInfoDirectoryPath =   !global.username?
+  ExternalDirectoryPath+'/nbInfo'
+  :ExternalDirectoryPath+'/'+global.username+'/nbInfo';
 
 export default class NoteBook_Dao {
 

@@ -13,6 +13,7 @@ import {
   View, 
   TouchableOpacity,
   Image,
+  BackHandler
 } from 'react-native';
 import TopTab from './tab';
 import FloatButton from './floatbutton';
@@ -21,6 +22,7 @@ import TodoList from '../todolist/todo_list';
 import { getColorType } from '../../config/color_type';
 import Setting from './setting';
 import { MenuProvider } from 'react-native-popup-menu';
+import { ToastShort } from '../../utils/toast_util';
 
 
 export default class MainView extends Component {
@@ -30,6 +32,24 @@ export default class MainView extends Component {
       // note 笔记  todo  待办
       currentPage: 'note'
     };
+  }
+
+  componentWillMount(){
+    BackHandler.addEventListener('hardwareBackPress',this.onBackAndroid);
+  }
+
+  comPonentWillUnmount(){
+    BackHandler.removeEventListener('hardwareBackPress',this.onBackAndroid);
+  }
+
+  onBackAndroid = ()=>{
+    if(!this.props.navigation.isFocused()) return false;
+    else if(this.lastBackPressed && this.lastBackPressed+2000>= Date.now()){
+      return false;
+    }
+    this.lastBackPressed = Date.now();
+    ToastShort('再按一次退出应用');
+    return true;
   }
   
   

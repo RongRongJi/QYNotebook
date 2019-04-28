@@ -54,10 +54,10 @@ export default class Index extends Component {
     return (
       <View style={styles.container}>
         <View style={{position:'absolute',top:100}}>
-          <Image style={{width:200,height:200}}
+          <Image style={{width:200,height:240}}
             source={require('./images/logo.png')}/>
         </View>
-        <Text style={{position:'absolute',top:320,fontSize:25,color:'#049F9A'}}>青鱼笔记</Text>
+        <Text style={{position:'absolute',top:360,fontSize:25,color:'#049F9A'}}>青鱼笔记</Text>
         <this.renderButton/>
         <this.renderSkip/>
       </View>
@@ -75,7 +75,7 @@ const styles = StyleSheet.create({
   btnView:{
     flexDirection:'row',
     position:'absolute',
-    bottom:150,
+    bottom:120,
   },
   loginBtn:{
     backgroundColor: '#049F9A',

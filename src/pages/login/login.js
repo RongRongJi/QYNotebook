@@ -23,23 +23,19 @@ import { TextInputLayout } from 'rn-textinputlayout';
 import NaviBar from 'react-native-pure-navigation-bar';
 import Button from 'apsl-react-native-button';
 import { setHeader } from '../../config/header';
-import { setColorState } from '../../utils/color_util';
-import { setLockState } from '../../utils/lock_util';
+import { getUserData } from '../../utils/login_util';
 
 export default class Login extends Component {
   constructor(props){
     super(props);
     this.state={
-      phonenumber:'',
-      password:'',
       isLoad:false,
     };
   }
 
   init(){
     //登录成功后进行初始化操作
-    setColorState().then((ret)=>setHeader());
-    setLockState();
+    getUserData(this.phonenumber).then((ret)=>setHeader());
     setTimeout(()=>{
       this.props.navigation.pop();
       this.props.navigation.navigate('main');

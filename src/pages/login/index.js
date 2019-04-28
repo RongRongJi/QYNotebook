@@ -24,6 +24,12 @@ export default class Index extends Component {
     super(props);
   }
 
+  //本地登录
+  Skip(){
+    global.username='';
+    this.props.navigation.navigate('initial');
+  }
+
   renderButton = () =>(
     <View style={styles.btnView}>
       <TouchableOpacity style={styles.loginPos}
@@ -43,7 +49,7 @@ export default class Index extends Component {
 
   renderSkip = ()=>(
     <View style={{position:'absolute',right:10,bottom:10}}>
-      <TouchableOpacity onPress={()=>this.props.navigation.navigate('initial')}>
+      <TouchableOpacity onPress={()=>this.Skip()}>
         <Text>>>跳过</Text>
       </TouchableOpacity>
     </View>

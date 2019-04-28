@@ -15,6 +15,7 @@ import {
   renderers,
 } from 'react-native-popup-menu';
 import { changeColorMode } from '../../utils/color_util';
+import { LogOff } from '../../utils/login_util';
 
 const { Popover } = renderers;
 
@@ -33,6 +34,17 @@ export default class Setting extends Component {
   _changeColorMode(){
     changeColorMode();
     this.props.navigation.navigate('initial');
+  }
+
+  _Logout(){
+    LogOff().then((ret)=>{
+      console.log('logoff: '+ret);
+      global.lock_pwd=null;
+      global.username=null;
+      global.colorType=null;
+      global.todoDao=null;
+      this.props.navigation.navigate('index');
+    });
   }
 
 
@@ -70,6 +82,13 @@ export default class Setting extends Component {
             marginLeft:5,
             color:getColorType()['ItemBackground'],
           }}>关于我们</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={[styles.row,{borderBottomColor: getColorType()['LineColor'],}]} onPress={()=>this._Logout()}>
+          <Image style={styles.icon} source={global.colorType=='day'?require('./images/logout_day.png'):require('./images/logout_night.png')}/>
+          <Text style={{
+            marginLeft:5,
+            color:getColorType()['ItemBackground'],
+          }}>注销账户</Text>
         </TouchableOpacity>
       </View>
     )

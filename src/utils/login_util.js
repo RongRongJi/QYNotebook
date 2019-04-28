@@ -17,7 +17,7 @@ export function DirectLogin(){
     global.storage.load({
       key:'currentUser',
     }).then((res)=>{
-      resolve(res.data);
+      resolve(res);
     }).catch((err)=>{
       resolve(false);
     });
@@ -32,6 +32,24 @@ export function LogOff(){
   let p = new Promise(function(resolve,reject){
     storage.remove({
       key:'currentUser',
+    });
+    resolve(true);
+  });
+  return p;
+}
+
+/**
+ * 存储当前用户信息
+ */
+export function LogIn(username,lock,color){
+  let p = new Promise(function(resolve,reject){
+    storage.save({
+      key:'currentUser',
+      data:{
+        username: username,
+        lock: lock,
+        color: color,
+      }  
     });
   });
   return p;
@@ -52,6 +70,7 @@ export function getUserData(username){
       global.lock_pwd = res.lock;
       global.colorType = res.color;
       console.log('getUserData'+username);
+      LogIn(res.username,res.lock,res.color);
       resolve(res);
     }).catch((err)=>{
       switch(err.name){
@@ -62,6 +81,7 @@ export function getUserData(username){
         global.lock_pwd ='';
         global.colorType='day';
         console.log('getUserData'+global.username);
+        LogIn(username,'','day');
         resolve(false);
         break;
       case 'ExpiredError':

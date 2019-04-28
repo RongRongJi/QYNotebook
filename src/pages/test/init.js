@@ -22,7 +22,6 @@ export default class Init extends Component {
   async init(){
     //初始化
     try{
-      global.username='';
       //初始化颜色
       let p =setColorState().then((ret)=>{
         setHeader();

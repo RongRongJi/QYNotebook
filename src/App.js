@@ -12,6 +12,7 @@ import LockNotebook from './pages/notebook/lock_notebook';
 import Index from './pages/login';
 import Login from './pages/login/login';
 import Register from './pages/login/register';
+import Advertise from './pages/login/ads';
 
 
 const MainStack = createStackNavigator(
@@ -56,6 +57,9 @@ const LoginStack = createStackNavigator(
 
 const InitStack = createSwitchNavigator(
   {
+    advertise:{
+      screen: Advertise,
+    },
     loginstack:{
       screen: LoginStack,
     },

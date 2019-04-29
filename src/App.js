@@ -13,6 +13,7 @@ import Index from './pages/login';
 import Login from './pages/login/login';
 import Register from './pages/login/register';
 import Advertise from './pages/login/ads';
+import About from './pages/main/about';
 
 
 const MainStack = createStackNavigator(
@@ -32,6 +33,9 @@ const MainStack = createStackNavigator(
     lockview: {
       screen: LockView,
     },
+    about: {
+      screen: About,
+    }
   },
   {
     headerMode: 'none'

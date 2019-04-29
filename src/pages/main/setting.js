@@ -47,6 +47,9 @@ export default class Setting extends Component {
     });
   }
 
+  _About(){
+    this.props.navigation.navigate('about');
+  }
 
     Popver = () =>(
       <Menu renderer={Popover} rendererProps={{placement:'bottom',preferredPlacement:'bottom'}}>
@@ -76,7 +79,7 @@ export default class Setting extends Component {
             color:getColorType()['ItemBackground'],
           }}>批量管理</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={[styles.row,{borderBottomColor: getColorType()['LineColor'],}]}>
+        <TouchableOpacity style={[styles.row,{borderBottomColor: getColorType()['LineColor'],}]} onPress={()=>this._About()}>
           <Image style={styles.icon} source={global.colorType=='day'?require('./images/about_day.png'):require('./images/about_night.png')}/>
           <Text style={{
             marginLeft:5,

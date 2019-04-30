@@ -31,8 +31,8 @@ export default class Init extends Component {
       //界面跳转
       setTimeout(() => {
         this.props.navigation.navigate('main');
-      }, 2000);
-    } catch (e) {
+      },500);
+    }catch(e){
       alert(e);
     }
   }
@@ -42,11 +42,11 @@ export default class Init extends Component {
     //setTimeout(this.init.then(this.props.navigation.navigate('main')),2000);
     return (
       <View style={styles.container}>
-        <Image
-          style={{ width: 100, height: 100 }}
-          source={require('../main/images/logo.png')}
-        />
-        <Text style={{ fontSize: 40, color: '#fff' }}>QYNotebook</Text>
+        <View style={{position:'absolute',top:100}}>
+          <Image style={{width:200,height:240}}
+            source={require('../login/images/logo.png')}/>
+        </View>
+        <Text style={{position:'absolute',top:360,fontSize:25,color:'#049F9A'}}>青鱼笔记</Text>
       </View>
     );
   }
@@ -57,7 +57,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#049F9A'
+    backgroundColor: '#fff',
   },
   welcome: {
     fontSize: 20,

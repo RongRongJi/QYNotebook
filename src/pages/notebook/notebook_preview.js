@@ -6,14 +6,14 @@
  * @flow
  */
 
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import {
-  ScrollView, 
-  Image, 
-  Platform, 
-  StyleSheet, 
-  Text, 
-  View, 
+  ScrollView,
+  Image,
+  Platform,
+  StyleSheet,
+  Text,
+  View,
   TouchableOpacity,
   Modal
 } from 'react-native';
@@ -21,37 +21,42 @@ import Dialog, {
   DialogTitle,
   DialogContent,
   DialogFooter,
-  DialogButton,
+  DialogButton
 } from 'react-native-popup-dialog';
 import NaviBar from 'react-native-pure-navigation-bar';
 import { getColorType } from '../../config/color_type';
 import SideMenu from 'react-native-side-menu';
 import { WIDTH } from '../../config/styles';
 import Menu from './menu';
-
+import Note from '../../config/note';
+import Editor from '../../config/editor';
 
 export default class NotebookPreview extends Component {
-
-  constructor(props){
+  constructor(props) {
     super(props);
+    this.uuid = this.props.navigation.getParam('uuid', false);
+    if (!this.uuid) {
+      throw new Error('no uuid found!');
+    }
+    this.note = new Note(this.uuid);
     this.toggle = this.toggle.bind(this);
 
     this.state = {
       isOpen: false,
       selectedItem: 'About',
       deleteDialog: false,
-      lockDialog: false,
+      lockDialog: false
     };
 
     this.data = {
       time: '5月9日',
-      size: '52kb',
+      size: '52kb'
     };
   }
 
   toggle() {
     this.setState({
-      isOpen: !this.state.isOpen,
+      isOpen: !this.state.isOpen
     });
   }
 
@@ -59,80 +64,101 @@ export default class NotebookPreview extends Component {
     this.setState({ isOpen });
   }
 
-  onMenuItemSelected = item =>{
+  onMenuItemSelected = item => {
     this.setState({
       //isOpen: false,
-      selectedItem: item,
+      selectedItem: item
     });
-    if(item=='Delete'){
-      this.setState({deleteDialog:true});
-    }else if(item=='Lock'){
-      this.setState({lockDialog: true});
+    if (item == 'Delete') {
+      this.setState({ deleteDialog: true });
+    } else if (item == 'Lock') {
+      this.setState({ lockDialog: true });
     }
-  }
+  };
 
-  renderHeader = () =>(
+  renderHeader = () => (
     <View
       style={[
         styles.row,
         { backgroundColor: getColorType()['ItemBackground'] }
       ]}
     >
-      <TouchableOpacity 
-        style={{position:'absolute',left:15}} 
-        onPress={()=>this.props.navigation.goBack()}>
-        <Image 
-          style={{width:18,height:18}} 
-          source={require('../../config/images/back.png')}/>
+      <TouchableOpacity
+        style={{ position: 'absolute', left: 15 }}
+        onPress={() => this.props.navigation.goBack()}
+      >
+        <Image
+          style={{ width: 18, height: 18 }}
+          source={require('../../config/images/back.png')}
+        />
       </TouchableOpacity>
-      <TouchableOpacity 
-        style={{position:'absolute',right:70}} 
-        onPress={()=>{}}>
-        <Image 
-          style={{width:20,height:20}} 
-          source={require('./images/editor.png')}/>
+      <TouchableOpacity
+        style={{ position: 'absolute', right: 70 }}
+        onPress={() => {}}
+      >
+        <Image
+          style={{ width: 20, height: 20 }}
+          source={require('./images/editor.png')}
+        />
       </TouchableOpacity>
-      <TouchableOpacity 
-        style={{position:'absolute',right:20}} 
-        onPress={this.toggle}>
-        <Image 
-          style={{width:20,height:20}} 
-          source={require('./images/more.png')}/>
+      <TouchableOpacity
+        style={{ position: 'absolute', right: 20 }}
+        onPress={this.toggle}
+      >
+        <Image
+          style={{ width: 20, height: 20 }}
+          source={require('./images/more.png')}
+        />
       </TouchableOpacity>
     </View>
-  )
-  
-  render() {
-    const menu = 
-    <Menu onItemSelected={this.onMenuItemSelected} 
-      data={this.data}
-    />;
+  );
 
+  render() {
+    const menu = (
+      <Menu onItemSelected={this.onMenuItemSelected} data={this.data} />
+    );
+    let type = this.note.type;
+    let uuid = this.note.uuid;
+    // let getSync = async () => {
+    // let rawData = await this.note.readContent();
     return (
       <SideMenu
         menu={menu}
         isOpen={this.state.isOpen}
-        openMenuOffset={WIDTH*4/7}
+        openMenuOffset={(WIDTH * 4) / 7}
         menuPosition={'right'}
         disableGestures={true}
         onChange={isOpen => this.updateMenuState(isOpen)}
       >
-        <View style={[styles.container,
-          this.state.isOpen?
-            {backgroundColor:getColorType()['Modal']}:
-            {backgroundColor:getColorType()['Background']}]}>
-          <this.renderHeader/>
+        <View
+          style={[
+            styles.container,
+            this.state.isOpen
+              ? { backgroundColor: getColorType()['Modal'] }
+              : { backgroundColor: getColorType()['Background'] }
+          ]}
+        >
+          <this.renderHeader />
           <ScrollView style={styles.container}>
-
+            <Editor
+              type={type}
+              ref={editor => {
+                this.editor = editor;
+              }}
+              uuid={uuid}
+            />
           </ScrollView>
         </View>
-        <this.renderDeleteDialog/>
-        <this.renderLockDialog/>
+        <this.renderDeleteDialog />
+        <this.renderLockDialog />
       </SideMenu>
     );
+    // };
+
+    // return getSync();
   }
 
-  renderDeleteDialog = () =>(
+  renderDeleteDialog = () => (
     <Dialog
       onDismiss={() => {
         this.setState({ deleteDialog: false });
@@ -145,7 +171,7 @@ export default class NotebookPreview extends Component {
         <DialogTitle
           title="删除笔记"
           style={{
-            backgroundColor: '#F7F7F8',
+            backgroundColor: '#F7F7F8'
           }}
           hasTitleBar={false}
           align="left"
@@ -174,15 +200,15 @@ export default class NotebookPreview extends Component {
     >
       <DialogContent
         style={{
-          backgroundColor: '#F7F7F8',
+          backgroundColor: '#F7F7F8'
         }}
       >
         <Text>你确定要删除该篇笔记吗？</Text>
       </DialogContent>
     </Dialog>
-  )
+  );
 
-  renderLockDialog = () =>(
+  renderLockDialog = () => (
     <Dialog
       onDismiss={() => {
         this.setState({ lockDialog: false });
@@ -195,7 +221,7 @@ export default class NotebookPreview extends Component {
         <DialogTitle
           title="加密笔记"
           style={{
-            backgroundColor: '#F7F7F8',
+            backgroundColor: '#F7F7F8'
           }}
           hasTitleBar={false}
           align="left"
@@ -216,36 +242,36 @@ export default class NotebookPreview extends Component {
     >
       <DialogContent
         style={{
-          backgroundColor: '#F7F7F8',
+          backgroundColor: '#F7F7F8'
         }}
       >
         <Text>您还未设置加密笔记密码，请前往设置！</Text>
       </DialogContent>
     </Dialog>
-  )
+  );
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    flex: 1
   },
-  row:{
-    flexDirection:'row',
+  row: {
+    flexDirection: 'row',
     alignItems: 'center',
-    height:50,
+    height: 50
   },
   dialogContentView: {
     paddingLeft: 18,
-    paddingRight: 18,
+    paddingRight: 18
   },
   navigationTitle: {
-    padding: 10,
+    padding: 10
   },
   navigationButton: {
-    padding: 10,
+    padding: 10
   },
   navigationLeftButton: {
     paddingLeft: 20,
-    paddingRight: 40,
-  },
+    paddingRight: 40
+  }
 });

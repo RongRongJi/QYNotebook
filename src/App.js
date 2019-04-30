@@ -1,6 +1,11 @@
 import React from 'react';
-import { createStackNavigator, createAppContainer, createSwitchNavigator } from 'react-navigation';
-
+import {
+  createStackNavigator,
+  createAppContainer,
+  createSwitchNavigator,
+  NavigationActions
+} from 'react-navigation';
+import { ToastShort } from './utils/toast_util';
 import ComponentTest from './pages/test/component_test';
 import MainView from './pages/main/main';
 
@@ -14,7 +19,6 @@ import Login from './pages/login/login';
 import Register from './pages/login/register';
 import Advertise from './pages/login/ads';
 
-
 const MainStack = createStackNavigator(
   {
     main: {
@@ -23,20 +27,73 @@ const MainStack = createStackNavigator(
     notebook: {
       screen: NotebookView
     },
-    nbpreview:{
-      screen: NotebookPreview,
+    nbpreview: {
+      screen: NotebookPreview
     },
     locknotebook: {
-      screen: LockNotebook,
+      screen: LockNotebook
     },
     lockview: {
-      screen: LockView,
-    },
+      screen: LockView
+    }
   },
   {
     headerMode: 'none'
   }
 );
+
+let stateIndex,
+  oStateIndex = false,
+  goBack = false;
+var lastBackPressed = false;
+const defaultGetStateForAction = MainStack.router.getStateForAction;
+MainStack.router.getStateForAction = (action, state) => {
+  if (state) {
+    stateIndex = state.index;
+    if (action.type === NavigationActions.BACK) {
+      if (state.routes[state.index].params) {
+        if (state.routes[state.index].params.backFn) {
+          const routes = [...state.routes];
+          var _backFn = async () => {
+            if (goBack) {
+              goBack = false;
+            } else {
+              goBack = await state.routes[state.index].params.backFn();
+            }
+            oStateIndex = state.index;
+            goBack();
+          };
+          _backFn();
+          if (stateIndex != oStateIndex) {
+            return {
+              ...state,
+              ...state.routes,
+              index: routes.length - 1
+            };
+          } else {
+            oStateIndex = false;
+          }
+        }
+      }
+      if (state.routes[state.index].routeName != 'notebook') {
+        return defaultGetStateForAction(action, state);
+      }
+      // if (state.routes[state.index].routeName == 'main') {
+      //   if (lastBackPressed + 2000 < Date.now()) {
+      //     ToastShort('再点击一次退出应用');
+      //     lastBackPressed = Date.now();
+      //     const routes = [...state.routes];
+      //     return {
+      //       ...state,
+      //       ...state.routes,
+      //       index: routes.length - 1
+      //     };
+      //   }
+      // }
+    }
+  }
+  return defaultGetStateForAction(action, state);
+};
 
 const LoginStack = createStackNavigator(
   {
@@ -57,18 +114,18 @@ const LoginStack = createStackNavigator(
 
 const InitStack = createSwitchNavigator(
   {
-    advertise:{
-      screen: Advertise,
+    advertise: {
+      screen: Advertise
     },
-    loginstack:{
-      screen: LoginStack,
+    loginstack: {
+      screen: LoginStack
     },
-    mainstack:{
-      screen: MainStack,
+    mainstack: {
+      screen: MainStack
     },
     initial: {
       screen: Init
-    },
+    }
   },
   {
     headerMode: 'none'
@@ -90,7 +147,7 @@ const AppNavigator = createStackNavigator(
   {
     init: {
       //screen: TestStack,
-      screen: InitStack,
+      screen: InitStack
     }
   },
   {

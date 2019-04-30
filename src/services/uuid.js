@@ -1,4 +1,3 @@
-
 export default function getUUID(){
   var s = [];
   var hexDigits = '0123456789abcdef';

@@ -6,62 +6,76 @@
  * @flow
  */
 
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import {
   Platform,
-  StyleSheet, 
-  Text, 
-  View, 
-  TouchableOpacity, 
-  TouchableNativeFeedback} from 'react-native';
-import RefreshListView,{RefreshState} from 'react-native-refresh-list-view';
+  StyleSheet,
+  Text,
+  View,
+  TouchableOpacity,
+  TouchableNativeFeedback
+} from 'react-native';
+import RefreshListView, { RefreshState } from 'react-native-refresh-list-view';
 import NotebookLabel from './notebook_label';
 import { getColorType } from '../../config/color_type';
 
-
-
 export default class NotebookList extends Component {
-  constructor(props){
+  constructor(props) {
     super(props);
     this.state = {
       data: this.props.data,
-      refreshState: RefreshState.Idle,
+      refreshState: RefreshState.Idle
     };
     this.refresh = this.props.refresh;
   }
 
   //刷新
-  async onRefresh(){
+  async onRefresh() {
     //开始刷新列表
     this.setState({
-      data:[],
-      refreshState: RefreshState.HeaderRefreshing,
+      data: [],
+      refreshState: RefreshState.HeaderRefreshing
     });
     //加载数据
     //测试数据
-    let alldata=[
-      {key:'1',title:'笔记1',content:'wrnm',date:'2月13'},
-      {key:'2',title:'笔记2',content:'wrnm',date:'3月4'},
-      {key:'3',title:'笔记3',content:'wrnm',date:'6月5'},
+    let alldata = [
+      {
+        uuid: '21d4f709-5fad-411f-88c3-908b78f4e064',
+        title: '笔记1',
+        content: 'wrnm',
+        date: '2月13'
+      },
+      {
+        uuid: '21d4f709-5fad-411f-88c3-908b78f4e064',
+        title: '笔记2',
+        content: 'wrnm',
+        date: '3月4'
+      },
+      {
+        uuid: '21d4f709-5fad-411f-88c3-908b78f4e064',
+        title: '笔记3',
+        content: 'wrnm',
+        date: '6月5'
+      }
     ];
     this.setState({
-      data:alldata,
+      data: alldata
     });
     //结束刷新
     this.setState({
-      refreshState: RefreshState.Idle,
+      refreshState: RefreshState.Idle
     });
   }
 
   //获取数据并跳转
-  _getItemData(){
-    this.props.navigation.navigate('nbpreview');
+  _getItemData(item) {
+    this.props.navigation.navigate('nbpreview', {
+      uuid: item.uuid
+    });
   }
 
-
-
-  renderList(){
-    return(
+  renderList() {
+    return (
       <View>
         <RefreshListView
           data={this.state.data}
@@ -71,18 +85,22 @@ export default class NotebookList extends Component {
           footerFailureText="数据加载失败，下拉刷新"
           footerEmptyDataText="没有更多笔记啦~"
         />
-
       </View>
     );
   }
 
-  renderItem({item}){
-    return(
+  renderItem({ item }) {
+    return (
       <TouchableNativeFeedback
-        onPress={()=>{this._getItemData();}}>
-        <View  style={{
-          backgroundColor: getColorType()['Background']
-        }}>
+        onPress={() => {
+          this._getItemData(item);
+        }}
+      >
+        <View
+          style={{
+            backgroundColor: getColorType()['Background']
+          }}
+        >
           <NotebookLabel
             key={item.key}
             item={item}
@@ -93,22 +111,17 @@ export default class NotebookList extends Component {
     );
   }
 
-
   render() {
-    return (
-      <View style={styles.container}>
-        {this.renderList()}
-      </View>
-    );
+    return <View style={styles.container}>{this.renderList()}</View>;
   }
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    flex: 1
   },
   listcontainer: {
     flex: 1,
-    marginTop: Platform.OS == 'ios' ? 20 : 0,
-  },
+    marginTop: Platform.OS == 'ios' ? 20 : 0
+  }
 });

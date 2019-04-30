@@ -110,7 +110,7 @@ export default class Note {
       NBInfoDirectoryPath =
         ExternalDirectoryPath + '/' + global.username + '/nbInfo';
     }
-    this.path = `${ExternalDirectoryPath}/${this.uuid}`;
+    this.path = `${NBInfoDirectoryPath}/${this.uuid}`;
     /**
      * 是否存在nbInfo文件夹
      * 如果不存在即创建
@@ -162,6 +162,17 @@ export default class Note {
       });
   }
 
+  async delete() {
+    console.log('delete note...');
+
+    await RNFS.unlink(`${this.path}`)
+      .then(() => {
+        console.log(`${this.path} delete success`);
+      })
+      .catch(err => {
+        console.log(`delete ${this.path} error`, err);
+      });
+  }
   async readContent() {
     console.log('read content files...');
     let config = {};

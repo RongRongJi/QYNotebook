@@ -78,7 +78,7 @@ export default class NoteBook_Dao {
           }
         }
         global.nbDao.init=true;
-        console.log(global.nbDao.notebookList);
+        //console.log(global.nbDao.notebookList);
         resolve(true);
       });
     });

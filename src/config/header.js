@@ -7,7 +7,7 @@ export function setHeader(){
     backgroundColor: getColorType()['Background'],
   };
   InnerNaviBar.defaultProps.navbarHeight=50;
-  InnerNaviBar.defaultProps.gobackImage=require('./images/back.png');
+  InnerNaviBar.defaultProps.gobackImage=global.colorType=='day'?require('./images/back_day.png'):require('./images/back_night.png');
   InnerNaviBar.defaultProps.style.title={
     fontSize:17,
     color: getColorType()['ItemBackground'],

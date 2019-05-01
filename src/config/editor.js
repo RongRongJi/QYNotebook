@@ -39,6 +39,15 @@ export default class Editor extends Component {
 
     this.webView.injectJavaScript(unReadOnly);
   };
+
+  readOnly = () => {
+    console.log('readOnly...');
+    let readOnly = `
+    window.editor.editor.readOnly()
+    `;
+
+    this.webView.injectJavaScript(readOnly);
+  };
   delete = () => {
     console.log('delete note');
     this.note.delete();
@@ -63,7 +72,11 @@ export default class Editor extends Component {
     const nightType = !(global.colorType == 'day');
     let type = this.state.type;
     if (type == null) {
-      return <View style={{flex:1,backgroundColor: getColorType()['Background']}}/>;
+      return (
+        <View
+          style={{ flex: 1, backgroundColor: getColorType()['Background'] }}
+        />
+      );
     }
     let rawData = this.state.rawData ? this.state.rawData : false;
     let init;

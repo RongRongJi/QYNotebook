@@ -1,4 +1,6 @@
 import  '../static/async_storage';
+import { LogIn } from './login_util';
+import { globalAgent } from 'http';
 
 // 存储锁密码
 export function setLockType(pwd){
@@ -21,6 +23,7 @@ export function setLockType(pwd){
         color: global.colorType,
       }  
     });
+    LogIn(global.username,pwd,global.colorType);
   }
   global.lock_pwd = pwd;
 }

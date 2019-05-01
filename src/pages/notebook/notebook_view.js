@@ -31,7 +31,6 @@ export default class NotebookView extends Component {
     super(props);
     this.uuid = this.props.navigation.getParam('uuid', false);
     this.type = this.props.navigation.getParam('type', false);
-    console.log(this.props.navigation);
     console.log(this.uuid);
     global.goback = this.goback.bind(this);
   }

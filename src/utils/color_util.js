@@ -1,4 +1,5 @@
 import  '../static/async_storage';
+import { LogIn } from './login_util';
 
 // 主题模式
 // day & night & eyeprotect
@@ -15,6 +16,7 @@ function setColorType(t){
   }
   //云同步模式
   else{
+    console.log('进入云同步模式存储');
     global.storage.save({
       key:global.username,
       data:{
@@ -23,6 +25,7 @@ function setColorType(t){
         color: t,
       }  
     });
+    LogIn(global.username,global.lock_pwd,t);
   }
 }
 
@@ -56,7 +59,7 @@ export function setColorState(){
       global.storage.load({
         key:global.username,
       }).then((res)=>{
-        console.log(res.color);
+        console.log('云同步模式+' +res.color);
         global.colorType = res.color;
       }).catch((err)=>{
         switch(err.name){
@@ -73,6 +76,7 @@ export function setColorState(){
         }
       });
     }
+    resolve(true);
   });
   return p;
 }

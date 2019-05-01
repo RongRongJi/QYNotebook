@@ -83,7 +83,11 @@ export default class NotebookPreview extends Component {
     <View
       style={[
         styles.row,
-        { backgroundColor: getColorType()['ItemBackground'] }
+        { 
+          backgroundColor: getColorType()['Background'],
+          borderBottomWidth: 1,
+          borderBottomColor: getColorType()['LineColor']
+        }
       ]}
     >
       <TouchableOpacity
@@ -91,8 +95,10 @@ export default class NotebookPreview extends Component {
         onPress={() => this.props.navigation.goBack()}
       >
         <Image
-          style={{ width: 18, height: 18 }}
-          source={require('../../config/images/back.png')}
+          style={{ width: 20, height: 20 }}
+          source={global.colorType=='day'?
+            require('../../config/images/back_day.png'):
+            require('../../config/images/back_night.png')}
         />
       </TouchableOpacity>
       <TouchableOpacity
@@ -103,7 +109,9 @@ export default class NotebookPreview extends Component {
       >
         <Image
           style={{ width: 20, height: 20 }}
-          source={require('./images/editor.png')}
+          source={global.colorType=='day'?
+            require('./images/editor_day.png'):
+            require('./images/editor_night.png')}
         />
       </TouchableOpacity>
       <TouchableOpacity
@@ -112,7 +120,9 @@ export default class NotebookPreview extends Component {
       >
         <Image
           style={{ width: 20, height: 20 }}
-          source={require('./images/more.png')}
+          source={global.colorType=='day'?
+            require('./images/more_day.png'):
+            require('./images/more_night.png')}
         />
       </TouchableOpacity>
     </View>

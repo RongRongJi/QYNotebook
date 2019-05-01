@@ -42,6 +42,7 @@ export default class MainView extends Component {
   }
 
   onBackAndroid = () => {
+    console.log(this.props.navigation.isFocused());
     if (!this.props.navigation.isFocused()) {
       if(!global.goback)
         return false;

@@ -17,7 +17,11 @@ const window = Dimensions.get('window');
 export default function Menu({ onItemSelected, data }) {
   return (
     <ScrollView scrollsToTop={false} style={[styles.menu,
-      {backgroundColor: getColorType()['Background'],}]}>
+      {
+        backgroundColor: getColorType()['Background'],
+        borderLeftWidth: 1,
+        borderLeftColor: getColorType()['LineColor']
+      }]}>
       <Text style={{
         fontSize:17,
         color:getColorType()['ItemBackground'],

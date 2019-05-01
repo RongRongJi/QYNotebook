@@ -46,58 +46,7 @@ const MainStack = createStackNavigator(
   }
 );
 
-let stateIndex,
-  oStateIndex = false,
-  goBack = false;
-var lastBackPressed = false;
-const defaultGetStateForAction = MainStack.router.getStateForAction;
-MainStack.router.getStateForAction = (action, state) => {
-  if (state) {
-    stateIndex = state.index;
-    if (action.type === NavigationActions.BACK) {
-      if (state.routes[state.index].params) {
-        if (state.routes[state.index].params.backFn) {
-          const routes = [...state.routes];
-          var _backFn = async () => {
-            if (goBack) {
-              goBack = false;
-            } else {
-              goBack = await state.routes[state.index].params.backFn();
-            }
-            oStateIndex = state.index;
-            goBack();
-          };
-          _backFn();
-          if (stateIndex != oStateIndex) {
-            return {
-              ...state,
-              ...state.routes,
-              index: routes.length - 1
-            };
-          } else {
-            oStateIndex = false;
-          }
-        }
-      }
-      if (state.routes[state.index].routeName != 'notebook') {
-        return defaultGetStateForAction(action, state);
-      }
-      // if (state.routes[state.index].routeName == 'main') {
-      //   if (lastBackPressed + 2000 < Date.now()) {
-      //     ToastShort('再点击一次退出应用');
-      //     lastBackPressed = Date.now();
-      //     const routes = [...state.routes];
-      //     return {
-      //       ...state,
-      //       ...state.routes,
-      //       index: routes.length - 1
-      //     };
-      //   }
-      // }
-    }
-  }
-  return defaultGetStateForAction(action, state);
-};
+
 
 const LoginStack = createStackNavigator(
   {

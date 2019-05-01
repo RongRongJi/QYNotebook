@@ -11,7 +11,21 @@ import {Platform, StyleSheet, Text, View, Dimensions} from 'react-native';
 import WIDTH from '../../config/styles';
 import { getColorType } from '../../config/color_type';
 
-
+/*
+ * config:{
+ *   "uuid": 唯一uuid标识,
+ *   "lock": true 笔记上锁 / false 笔记公开
+ *   "create_date": "2019-4-18" 创建时间
+ *   "last_date": "2019-4-26" 最后修改时间
+ *   "type": "markdown",  //markdown or richtext
+ *   "note":{
+ *      "html":path,
+ *      "raw":path
+ *  }
+ *   "info":{
+ *      key1:"path1"
+ *  }
+*/
 
 export default class NotebookLabel extends Component {
   constructor(props){
@@ -20,9 +34,9 @@ export default class NotebookLabel extends Component {
   }
 
     renderItem = () =>{
-      let title = this.item.title;
-      let content = this.item.content;
-      let date = this.item.date;
+      let title = this.item.uuid;
+      let content = this.item.note.html;
+      let date = this.item.last_date;
       return (
         <View style={[styles.container,
           {borderBottomColor:getColorType()['LineColor']}  

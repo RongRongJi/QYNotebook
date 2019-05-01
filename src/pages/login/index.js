@@ -16,6 +16,7 @@ import {
   TouchableOpacity,
   Dimensions,
 } from 'react-native';
+import NoteBook_Dao from '../../services/notebook';
 
 
 
@@ -27,6 +28,9 @@ export default class Index extends Component {
   //本地登录
   Skip(){
     global.username='';
+    //初始化notebook文件夹
+    if(!global.nbDao)
+      global.nbDao = new NoteBook_Dao();
     this.props.navigation.navigate('initial');
   }
 

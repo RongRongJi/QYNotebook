@@ -17,6 +17,7 @@ import {
   Dimensions,
 } from 'react-native';
 import { DirectLogin } from '../../utils/login_util';
+import NoteBook_Dao from '../../services/notebook';
 
 
 
@@ -35,6 +36,9 @@ export default class Advertise extends Component {
         global.username = res.username;
         global.lock_pwd = res.lock;
         global.colorType = res.color;
+        //初始化notebook文件夹
+        if(!global.nbDao)
+          global.nbDao = new NoteBook_Dao();
         this.props.navigation.pop();
         this.props.navigation.navigate('main');
       }

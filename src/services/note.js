@@ -102,6 +102,10 @@ export default class Note {
     //类变量初始化
     this.uuid = uuid;
     this.type = type;
+    this.note = {
+      html: this.uuid + 'html',
+      raw: this.uuid + 'raw'
+    };
     this.saveConfig = this.saveConfig.bind(this);
     this.save = this.save.bind(this);
     if (global.username == '') {
@@ -174,7 +178,7 @@ export default class Note {
       });
   }
   async readContent() {
-    console.log('read content files...');
+    console.log('read content files...'+this.note);
     let config = {};
     await RNFS.readFile(`${this.path}/${this.note.html}`)
       .then(res => {

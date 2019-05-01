@@ -28,17 +28,19 @@ import { getColorType } from '../../config/color_type';
 import SideMenu from 'react-native-side-menu';
 import { WIDTH } from '../../config/styles';
 import Menu from './menu';
-import Note from '../../config/note';
+import Note from '../../services/note';
 import Editor from '../../config/editor';
 
 export default class NotebookPreview extends Component {
   constructor(props) {
     super(props);
     this.uuid = this.props.navigation.getParam('uuid', false);
+    this.type = this.props.navigation.getParam('type', false);
+    this.content = this.props.navigation.getParam('content', false);
     if (!this.uuid) {
       throw new Error('no uuid found!');
     }
-    this.note = new Note(this.uuid);
+    this.note = new Note(this.uuid,this.type);
     this.toggle = this.toggle.bind(this);
 
     this.state = {
@@ -119,6 +121,7 @@ export default class NotebookPreview extends Component {
     );
     let type = this.note.type;
     let uuid = this.note.uuid;
+    console.log(this.uuid);
     // let getSync = async () => {
     // let rawData = await this.note.readContent();
     return (

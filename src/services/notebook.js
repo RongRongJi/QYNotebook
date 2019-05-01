@@ -2,6 +2,7 @@ import getUUID from './uuid';
 import RNFS from 'react-native-fs';
 import { ToastShort } from '../utils/toast_util';
 import { getToday, getYesterday } from '../utils/date';
+import Note from './note';
 
 /*
  * 笔记的增删改查操作
@@ -20,16 +21,20 @@ import { getToday, getYesterday } from '../utils/date';
  */
 const ExternalDirectoryPath = RNFS.ExternalDirectoryPath;
 //notebook Information文件夹
-const NBInfoDirectoryPath = !global.username
-  ? ExternalDirectoryPath + '/nbInfo'
-  : ExternalDirectoryPath + '/' + global.username + '/nbInfo';
+let NBInfoDirectoryPath;
 
 export default class NoteBook_Dao {
   //构造函数
   constructor(props) {
     //类变量初始化
     this.notebookList = [];
+    this.lockList = [];
     this.init = false;
+    if(global.username==''){
+      NBInfoDirectoryPath = ExternalDirectoryPath+'/nbInfo';
+    }else{
+      NBInfoDirectoryPath = ExternalDirectoryPath+'/'+global.username+'/nbInfo';
+    }
     /**
      * 是否存在nbInfo文件夹
      * 如果不存在即创建
@@ -53,42 +58,67 @@ export default class NoteBook_Dao {
       });
   }
 
+  //读取笔记列表
+  static getInitData(){
+    var p = new Promise(function(resolve,reject){
+      NoteBook_Dao.getNotebook().then(async (ret)=>{
+        let allData = ret;
+        let nblist = [];
+        let locklist=[];
+        for(var i=0;i<allData.length;i++){
+          let note = await new Note(allData[i].uuid,allData[i].type);
+          let content = await note.readContent();
+          allData[i].note=content;
+          if(allData.lock==true){
+            locklist.push(allData[i]);
+            global.nbDao.lockList=locklist;
+          }else{
+            nblist.push(allData[i]);
+            global.nbDao.notebookList=nblist;
+          }
+        }
+        global.nbDao.init=true;
+        console.log(global.nbDao.notebookList);
+        resolve(true);
+      });
+    });
+    return p;
+  }
+
+
+
   /**
    * 获取笔记列表
    * 将数据返回给页面
    */
   static async getNotebook() {
     //从Storage中获取所有uuid
-    let uuidArray = [];
-    await RNFS.readDir(NBInfoDirectoryPath).then(async readDirItems => {
-      for (let readDirItem in readDirItems) {
-        if (readDirItem.isDirectory()) {
-          uuidArray.push(readDirItem.name);
-        }
-      }
-    });
     var p = new Promise(function(resolve, reject) {
-      let nbmsg = [];
-      let check = 0;
-      for (var i = uuidArray.length - 1; i >= 0; i--) {
-        RNFS.readFile(
-          NBInfoDirectoryPath + '/' + uuidArray[i] + '.json',
-          'utf8'
-        )
-          .then(ret => {
-            console.log('FILE READ!');
-            nbmsg.push(JSON.parse(ret));
-            check++;
-            if (check == uuidArray.length) {
-              console.log(nbmsg);
-              resolve(nbmsg);
-            }
-          })
-          .catch(err => {
-            alert(err.message);
-            console.log(err.message);
-          });
-      }
+      RNFS.readdir(NBInfoDirectoryPath)
+        .then((ret)=>{
+          let uuidArray = ret;
+          let nbmsg = [];
+          let check = 0;
+          for (var i = uuidArray.length - 1; i >= 0; i--) {
+            RNFS.readFile(
+              NBInfoDirectoryPath + '/' + uuidArray[i] + '/config.json',
+              'utf8'
+            )
+              .then(ret => {
+                console.log('FILE READ!');
+                nbmsg.push(JSON.parse(ret));
+                check++;
+                if (check == uuidArray.length) {
+                  console.log(nbmsg);
+                  resolve(nbmsg);
+                }
+              })
+              .catch(err => {
+                alert(err.message);
+                console.log(err.message);
+              });
+          }
+        });
     });
     //console.log(p);
     return p;

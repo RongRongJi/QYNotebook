@@ -9,7 +9,7 @@
 import React, { Component } from 'react';
 import { Platform, StyleSheet, Text, View } from 'react-native';
 import { WebView } from 'react-native-webview';
-import Note from './note';
+import Note from '../services/note';
 export default class Editor extends Component {
   constructor(props) {
     super(props);

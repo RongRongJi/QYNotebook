@@ -1,4 +1,5 @@
 import  '../static/async_storage';
+import NoteBook_Dao from '../services/notebook';
 
 /**
  * data: {
@@ -70,6 +71,9 @@ export function getUserData(username){
       global.lock_pwd = res.lock;
       global.colorType = res.color;
       console.log('getUserData'+username);
+      //初始化notebook文件夹
+      if(!global.nbDao)
+        global.nbDao = new NoteBook_Dao();
       LogIn(res.username,res.lock,res.color);
       resolve(res);
     }).catch((err)=>{
@@ -81,6 +85,9 @@ export function getUserData(username){
         global.lock_pwd ='';
         global.colorType='day';
         console.log('getUserData'+global.username);
+        //初始化notebook文件夹
+        if(!global.nbDao)
+          global.nbDao = new NoteBook_Dao();
         LogIn(username,'','day');
         resolve(false);
         break;

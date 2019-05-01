@@ -12,6 +12,7 @@ import { setHeader } from '../../config/header';
 import { setColorState } from '../../utils/color_util';
 import { setLockState } from '../../utils/lock_util';
 import RNFS from 'react-native-fs';
+import NoteBook_Dao from '../../services/notebook';
 
 export default class Init extends Component {
   constructor(props) {
@@ -28,6 +29,10 @@ export default class Init extends Component {
       //加载锁密码
       let pwd = await setLockState();
 
+      //初始化notebook文件夹
+      if(!global.nbDao)
+        global.nbDao = new NoteBook_Dao();
+      
       //界面跳转
       setTimeout(() => {
         this.props.navigation.navigate('main');

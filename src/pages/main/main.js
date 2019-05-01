@@ -125,30 +125,7 @@ export default class MainView extends Component {
 
   //获取笔记列表
   renderNotebookList = () => {
-    let alldata = [
-      {
-        key: 1,
-        uuid: '21d4f709-5fad-411f-88c3-908b78f4e064',
-        title: '笔记1',
-        content: '.....',
-        date: '2月13'
-      },
-      {
-        key: 2,
-        uuid: '21d4f709-5fad-411f-88c3-908b78f4e064',
-        title: '笔记2',
-        content: 'hahahahahahah',
-        date: '3月4'
-      },
-      {
-        key: 3,
-        uuid: '21d4f709-5fad-411f-88c3-908b78f4e064',
-        title: '笔记3',
-        content: '123321123321',
-        date: '6月5'
-      }
-    ];
-    return <NotebookList data={alldata} navigation={this.props.navigation} />;
+    return <NotebookList navigation={this.props.navigation} />;
   };
 
   //获取待办列表

@@ -18,14 +18,18 @@ import {
 import RefreshListView, { RefreshState } from 'react-native-refresh-list-view';
 import NotebookLabel from './notebook_label';
 import { getColorType } from '../../config/color_type';
+import NoteBook_Dao from '../../services/notebook';
 
 export default class NotebookList extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      data: this.props.data,
       refreshState: RefreshState.Idle
     };
+    NoteBook_Dao.getInitData().then((ret)=>{
+      this.setState({data:global.nbDao.notebookList});
+      //this.state.data= global.nbDao.NotebookList;
+    });
     this.refresh = this.props.refresh;
   }
 
@@ -38,39 +42,22 @@ export default class NotebookList extends Component {
     });
     //加载数据
     //测试数据
-    let alldata = [
-      {
-        uuid: '21d4f709-5fad-411f-88c3-908b78f4e064',
-        title: '笔记1',
-        content: 'wrnm',
-        date: '2月13'
-      },
-      {
-        uuid: '21d4f709-5fad-411f-88c3-908b78f4e064',
-        title: '笔记2',
-        content: 'wrnm',
-        date: '3月4'
-      },
-      {
-        uuid: '21d4f709-5fad-411f-88c3-908b78f4e064',
-        title: '笔记3',
-        content: 'wrnm',
-        date: '6月5'
-      }
-    ];
-    this.setState({
-      data: alldata
+    NoteBook_Dao.getInitData().then((ret)=>{
+      this.setState({data: global.nbDao.notebookList});
+      //结束刷新
+      this.setState({
+        refreshState: RefreshState.Idle
+      });
     });
-    //结束刷新
-    this.setState({
-      refreshState: RefreshState.Idle
-    });
+    
   }
 
   //获取数据并跳转
   _getItemData(item) {
     this.props.navigation.navigate('nbpreview', {
-      uuid: item.uuid
+      uuid: item.uuid,
+      type: item.type,
+      content: item.note,
     });
   }
 

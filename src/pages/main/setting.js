@@ -43,6 +43,7 @@ export default class Setting extends Component {
       global.username=null;
       global.colorType=null;
       global.todoDao=null;
+      global.nbDao=null;
       this.props.navigation.navigate('index');
     });
   }

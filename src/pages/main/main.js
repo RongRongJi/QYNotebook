@@ -42,7 +42,18 @@ export default class MainView extends Component {
   }
 
   onBackAndroid = () => {
-    if (!this.props.navigation.isFocused()) return false;
+    if (!this.props.navigation.isFocused()) {
+      if(!global.goback)
+        return false;
+      else if(global.goback==null)
+        return false;
+      else{
+        global.goback().then((ret)=>{
+          if(ret!=false) ret();
+        });
+        return true;
+      }
+    }
     else if (
       this.lastBackPressed &&
       this.lastBackPressed + 2000 >= Date.now()

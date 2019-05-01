@@ -28,7 +28,7 @@ export default class Advertise extends Component {
 
   initData(){
     DirectLogin().then((res)=>{
-      console.log('res= '+res);
+      console.log('res= '+res.color);
       if(res==false){
         this.props.navigation.pop();
         this.props.navigation.navigate('index');
@@ -36,6 +36,9 @@ export default class Advertise extends Component {
         global.username = res.username;
         global.lock_pwd = res.lock;
         global.colorType = res.color;
+        console.log(global.username);
+        console.log(global.lock_pwd);
+        console.log(global.colorType);
         //初始化notebook文件夹
         if(!global.nbDao)
           global.nbDao = new NoteBook_Dao();

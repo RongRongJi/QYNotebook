@@ -35,6 +35,7 @@ export default class NotebookLabel extends Component {
   }
 
   replaceHtml(str){
+    if(!str) return str;
     var con = str.replace(/\s*/g, '');  //去掉空格
     var res =con.replace(/<[^>]+>/g, ''); //去掉所有的html标记
     var res1 = res.replace(/↵/g, '');     //去掉所有的↵符号

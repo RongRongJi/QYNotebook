@@ -52,6 +52,7 @@ export function LogIn(username,lock,color){
         color: color,
       }  
     });
+    resolve(true);
   });
   return p;
 }

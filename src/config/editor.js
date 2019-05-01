@@ -13,9 +13,31 @@ import Note from '../services/note';
 export default class Editor extends Component {
   constructor(props) {
     super(props);
-    this.note = new Note(props.uuid, this.props.type);
+    this.state = {
+      type: null,
+      rawData: null
+    };
   }
+  componentWillMount = async () => {
+    this.note = new Note(this.props.uuid, this.props.type);
+    await this.note.init();
+    if (this.props.show) {
+      await this.note.readContent().then(res => {
+        this.rawData = res;
+        this.setState({ type: this.note.type, rawData: res.raw });
+      });
+    } else {
+      this.setState({ type: this.note.type });
+    }
+  };
+  unReadOnly = () => {
+    console.log('unReadOnly...');
+    let unReadOnly = `
+    window.editor.editor.unReadOnly()
+    `;
 
+    this.webView.injectJavaScript(unReadOnly);
+  };
   save = () => {
     console.log('richtext content saving...');
     let save = `
@@ -34,9 +56,18 @@ export default class Editor extends Component {
         ? require('./type-editor/dist/index.html')
         : { uri: 'file:///android_asset/index.html' };
     const nightType = !(global.colorType == 'day');
-    let type = this.props.type;
-    let rawData = this.props.rawData ? this.props.rawData : false;
-    let init = `window.setEditor('${type}',${nightType},${rawData});`;
+    let type = this.state.type;
+    if (type == null) {
+      return <View />;
+    }
+    let rawData = this.state.rawData ? this.state.rawData : false;
+    let init;
+    if (rawData) {
+      init = `window.setEditor('${type}',${nightType},'${rawData}');`;
+    } else {
+      init = `window.setEditor('${type}',${nightType});`;
+    }
+
     console.log(init);
     return (
       <WebView

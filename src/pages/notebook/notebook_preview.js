@@ -30,6 +30,7 @@ import { WIDTH } from '../../config/styles';
 import Menu from './menu';
 import Note from '../../services/note';
 import Editor from '../../config/editor';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
 export default class NotebookPreview extends Component {
   constructor(props) {
@@ -40,14 +41,14 @@ export default class NotebookPreview extends Component {
     if (!this.uuid) {
       throw new Error('no uuid found!');
     }
-    this.note = new Note(this.uuid,this.type);
     this.toggle = this.toggle.bind(this);
 
     this.state = {
       isOpen: false,
       selectedItem: 'About',
       deleteDialog: false,
-      lockDialog: false
+      lockDialog: false,
+      rawData: false
     };
 
     this.data = {
@@ -96,7 +97,9 @@ export default class NotebookPreview extends Component {
       </TouchableOpacity>
       <TouchableOpacity
         style={{ position: 'absolute', right: 70 }}
-        onPress={() => {}}
+        onPress={() => {
+          this.editor.unReadOnly();
+        }}
       >
         <Image
           style={{ width: 20, height: 20 }}
@@ -119,9 +122,6 @@ export default class NotebookPreview extends Component {
     const menu = (
       <Menu onItemSelected={this.onMenuItemSelected} data={this.data} />
     );
-    let type = this.note.type;
-    let uuid = this.note.uuid;
-    console.log(this.uuid);
     // let getSync = async () => {
     // let rawData = await this.note.readContent();
     return (
@@ -142,15 +142,15 @@ export default class NotebookPreview extends Component {
           ]}
         >
           <this.renderHeader />
-          <ScrollView style={styles.container}>
+          <KeyboardAwareScrollView contentContainerStyle={styles.container}>
             <Editor
-              type={type}
               ref={editor => {
                 this.editor = editor;
               }}
-              uuid={uuid}
+              uuid={this.uuid}
+              show={true}
             />
-          </ScrollView>
+          </KeyboardAwareScrollView>
         </View>
         <this.renderDeleteDialog />
         <this.renderLockDialog />

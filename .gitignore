@@ -64,4 +64,5 @@ yarn-error.log*
 
 
 # type-editor
-src/config/type-editor
+src/config/type-editor/*
+!src/config/type-editor/dist

@@ -92,7 +92,6 @@ export default class Editor extends Component {
             (this.props.type == 'richtext' && config.html == '<p></p>')
           ) {
             console.log('no edit note');
-            this.delete();
             return;
           }
           this.note.save(config.html, config.raw);

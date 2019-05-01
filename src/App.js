@@ -35,10 +35,10 @@ const MainStack = createStackNavigator(
       screen: LockNotebook
     },
     lockview: {
-      screen: LockView,
+      screen: LockView
     },
     about: {
-      screen: About,
+      screen: About
     }
   },
   {

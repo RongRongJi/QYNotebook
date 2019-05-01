@@ -2,6 +2,7 @@ import getUUID from '../services/uuid';
 import RNFS from 'react-native-fs';
 import { ToastShort } from '../utils/toast_util';
 import { config } from 'rx';
+import { getToday } from '../utils/date';
 
 /*
  * 笔记的增删改查操作
@@ -30,26 +31,17 @@ const ExternalDirectoryPath = RNFS.ExternalDirectoryPath;
 
 export default class Note {
   //构造函数
-  async init() {
-    await RNFS.exists(this.path)
-      .then(async res => {
-        if (res) {
-          console.log(`${this.path} exits`);
-        } else {
-          await RNFS.mkdir(this.path)
-            .then(r => {
-              console.log(`mkdir ${this.path} success`);
-            })
-            .catch(err => {
-              console.log(`mkdir ${this.path} error`, err);
-            });
-        }
-      })
-      .catch(err => {
-        console.log(`error ${this.path} exits`, err);
-      });
-
-    console.log('saving to config.json...');
+  init = async () => {
+    console.log('init note...');
+    let created = getToday();
+    this.created = created;
+    this.last_date = created;
+    this.note = {
+      html: this.uuid + 'html',
+      raw: this.uuid + 'raw'
+    };
+    this.info = {};
+    this.lock = false;
     await RNFS.exists(`${this.path}/config.json`)
       .then(async res => {
         if (res) {
@@ -68,37 +60,12 @@ export default class Note {
             });
         } else {
           console.log(`${this.path}/config.json doesn't exits`);
-          let created = Date.now();
-          this.created = created;
-          this.last_date = created;
-          this.note = {
-            html: this.uuid + 'html',
-            raw: this.uuid + 'raw'
-          };
-          this.info = {};
-          this.lock = false;
-          let info = {
-            created: this.created,
-            last_date: this.last_date,
-            type: this.type,
-            note: this.note,
-            info: this.info,
-            lock: this.lock,
-            uuid: this.uuid
-          };
-          await RNFS.writeFile(`${this.path}/config.json`, JSON.stringify(info))
-            .then(() => {
-              console.log(`${this.path}/config.json write success`);
-            })
-            .catch(err => {
-              console.log(`write ${this.path}/config.json error`, err);
-            });
         }
       })
       .catch(err => {
         console.log(`error ${this.path}/config.json exits`, err);
       });
-  }
+  };
   constructor(uuid, type) {
     //类变量初始化
     this.uuid = uuid;
@@ -107,8 +74,6 @@ export default class Note {
       html: this.uuid + 'html',
       raw: this.uuid + 'raw'
     };
-    this.saveConfig = this.saveConfig.bind(this);
-    this.save = this.save.bind(this);
     if (global.username == '') {
       NBInfoDirectoryPath = ExternalDirectoryPath + '/nbInfo';
     } else {
@@ -122,9 +87,26 @@ export default class Note {
      */
   }
 
-  async saveConfig() {
+  saveConfig = async () => {
+    await RNFS.exists(this.path)
+      .then(async res => {
+        if (res) {
+          console.log(`${this.path} exits`);
+        } else {
+          await RNFS.mkdir(this.path)
+            .then(r => {
+              console.log(`mkdir ${this.path} success`);
+            })
+            .catch(err => {
+              console.log(`mkdir ${this.path} error`, err);
+            });
+        }
+      })
+      .catch(err => {
+        console.log(`error ${this.path} exits`, err);
+      });
     console.log('saving to config.json...');
-    this.last_date = Date.now();
+    this.last_date = getToday();
 
     let info = {
       created: this.created,
@@ -142,9 +124,9 @@ export default class Note {
       .catch(err => {
         console.log(`write ${this.path}/config.json error`, err);
       });
-  }
+  };
 
-  async save(html, raw) {
+  save = async (html, raw) => {
     await this.saveConfig();
     console.log('saving to note...');
 
@@ -163,9 +145,9 @@ export default class Note {
       .catch(err => {
         console.log(`write ${this.path}/${this.note.raw} error`, err);
       });
-  }
+  };
 
-  async delete() {
+  delete = async () => {
     console.log('delete note...');
 
     await RNFS.unlink(`${this.path}`)
@@ -175,9 +157,9 @@ export default class Note {
       .catch(err => {
         console.log(`delete ${this.path} error`, err);
       });
-  }
-  async readContent() {
-    console.log('read content files...'+this.note);
+  };
+  readContent = async () => {
+    console.log('read content files...' + this.note);
     let config = {};
     console.log(`${this.path}/${this.note.html}`);
     await RNFS.readFile(`${this.path}/${this.note.html}`)
@@ -196,5 +178,5 @@ export default class Note {
         console.log(`read ${this.path}/config.json error`, err);
       });
     return config;
-  }
+  };
 }

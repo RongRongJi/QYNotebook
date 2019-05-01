@@ -36,7 +36,7 @@ export default class NotebookView extends Component {
     global.goback = this.goback.bind(this);
   }
 
-  goback(){
+  goback() {
     return new Promise((resolve, reject) => {
       Alert.alert(
         '提示',
@@ -45,7 +45,8 @@ export default class NotebookView extends Component {
           {
             text: '取消',
             onPress: () => {
-              resolve(false);
+              global.goback = null;
+              resolve(this.props.navigation.pop);
             },
             style: 'cancel'
           },
@@ -55,7 +56,7 @@ export default class NotebookView extends Component {
               //你要执行的函数
               //this.postMessage();
               this.editor.save();
-              global.goback=null;
+              global.goback = null;
               resolve(this.props.navigation.pop);
             }
           }
@@ -67,7 +68,6 @@ export default class NotebookView extends Component {
     });
   }
 
-
   render() {
     // if (this.props.type === 'richtext') {
     let uuid = this.uuid ? this.uuid : getUUID();
@@ -75,38 +75,60 @@ export default class NotebookView extends Component {
 
     return (
       <KeyboardAwareScrollView contentContainerStyle={styles.container}>
-        <NaviBar 
+        <NaviBar
           style={{
-            safeView:{flex:0,backgroundColor:getColorType()['Background']},
-            title:{
-              fontSize:17,
+            safeView: {
+              flex: 0,
+              backgroundColor: getColorType()['Background']
+            },
+            title: {
+              fontSize: 17,
               color: getColorType()['ItemBackground'],
-              textAlign:'center',
-              overflow:'hidden',
-              fontWeight: 'bold',
+              textAlign: 'center',
+              overflow: 'hidden',
+              fontWeight: 'bold'
             }
           }}
           rightElement={
-            <TouchableOpacity onPress={()=>{
-              return new Promise((resolve, reject) => {
-                this.editor.save();
-                resolve(ToastShort('保存成功'));
-              });
-            }}>
-              <Image style={{width:20,height:20}}
-                source={global.colorType=='day'?require('../../config/images/save_day.png'):require('../../config/images/save_night.png')}/>
+            <TouchableOpacity
+              onPress={() => {
+                return new Promise((resolve, reject) => {
+                  this.editor.save();
+                  resolve(ToastShort('保存成功'));
+                });
+              }}
+            >
+              <Image
+                style={{ width: 20, height: 20 }}
+                source={
+                  global.colorType == 'day'
+                    ? require('../../config/images/save_day.png')
+                    : require('../../config/images/save_night.png')
+                }
+              />
             </TouchableOpacity>
           }
           leftElement={
-            <TouchableOpacity onPress={()=>{
-              this.goback().then((ret)=>{if(ret!=false)ret();});
-            }}>
-              <Image style={{width:20,height:20}}
-                source={global.colorType=='day'?require('../../config/images/back_day.png'):require('../../config/images/back_night.png')}/>
+            <TouchableOpacity
+              onPress={() => {
+                this.goback().then(ret => {
+                  if (ret != false) ret();
+                });
+              }}
+            >
+              <Image
+                style={{ width: 20, height: 20 }}
+                source={
+                  global.colorType == 'day'
+                    ? require('../../config/images/back_day.png')
+                    : require('../../config/images/back_night.png')
+                }
+              />
             </TouchableOpacity>
           }
           navbarHeight={50}
-          title={'青鱼笔记'}/>
+          title={'青鱼笔记'}
+        />
 
         <Editor
           type={type}

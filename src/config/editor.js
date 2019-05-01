@@ -10,6 +10,7 @@ import React, { Component } from 'react';
 import { Platform, StyleSheet, Text, View } from 'react-native';
 import { WebView } from 'react-native-webview';
 import Note from '../services/note';
+import { getColorType } from './color_type';
 export default class Editor extends Component {
   constructor(props) {
     super(props);
@@ -62,7 +63,7 @@ export default class Editor extends Component {
     const nightType = !(global.colorType == 'day');
     let type = this.state.type;
     if (type == null) {
-      return <View />;
+      return <View style={{flex:1,backgroundColor: getColorType()['Background']}}/>;
     }
     let rawData = this.state.rawData ? this.state.rawData : false;
     let init;

@@ -40,19 +40,19 @@ export default class NotebookList extends Component {
     //测试数据
     let alldata = [
       {
-        uuid: '21d4f709-5fad-411f-88c3-908b78f4e064',
+        uuid: '7872a68c-7815-4ed6-9780-c9a2212d3cf6',
         title: '笔记1',
         content: 'wrnm',
         date: '2月13'
       },
       {
-        uuid: '21d4f709-5fad-411f-88c3-908b78f4e064',
+        uuid: '7872a68c-7815-4ed6-9780-c9a2212d3cf6',
         title: '笔记2',
         content: 'wrnm',
         date: '3月4'
       },
       {
-        uuid: '21d4f709-5fad-411f-88c3-908b78f4e064',
+        uuid: '7872a68c-7815-4ed6-9780-c9a2212d3cf6',
         title: '笔记3',
         content: 'wrnm',
         date: '6月5'

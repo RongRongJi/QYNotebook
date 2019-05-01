@@ -30,7 +30,7 @@ const ExternalDirectoryPath = RNFS.ExternalDirectoryPath;
 
 export default class Note {
   //构造函数
-  async _constructor() {
+  async init() {
     await RNFS.exists(this.path)
       .then(async res => {
         if (res) {
@@ -57,6 +57,7 @@ export default class Note {
           // read config from json
           await RNFS.readFile(`${this.path}/config.json`)
             .then(res => {
+              console.log(`read ${this.path}/config.json`);
               res = JSON.parse(res);
               for (let key in res) {
                 this[key] = res[key];
@@ -115,8 +116,6 @@ export default class Note {
      * 是否存在nbInfo文件夹
      * 如果不存在即创建
      */
-    this._constructor(uuid, type);
-    console.log('test async');
   }
 
   async saveConfig() {
@@ -176,6 +175,7 @@ export default class Note {
   async readContent() {
     console.log('read content files...');
     let config = {};
+    console.log(`${this.path}/${this.note.html}`);
     await RNFS.readFile(`${this.path}/${this.note.html}`)
       .then(res => {
         config.html = res;

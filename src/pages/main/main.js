@@ -128,21 +128,21 @@ export default class MainView extends Component {
     let alldata = [
       {
         key: 1,
-        uuid: '21d4f709-5fad-411f-88c3-908b78f4e064',
+        uuid: '7872a68c-7815-4ed6-9780-c9a2212d3cf6',
         title: '笔记1',
         content: '.....',
         date: '2月13'
       },
       {
         key: 2,
-        uuid: '21d4f709-5fad-411f-88c3-908b78f4e064',
+        uuid: '7872a68c-7815-4ed6-9780-c9a2212d3cf6',
         title: '笔记2',
         content: 'hahahahahahah',
         date: '3月4'
       },
       {
         key: 3,
-        uuid: '21d4f709-5fad-411f-88c3-908b78f4e064',
+        uuid: '7872a68c-7815-4ed6-9780-c9a2212d3cf6',
         title: '笔记3',
         content: '123321123321',
         date: '6月5'

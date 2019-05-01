@@ -38,6 +38,10 @@ export default class Editor extends Component {
 
     this.webView.injectJavaScript(unReadOnly);
   };
+  delete = () => {
+    console.log('delete note');
+    this.note.delete();
+  };
   save = () => {
     console.log('richtext content saving...');
     let save = `
@@ -88,7 +92,7 @@ export default class Editor extends Component {
             (this.props.type == 'richtext' && config.html == '<p></p>')
           ) {
             console.log('no edit note');
-            this.note.delete();
+            this.delete();
             return;
           }
           this.note.save(config.html, config.raw);

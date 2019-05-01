@@ -194,7 +194,9 @@ export default class NotebookPreview extends Component {
             text="删除"
             bordered
             onPress={() => {
+              this.editor.delete();
               this.setState({ deleteDialog: false });
+              this.props.navigation.pop();
             }}
             key="button-2"
           />

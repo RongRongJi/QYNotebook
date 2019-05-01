@@ -52,7 +52,8 @@ export default class Editor extends Component {
     console.log('delete note');
     this.note.delete();
   };
-  save = () => {
+  save = title => {
+    this.note.setTitle(title);
     console.log('richtext content saving...');
     let save = `
     setTimeout(function(){

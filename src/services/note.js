@@ -14,7 +14,8 @@ import { getToday } from '../utils/date';
  *   "lock": true 笔记上锁 / false 笔记公开
  *   "create_date": "2019-4-18" 创建时间
  *   "last_date": "2019-4-26" 最后修改时间
- *   "type": "markdown",  //markdown or richtext
+ *   "type": "markdown",  //markdown or richtext,
+ *    "title": title, // 默认标题为当前事件
  *   "note":{
  *      "html":path,
  *      "raw":path
@@ -42,6 +43,7 @@ export default class Note {
     };
     this.info = {};
     this.lock = false;
+    this.title = getToday();
     await RNFS.exists(`${this.path}/config.json`)
       .then(async res => {
         if (res) {
@@ -115,7 +117,8 @@ export default class Note {
       note: this.note,
       info: this.info,
       lock: this.lock,
-      uuid: this.uuid
+      uuid: this.uuid,
+      title: this.title
     };
     await RNFS.writeFile(`${this.path}/config.json`, JSON.stringify(info))
       .then(() => {
@@ -124,6 +127,10 @@ export default class Note {
       .catch(err => {
         console.log(`write ${this.path}/config.json error`, err);
       });
+  };
+
+  setTitle = title => {
+    this.title = title;
   };
 
   save = async (html, raw) => {

@@ -28,6 +28,7 @@ import Note from '../../services/note';
 import Editor from '../../config/editor';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { getToday } from '../../utils/date';
+import { ToastShort } from '../../utils/toast_util';
 
 export default class NotebookPreview extends Component {
   constructor(props) {

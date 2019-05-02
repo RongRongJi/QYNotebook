@@ -73,13 +73,6 @@ export default class Setting extends Component {
             color:getColorType()['ItemBackground'],
           }}>{this.state.mode}</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={[styles.row,{borderBottomColor: getColorType()['LineColor'],}]}>
-          <Image style={styles.icon} source={global.colorType=='day'?require('./images/manager_day.png'):require('./images/manager_night.png')}/>
-          <Text style={{
-            marginLeft:5,
-            color:getColorType()['ItemBackground'],
-          }}>批量管理</Text>
-        </TouchableOpacity>
         <TouchableOpacity style={[styles.row,{borderBottomColor: getColorType()['LineColor'],}]} onPress={()=>this._About()}>
           <Image style={styles.icon} source={global.colorType=='day'?require('./images/about_day.png'):require('./images/about_night.png')}/>
           <Text style={{

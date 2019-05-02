@@ -51,7 +51,8 @@ export default class NotebookPreview extends Component {
     this.data = {
       create_date: this.item.created,
       last_date: this.item.last_date,
-      type: this.item.type
+      type: this.item.type,
+      lock: this.item.lock,
     };
   }
 
@@ -76,6 +77,18 @@ export default class NotebookPreview extends Component {
       this.renderLockDialog();
     }
   };
+
+  //加密操作
+  Encrypthion(){
+
+    ToastShort('解锁成功!');
+  }
+
+  //解密操作
+  Unencryption(){
+
+    ToastShort('解锁成功!');
+  }
 
   goback() {
     return new Promise((resolve, reject) => {
@@ -268,9 +281,7 @@ export default class NotebookPreview extends Component {
         <View
           style={[
             styles.container,
-            this.state.isOpen
-              ? { backgroundColor: getColorType()['Modal'] }
-              : { backgroundColor: getColorType()['Background'] }
+            { backgroundColor: getColorType()['Background'] }
           ]}
         >
           {this.state.readOnly?<this.renderHeader />:<this.renderSaveHeader/>}
@@ -343,7 +354,7 @@ export default class NotebookPreview extends Component {
           }
         );
       });
-    }else{
+    }else if(!this.item.lock){
       return new Promise((resolve, reject) => {
         Alert.alert(
           '加密笔记',
@@ -360,7 +371,33 @@ export default class NotebookPreview extends Component {
               text: '确定',
               onPress: () => {
                 //你要执行的函数
-                ToastShort('加密成功!');
+                this.Encrypthion();
+              }
+            }
+          ],
+          {
+            cancelable: true
+          }
+        );
+      });
+    }else{
+      return new Promise((resolve, reject) => {
+        Alert.alert(
+          '解锁笔记',
+          '您是否要解锁此篇笔记?',
+          [
+            {
+              text: '取消',
+              onPress: () => {
+                resolve(false);
+              },
+              style: 'cancel'
+            },
+            {
+              text: '确定',
+              onPress: () => {
+                //你要执行的函数
+                this.Unencryption();
               }
             }
           ],

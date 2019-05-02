@@ -7,11 +7,20 @@
  */
 
 import React, {Component} from 'react';
-import {Platform, StyleSheet, Text, View, TouchableOpacity} from 'react-native';
+import {
+  Platform,
+  StyleSheet,
+  Text,
+  View,
+  TouchableOpacity,
+  TouchableNativeFeedback,
+  DeviceEventEmitter
+} from 'react-native';
 import RefreshListView,{RefreshState} from 'react-native-refresh-list-view';
 import NotebookLabel from './notebook_label';
 import NaviBar from 'react-native-pure-navigation-bar';
-
+import { getColorType } from '../../config/color_type';
+import NoteBook_Dao from '../../services/notebook';
 
 
 export default class LockNotebook extends Component {
@@ -21,6 +30,10 @@ export default class LockNotebook extends Component {
       data: this.props.data,
       refreshState: RefreshState.Idle,
     };
+    NoteBook_Dao.getInitData().then((ret)=>{
+      this.setState({data:global.nbDao.lockList});
+      //this.state.data= global.nbDao.NotebookList;
+    });
     this.refresh = this.props.refresh;
   }
 
@@ -33,17 +46,12 @@ export default class LockNotebook extends Component {
     });
     //加载数据
     //测试数据
-    let alldata=[
-      {key:'1',title:'笔记1',content:'wrnm',date:'2月13'},
-      {key:'2',title:'笔记2',content:'wrnm',date:'3月4'},
-      {key:'3',title:'笔记3',content:'wrnm',date:'6月5'},
-    ];
-    this.setState({
-      data:alldata,
-    });
-    //结束刷新
-    this.setState({
-      refreshState: RefreshState.Idle,
+    NoteBook_Dao.getInitData().then((ret)=>{
+      this.setState({data: global.nbDao.lockList});
+      //结束刷新
+      this.setState({
+        refreshState: RefreshState.Idle
+      });
     });
   }
 
@@ -72,21 +80,30 @@ export default class LockNotebook extends Component {
 
   renderItem({item}){
     return(
-      <TouchableOpacity style={styles.itemcontainer}
-        onPress={()=>{this._getItemData();}}>
-        <NotebookLabel
-          key={item.key}
-          item={item}
-          navigation={this.props.navigation}
-        />
-      </TouchableOpacity>
+      <TouchableNativeFeedback
+        onPress={() => {
+          this._getItemData(item);
+        }}
+      >
+        <View
+          style={{
+            backgroundColor: getColorType()['Background']
+          }}
+        >
+          <NotebookLabel
+            key={item.key}
+            item={item}
+            navigation={this.props.navigation}
+          />
+        </View>
+      </TouchableNativeFeedback>
     );
   }
 
 
   render() {
     return (
-      <View style={styles.container}>
+      <View style={[styles.container,{backgroundColor:getColorType()['Background']}]}>
         <NaviBar title='加密笔记'/>
         {this.renderList()}
       </View>

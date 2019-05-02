@@ -13,7 +13,8 @@ import {
   Text,
   View,
   TouchableOpacity,
-  TouchableNativeFeedback
+  TouchableNativeFeedback,
+  DeviceEventEmitter
 } from 'react-native';
 import RefreshListView, { RefreshState } from 'react-native-refresh-list-view';
 import NotebookLabel from './notebook_label';
@@ -50,6 +51,18 @@ export default class NotebookList extends Component {
       });
     });
     
+  }
+
+  componentDidMount(){
+    this.subscription=DeviceEventEmitter.addListener('notebookrefresh',async (ret)=>{
+      if(ret){
+        await this.onRefresh();
+      }
+    });
+  }
+
+  componentWillUnMount(){
+    this.subscription.remove();
   }
 
   //获取数据并跳转

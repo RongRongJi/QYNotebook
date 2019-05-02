@@ -18,6 +18,7 @@ import {
   Image,
   TouchableOpacity,
   TextInput,
+  DeviceEventEmitter
 } from 'react-native';
 import NaviBar from 'react-native-pure-navigation-bar';
 import Editor from '../../config/editor';
@@ -64,6 +65,7 @@ export default class NotebookView extends Component {
               }else{
                 this.editor.save(this.state.text);
               }
+              DeviceEventEmitter.emit('notebookrefresh',true);
               global.goback = null;
               resolve(this.props.navigation.pop);
             }
@@ -129,6 +131,7 @@ export default class NotebookView extends Component {
                   }else{
                     this.editor.save(this.state.text);
                   }
+                  DeviceEventEmitter.emit('notebookrefresh',true);
                   resolve(ToastShort('保存成功'));
                 });
               }}

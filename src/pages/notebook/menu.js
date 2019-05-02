@@ -67,7 +67,7 @@ export default function Menu({ onItemSelected, data }) {
           style={styles.avatar}
           source={global.colorType=='day'?require('./images/lock_day.png'):require('./images/lock_night.png')}
         />
-        <Text style={{marginLeft:15,color:getColorType()['ItemBackground']}}>加密笔记</Text>
+        <Text style={{marginLeft:15,color:getColorType()['ItemBackground']}}>{data.lock?'解锁笔记':'加密笔记'}</Text>
       </TouchableOpacity>
 
       <TouchableOpacity style={styles.avatarContainer}

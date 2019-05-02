@@ -96,7 +96,7 @@ export default class TodoInput extends Component {
       onShow={()=>this.myTextInput.focus()}
     >
       <TouchableWithoutFeedback onPress={()=>this.changeState()}>
-        <View style={{flex:1,backgroundColor:getColorType()['Modal']}}>
+        <View style={[{flex:1},global.colorType=='day'?{backgroundColor:getColorType()['Modal']}:{}]}>
         </View>
       </TouchableWithoutFeedback>
       <View style={[{

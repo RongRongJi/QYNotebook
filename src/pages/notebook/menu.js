@@ -29,19 +29,19 @@ export default function Menu({ onItemSelected, data }) {
       <Text style={{
         marginTop:10,
         color:getColorType()['ItemBackground'],
+      }}>用户</Text>
+      <Text style={{
+        fontSize:16,
+        color:getColorType()['TitleColor'],
+      }}>{global.username==''?'本机':global.username}</Text>
+      <Text style={{
+        marginTop:15,
+        color:getColorType()['ItemBackground'],
       }}>类型</Text>
       <Text style={{
         fontSize:16,
         color:getColorType()['TitleColor'],
-      }}>笔记</Text>
-      <Text style={{
-        marginTop:15,
-        color:getColorType()['ItemBackground'],
-      }}>大小</Text>
-      <Text style={{
-        fontSize:16,
-        color:getColorType()['TitleColor'],
-      }}>{data.size}</Text>
+      }}>{data.type}</Text>
       <Text style={{
         marginTop:15,
         color:getColorType()['ItemBackground'],
@@ -49,7 +49,7 @@ export default function Menu({ onItemSelected, data }) {
       <Text style={{
         fontSize:16,
         color:getColorType()['TitleColor'],
-      }}>{data.time}</Text>
+      }}>{data.create_date}</Text>
       <Text style={{
         marginTop:15,
         color:getColorType()['ItemBackground'],
@@ -57,7 +57,7 @@ export default function Menu({ onItemSelected, data }) {
       <Text style={{
         fontSize:16,
         color:getColorType()['TitleColor'],
-      }}>{data.time}</Text>
+      }}>{data.last_date}</Text>
       <View style={{height:20}}></View>
 
       <TouchableOpacity style={styles.avatarContainer}

@@ -15,14 +15,10 @@ import {
   Text,
   View,
   TouchableOpacity,
-  Modal
+  Modal,
+  Alert,
+  TextInput,
 } from 'react-native';
-import Dialog, {
-  DialogTitle,
-  DialogContent,
-  DialogFooter,
-  DialogButton
-} from 'react-native-popup-dialog';
 import NaviBar from 'react-native-pure-navigation-bar';
 import { getColorType } from '../../config/color_type';
 import SideMenu from 'react-native-side-menu';
@@ -31,13 +27,14 @@ import Menu from './menu';
 import Note from '../../services/note';
 import Editor from '../../config/editor';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import { getToday } from '../../utils/date';
 
 export default class NotebookPreview extends Component {
   constructor(props) {
     super(props);
     this.uuid = this.props.navigation.getParam('uuid', false);
     this.type = this.props.navigation.getParam('type', false);
-    this.content = this.props.navigation.getParam('content', false);
+    this.item = this.props.navigation.getParam('item', false);
     if (!this.uuid) {
       throw new Error('no uuid found!');
     }
@@ -46,14 +43,15 @@ export default class NotebookPreview extends Component {
     this.state = {
       isOpen: false,
       selectedItem: 'About',
-      deleteDialog: false,
-      lockDialog: false,
-      rawData: false
+      rawData: false,
+      readOnly: true,
+      text: this.item.title,
     };
 
     this.data = {
-      time: '5月9日',
-      size: '52kb'
+      create_date: this.item.created,
+      last_date: this.item.last_date,
+      type: this.item.type
     };
   }
 
@@ -73,11 +71,71 @@ export default class NotebookPreview extends Component {
       selectedItem: item
     });
     if (item == 'Delete') {
-      this.setState({ deleteDialog: true });
+      this.renderDeleteDialog();
     } else if (item == 'Lock') {
-      this.setState({ lockDialog: true });
+      this.renderLockDialog();
     }
   };
+
+  goback() {
+    return new Promise((resolve, reject) => {
+      Alert.alert(
+        '提示',
+        '是否保存数据?',
+        [
+          {
+            text: '取消',
+            onPress: () => {
+              global.goback = null;
+              resolve(this.props.navigation.pop);
+            },
+            style: 'cancel'
+          },
+          {
+            text: '确定',
+            onPress: () => {
+              //你要执行的函数
+              //this.postMessage();
+              if(this.state.text==''){
+                this.editor.save(getToday());
+              }else{
+                this.editor.save(this.state.text);
+              }
+              global.goback = null;
+              resolve(this.props.navigation.pop);
+            }
+          }
+        ],
+        {
+          cancelable: true
+        }
+      );
+    });
+  }
+
+  renderTitle = () =>(
+    <View style={{
+      width:WIDTH-56,
+      borderBottomWidth:2,
+      borderBottomColor:getColorType()['TabShadow'],
+      marginLeft:28
+    }}>
+      <TextInput
+        placeholder={' 标题'}
+        placeholderTextColor={getColorType()['LineColor']}
+        onChangeText={(text)=>this.setState({text:text})}
+        value={this.state.text}
+        editable={!this.state.readOnly}
+        style={{
+          height:50,
+          backgroundColor:getColorType()['Background'],
+          color:getColorType()['TitleColor'],
+          fontSize:17,
+          fontWeight:'bold'
+        }}
+      />
+    </View>
+  )
 
   renderHeader = () => (
     <View
@@ -105,6 +163,8 @@ export default class NotebookPreview extends Component {
         style={{ position: 'absolute', right: 70 }}
         onPress={() => {
           this.editor.unReadOnly();
+          this.setState({readOnly:false});
+          global.goback=this.goback.bind(this);
         }}
       >
         <Image
@@ -127,6 +187,68 @@ export default class NotebookPreview extends Component {
       </TouchableOpacity>
     </View>
   );
+
+  renderSaveHeader=()=>(
+    <NaviBar
+      style={{
+        safeView: {
+          flex: 0,
+          backgroundColor: getColorType()['Background']
+        },
+        title: {
+          fontSize: 17,
+          color: getColorType()['ItemBackground'],
+          textAlign: 'center',
+          overflow: 'hidden',
+          fontWeight: 'bold'
+        }
+      }}
+      rightElement={
+        <TouchableOpacity
+          onPress={() => {
+            return new Promise((resolve, reject) => {
+              if(this.state.text==''){
+                this.editor.save(getToday());
+              }else{
+                this.editor.save(this.state.text);
+              }
+              this.setState({readOnly:true});
+              resolve(ToastShort('保存成功'));
+            });
+          }}
+        >
+          <Image
+            style={{ width: 20, height: 20 }}
+            source={
+              global.colorType == 'day'
+                ? require('../../config/images/save_day.png')
+                : require('../../config/images/save_night.png')
+            }
+          />
+        </TouchableOpacity>
+      }
+      leftElement={
+        <TouchableOpacity
+          onPress={() => {
+            this.goback().then(ret => {
+              if (ret != false) ret();
+            });
+          }}
+        >
+          <Image
+            style={{ width: 20, height: 20 }}
+            source={
+              global.colorType == 'day'
+                ? require('../../config/images/back_day.png')
+                : require('../../config/images/back_night.png')
+            }
+          />
+        </TouchableOpacity>
+      }
+      navbarHeight={50}
+      title={''}
+    />
+  )
 
   render() {
     const menu = (
@@ -151,8 +273,9 @@ export default class NotebookPreview extends Component {
               : { backgroundColor: getColorType()['Background'] }
           ]}
         >
-          <this.renderHeader />
+          {this.state.readOnly?<this.renderHeader />:<this.renderSaveHeader/>}
           <KeyboardAwareScrollView contentContainerStyle={styles.container}>
+            <this.renderTitle/>
             <Editor
               ref={editor => {
                 this.editor = editor;
@@ -162,8 +285,6 @@ export default class NotebookPreview extends Component {
             />
           </KeyboardAwareScrollView>
         </View>
-        <this.renderDeleteDialog />
-        <this.renderLockDialog />
       </SideMenu>
     );
     // };
@@ -171,99 +292,86 @@ export default class NotebookPreview extends Component {
     // return getSync();
   }
 
-  renderDeleteDialog = () => (
-    <Dialog
-      onDismiss={() => {
-        this.setState({ deleteDialog: false });
-      }}
-      width={0.9}
-      visible={this.state.deleteDialog}
-      rounded
-      actionsBordered
-      dialogTitle={
-        <DialogTitle
-          title="删除笔记"
-          style={{
-            backgroundColor: '#F7F7F8'
-          }}
-          hasTitleBar={false}
-          align="left"
-        />
-      }
-      footer={
-        <DialogFooter>
-          <DialogButton
-            text="取消"
-            bordered
-            onPress={() => {
-              this.setState({ deleteDialog: false });
-            }}
-            key="button-1"
-          />
-          <DialogButton
-            text="删除"
-            bordered
-            onPress={() => {
+  renderDeleteDialog = () => {
+    return new Promise((resolve, reject) => {
+      Alert.alert(
+        '删除笔记',
+        '您是否要删除此篇笔记?',
+        [
+          {
+            text: '取消',
+            onPress: () => {
+              resolve(false);
+            },
+            style: 'cancel'
+          },
+          {
+            text: '确定',
+            onPress: () => {
+              //你要执行的函数
+              //this.postMessage();
               this.editor.delete();
-              this.setState({ deleteDialog: false });
               this.props.navigation.pop();
-            }}
-            key="button-2"
-          />
-        </DialogFooter>
-      }
-    >
-      <DialogContent
-        style={{
-          backgroundColor: '#F7F7F8'
-        }}
-      >
-        <Text>你确定要删除该篇笔记吗？</Text>
-      </DialogContent>
-    </Dialog>
-  );
+            }
+          }
+        ],
+        {
+          cancelable: true
+        }
+      );
+    });
+  }
+    
 
-  renderLockDialog = () => (
-    <Dialog
-      onDismiss={() => {
-        this.setState({ lockDialog: false });
-      }}
-      width={0.9}
-      visible={this.state.lockDialog}
-      rounded
-      actionsBordered
-      dialogTitle={
-        <DialogTitle
-          title="加密笔记"
-          style={{
-            backgroundColor: '#F7F7F8'
-          }}
-          hasTitleBar={false}
-          align="left"
-        />
-      }
-      footer={
-        <DialogFooter>
-          <DialogButton
-            text="确定"
-            bordered
-            onPress={() => {
-              this.setState({ lockDialog: false });
-            }}
-            key="button-1"
-          />
-        </DialogFooter>
-      }
-    >
-      <DialogContent
-        style={{
-          backgroundColor: '#F7F7F8'
-        }}
-      >
-        <Text>您还未设置加密笔记密码，请前往设置！</Text>
-      </DialogContent>
-    </Dialog>
-  );
+  renderLockDialog = () => {
+    if(global.lock_pwd==''){
+      return new Promise((resolve, reject) => {
+        Alert.alert(
+          '加密笔记',
+          '您还未设置加密笔记密码，请前往设置!',
+          [
+            {
+              text: '确定',
+              onPress: () => {
+                resolve(false);
+              },
+              style: 'cancel'
+            }
+          ],
+          {
+            cancelable: true
+          }
+        );
+      });
+    }else{
+      return new Promise((resolve, reject) => {
+        Alert.alert(
+          '加密笔记',
+          '您是否要加密此篇笔记?',
+          [
+            {
+              text: '取消',
+              onPress: () => {
+                resolve(false);
+              },
+              style: 'cancel'
+            },
+            {
+              text: '确定',
+              onPress: () => {
+                //你要执行的函数
+                ToastShort('加密成功!');
+              }
+            }
+          ],
+          {
+            cancelable: true
+          }
+        );
+      });
+    } 
+  }
+    
 }
 
 const styles = StyleSheet.create({

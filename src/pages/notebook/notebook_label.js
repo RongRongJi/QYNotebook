@@ -44,7 +44,7 @@ export default class NotebookLabel extends Component {
   }
 
   renderItem = () => {
-    let title = this.item.uuid;
+    let title = this.item.title;
     let content = this.replaceHtml(this.item.note.html);
     let date = this.item.last_date;
     return (

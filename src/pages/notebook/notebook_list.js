@@ -54,10 +54,11 @@ export default class NotebookList extends Component {
 
   //获取数据并跳转
   _getItemData(item) {
+    console.log('获取数据并跳转'+item.created);
     this.props.navigation.navigate('nbpreview', {
       uuid: item.uuid,
       type: item.type,
-      content: item.note,
+      item: item,
     });
   }
 

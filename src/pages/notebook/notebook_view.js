@@ -17,7 +17,7 @@ import {
   Alert,
   Image,
   TouchableOpacity,
-  BackAndroid
+  TextInput,
 } from 'react-native';
 import NaviBar from 'react-native-pure-navigation-bar';
 import Editor from '../../config/editor';
@@ -25,6 +25,8 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 import getUUID from '../../services/uuid';
 import { getColorType } from '../../config/color_type';
 import { ToastShort } from '../../utils/toast_util';
+import { getToday } from '../../utils/date';
+import { WIDTH } from '../../config/styles';
 
 export default class NotebookView extends Component {
   constructor(props) {
@@ -33,6 +35,9 @@ export default class NotebookView extends Component {
     this.type = this.props.navigation.getParam('type', false);
     console.log(this.uuid);
     global.goback = this.goback.bind(this);
+    this.state={
+      text:''
+    };
   }
 
   goback() {
@@ -54,7 +59,11 @@ export default class NotebookView extends Component {
             onPress: () => {
               //你要执行的函数
               //this.postMessage();
-              this.editor.save();
+              if(this.state.text==''){
+                this.editor.save(getToday());
+              }else{
+                this.editor.save(this.state.text);
+              }
               global.goback = null;
               resolve(this.props.navigation.pop);
             }
@@ -67,13 +76,36 @@ export default class NotebookView extends Component {
     });
   }
 
+  renderTitle = () =>(
+    <View style={{
+      width:WIDTH-56,
+      borderBottomWidth:2,
+      borderBottomColor:getColorType()['TabShadow'],
+      marginLeft:28
+    }}>
+      <TextInput
+        placeholder={' 标题'}
+        placeholderTextColor={getColorType()['LineColor']}
+        onChangeText={(text)=>this.setState({text:text})}
+        value={this.state.text}
+        style={{
+          height:50,
+          backgroundColor:getColorType()['Background'],
+          color:getColorType()['TitleColor'],
+          fontSize:17,
+          fontWeight:'bold'
+        }}
+      />
+    </View>
+  )
+
   render() {
     // if (this.props.type === 'richtext') {
     let uuid = this.uuid ? this.uuid : getUUID();
     let type = this.type;
 
     return (
-      <KeyboardAwareScrollView contentContainerStyle={styles.container}>
+      <KeyboardAwareScrollView contentContainerStyle={[styles.container,{backgroundColor:getColorType()['Background']}]}>
         <NaviBar
           style={{
             safeView: {
@@ -92,7 +124,11 @@ export default class NotebookView extends Component {
             <TouchableOpacity
               onPress={() => {
                 return new Promise((resolve, reject) => {
-                  this.editor.save();
+                  if(this.state.text==''){
+                    this.editor.save(getToday());
+                  }else{
+                    this.editor.save(this.state.text);
+                  }
                   resolve(ToastShort('保存成功'));
                 });
               }}
@@ -128,7 +164,7 @@ export default class NotebookView extends Component {
           navbarHeight={50}
           title={'青鱼笔记'}
         />
-
+        <this.renderTitle/>
         <Editor
           type={type}
           ref={editor => {

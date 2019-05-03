@@ -1,4 +1,4 @@
-import  '../static/async_storage';
+import '../static/async_storage';
 import { LogIn } from './login_util';
 import { URL, PostJSON } from './fetch';
 
@@ -25,7 +25,7 @@ export function setLockType(pwd) {
     });
     PostJSON(URL.update, {
       usernum: global.username,
-      lock: global.lock_pwd,
+      lock: pwd,
       color: global.colorType
     }).then(res => {
       console.log(res);
@@ -35,7 +35,7 @@ export function setLockType(pwd) {
         console.log('failed');
       }
     });
-    LogIn(global.username,pwd,global.colorType);
+    LogIn(global.username, pwd, global.colorType);
   }
   global.lock_pwd = pwd;
 }

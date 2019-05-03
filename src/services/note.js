@@ -186,4 +186,31 @@ export default class Note {
       });
     return config;
   };
+  readHtmlContent = async () => {
+    console.log('read content files...' + this.note);
+    let config = {};
+    console.log(`${this.path}/${this.note.html}`);
+    await RNFS.readFile(`${this.path}/${this.note.html}`)
+      .then(res => {
+        config.html = res;
+      })
+      .catch(err => {
+        console.log(`read ${this.path}/config.json error`, err);
+      });
+    return config;
+  };
+  readRawContent = async () => {
+    console.log('read content files...' + this.note);
+    let config = {};
+    console.log(`${this.path}/${this.note.html}`);
+
+    await RNFS.readFile(`${this.path}/${this.note.raw}`)
+      .then(res => {
+        config.raw = res;
+      })
+      .catch(err => {
+        console.log(`read ${this.path}/config.json error`, err);
+      });
+    return config;
+  };
 }

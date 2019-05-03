@@ -34,11 +34,13 @@ export default class NotebookLabel extends Component {
     this.item = this.props.item;
   }
 
-  replaceHtml(str){
-    if(!str) return str;
-    var con = str.replace(/\s*/g, '');  //去掉空格
-    var res =con.replace(/<[^>]+>/g, ''); //去掉所有的html标记
-    var res1 = res.replace(/↵/g, '');     //去掉所有的↵符号
+  replaceHtml(str) {
+    if (!str) return str;
+    var con = str.replace(/(<img.*?)>/gi, ''); //去掉所有的img标记
+    con = con.replace(/\s*/g, ''); //去掉空格
+    console.log(con);
+    var res = con.replace(/<[^>]+>/g, ''); //去掉所有的html标记
+    var res1 = res.replace(/↵/g, ''); //去掉所有的↵符号
     var res2 = res1.replace(/[\r\n]/g, ''); //去掉回车换行
     return res2;
   }
@@ -48,12 +50,37 @@ export default class NotebookLabel extends Component {
     let content = this.replaceHtml(this.item.note.html);
     let date = this.item.last_date;
     return (
-      <View style={[styles.container,
-        {borderBottomColor:getColorType()['LineColor']}  
-      ]}>
-        <Text style={[styles.titlefont,{color:getColorType()['TitleColor']}]}>{title}</Text>
-        <Text numberOfLines={2} style={{color:getColorType()['TextColor'],marginLeft:10,width:Dimensions.get('window').width-56}}>{content}</Text>
-        <Text style={{ position:'absolute',left:10,bottom:10,color:getColorType()['TextColor']}}>{date}</Text>
+      <View
+        style={[
+          styles.container,
+          { borderBottomColor: getColorType()['LineColor'] }
+        ]}
+      >
+        <Text
+          style={[styles.titlefont, { color: getColorType()['TitleColor'] }]}
+        >
+          {title}
+        </Text>
+        <Text
+          numberOfLines={2}
+          style={{
+            color: getColorType()['TextColor'],
+            marginLeft: 10,
+            width: Dimensions.get('window').width - 56
+          }}
+        >
+          {content}
+        </Text>
+        <Text
+          style={{
+            position: 'absolute',
+            left: 10,
+            bottom: 10,
+            color: getColorType()['TextColor']
+          }}
+        >
+          {date}
+        </Text>
       </View>
     );
   };

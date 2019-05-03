@@ -29,7 +29,7 @@ function setColorType(t) {
     PostJSON(URL.update, {
       usernum: global.username,
       lock: global.lock_pwd,
-      color: global.colorType
+      color: t
     }).then(res => {
       console.log(res);
       if (res.ret == 0) {

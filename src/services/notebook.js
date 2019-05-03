@@ -67,7 +67,7 @@ export default class NoteBook_Dao {
         let locklist=[];
         for(var i=0;i<allData.length;i++){
           let note = await new Note(allData[i].uuid,allData[i].type);
-          let content = await note.readContent();
+          let content = await note.readHtmlContent();
           allData[i].note=content;
           if(allData.lock==true){
             locklist.push(allData[i]);

@@ -23,7 +23,7 @@ export default class Editor extends Component {
     this.note = new Note(this.props.uuid, this.props.type);
     await this.note.init();
     if (this.props.show) {
-      await this.note.readContent().then(res => {
+      await this.note.readRawContent().then(res => {
         this.rawData = res;
         this.setState({ type: this.note.type, rawData: res.raw });
       });
@@ -109,6 +109,7 @@ export default class Editor extends Component {
             console.log('no edit note');
             return;
           }
+          config.html = config.html.replace(/(<img.*?)>/gi, ''); //去掉所有的img标记
           this.note.save(config.html, config.raw);
         }}
       />

@@ -229,6 +229,7 @@ export default class NotebookPreview extends Component {
               }else{
                 this.editor.save(this.state.text);
               }
+              this.editor.readOnly();
               this.setState({readOnly:true});
               DeviceEventEmitter.emit('notebookrefresh',true);
               resolve(ToastShort('保存成功'));

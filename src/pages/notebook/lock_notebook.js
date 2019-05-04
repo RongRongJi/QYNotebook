@@ -37,6 +37,7 @@ export default class LockNotebook extends Component {
     this.refresh = this.props.refresh;
   }
 
+
   //刷新
   async onRefresh(){
     //开始刷新列表

@@ -26,6 +26,9 @@ import { compareDate, getToday } from '../../utils/date';
 import Todo_Dao from '../../services/todo';
 import TodoInput from './todo_input';
 import TodoDataManager from '../../services/todo_data_manager';
+import { URL, GetWithParams, GetFile } from '../../utils/fetch';
+import RNFS from 'react-native-fs';
+import RNFetchBlob from 'rn-fetch-blob';
 
 export default class TodoList extends Component {
   constructor(props) {
@@ -38,33 +41,89 @@ export default class TodoList extends Component {
       done: true,
       todayTd: [],
       waitTd: [],
-      doneTd: [],
+      doneTd: []
     };
     this.refresh = this.props.refresh;
     //异步分配数据
-    if(!global.todoDao){
+    if (!global.todoDao) {
       let tdm = new TodoDataManager();
-      tdm.getInitData().then((ret)=>{
-        this.setState({todayTd:global.todoDao.todayTd});
-        this.setState({doneTd:global.todoDao.doneTd});
-        this.setState({waitTd:global.todoDao.waitTd});
+      tdm.getInitData().then(ret => {
+        this.setState({ todayTd: global.todoDao.todayTd });
+        this.setState({ doneTd: global.todoDao.doneTd });
+        this.setState({ waitTd: global.todoDao.waitTd });
       });
-    }else{
-      this.state.todayTd=global.todoDao.todayTd;
-      this.state.doneTd=global.todoDao.doneTd;
-      this.state.waitTd=global.todoDao.waitTd;
+    } else {
+      this.state.todayTd = global.todoDao.todayTd;
+      this.state.doneTd = global.todoDao.doneTd;
+      this.state.waitTd = global.todoDao.waitTd;
     }
   }
 
-  _openFold(flag){
-    if(flag==1){
-      this.setState({today: !this.state.today});
+  todo_download = uuid => {
+    let TodoListDirectoryPath =
+      RNFS.ExternalDirectoryPath + '/' + global.username + '/todolist';
+    let path = TodoListDirectoryPath + `/${uuid}`;
+    let fetch = RNFetchBlob.config({
+      // response data will be saved to this path if it has access right.
+      path: path
+    });
+    fetch
+      .fetch('GET', URL.todo_download + `/${uuid}`, {
+        //some headers ..
+      })
+      .then(res => {
+        // the path should be dirs.DocumentDir + 'path-to-file.anything'
+        console.log('The file saved to ', res.path());
+        this.update_todo();
+      });
+  };
+
+  update_todo = () => {
+    let tdm = new TodoDataManager();
+    tdm.getInitData().then(ret => {
+      this.setState({ todayTd: global.todoDao.todayTd });
+      this.setState({ doneTd: global.todoDao.doneTd });
+      this.setState({ waitTd: global.todoDao.waitTd });
+    });
+  };
+
+  componentDidMount = async () => {
+    if (global.username != '') {
+      let TodoListDirectoryPath =
+        RNFS.ExternalDirectoryPath + '/' + global.username + '/todolist';
+      let todolist;
+      await RNFS.readdir(TodoListDirectoryPath)
+        .then(res => {
+          todolist = res;
+          GetWithParams(URL.todo_get_all_uuid, { usernum: global.username })
+            .then(res => {
+              console.log(res);
+              if (res.ret == 0) {
+                for (let uuid of res.uuid) {
+                  if (!todolist.includes(uuid)) {
+                    console.log(`download ${uuid}...`);
+                    this.todo_download(uuid);
+                  }
+                }
+              }
+            })
+            .catch(err => {
+              console.log(err);
+            });
+        })
+        .catch(err => {
+          console.log(err);
+        });
     }
-    else if(flag==2){
-      this.setState({wait: !this.state.wait});
-    }
-    else if(flag==3){
-      this.setState({done: !this.state.done});
+  };
+
+  _openFold(flag) {
+    if (flag == 1) {
+      this.setState({ today: !this.state.today });
+    } else if (flag == 2) {
+      this.setState({ wait: !this.state.wait });
+    } else if (flag == 3) {
+      this.setState({ done: !this.state.done });
     }
   }
 
@@ -91,66 +150,91 @@ export default class TodoList extends Component {
     );
   }
 
-  renderFold = () =>(
+  renderFold = () => (
     <View>
-      <TouchableNativeFeedback onPress={()=>this._openFold(1)}>
-        <View style={[styles.foldView,{backgroundColor: getColorType()['FoldColor']}]}>
-          <Text style={{position:'absolute',left:20}}>今天</Text>
-          <Image style={{width:20,height:20,position:'absolute',right:20}} 
-            source={this.state.today?require('./images/angle_down.png'):
-              require('./images/angle_right.png')}/>
+      <TouchableNativeFeedback onPress={() => this._openFold(1)}>
+        <View
+          style={[
+            styles.foldView,
+            { backgroundColor: getColorType()['FoldColor'] }
+          ]}
+        >
+          <Text style={{ position: 'absolute', left: 20 }}>今天</Text>
+          <Image
+            style={{ width: 20, height: 20, position: 'absolute', right: 20 }}
+            source={
+              this.state.today
+                ? require('./images/angle_down.png')
+                : require('./images/angle_right.png')
+            }
+          />
         </View>
       </TouchableNativeFeedback>
-      {this.state.today?this.renderList(this.state.todayTd):null}
-      <TouchableNativeFeedback onPress={()=>this._openFold(2)}>
-        <View style={[styles.foldView,{backgroundColor: getColorType()['FoldColor']}]}>
-          <Text style={{position:'absolute',left:20}}>待办</Text>
-          <Image style={{width:20,height:20,position:'absolute',right:20}} 
-            source={this.state.wait?require('./images/angle_down.png'):
-              require('./images/angle_right.png')}/>
+      {this.state.today ? this.renderList(this.state.todayTd) : null}
+      <TouchableNativeFeedback onPress={() => this._openFold(2)}>
+        <View
+          style={[
+            styles.foldView,
+            { backgroundColor: getColorType()['FoldColor'] }
+          ]}
+        >
+          <Text style={{ position: 'absolute', left: 20 }}>待办</Text>
+          <Image
+            style={{ width: 20, height: 20, position: 'absolute', right: 20 }}
+            source={
+              this.state.wait
+                ? require('./images/angle_down.png')
+                : require('./images/angle_right.png')
+            }
+          />
         </View>
       </TouchableNativeFeedback>
-      {this.state.wait?this.renderList(this.state.waitTd):null}
-      <TouchableNativeFeedback onPress={()=>this._openFold(3)}>
-        <View style={[styles.foldView,{backgroundColor: getColorType()['FoldColor']}]}>
-          <Text style={{position:'absolute',left:20}}>已完成</Text> 
-          <Image style={{width:20,height:20,position:'absolute',right:20}} 
-            source={this.state.done?require('./images/angle_down.png'):
-              require('./images/angle_right.png')}/>
+      {this.state.wait ? this.renderList(this.state.waitTd) : null}
+      <TouchableNativeFeedback onPress={() => this._openFold(3)}>
+        <View
+          style={[
+            styles.foldView,
+            { backgroundColor: getColorType()['FoldColor'] }
+          ]}
+        >
+          <Text style={{ position: 'absolute', left: 20 }}>已完成</Text>
+          <Image
+            style={{ width: 20, height: 20, position: 'absolute', right: 20 }}
+            source={
+              this.state.done
+                ? require('./images/angle_down.png')
+                : require('./images/angle_right.png')
+            }
+          />
         </View>
       </TouchableNativeFeedback>
-      {this.state.done?this.renderList(this.state.doneTd):null}
+      {this.state.done ? this.renderList(this.state.doneTd) : null}
     </View>
-  )
+  );
 
-  _OpenInput(){
+  _OpenInput() {
     this.todoinput.changeState();
   }
 
-  public(ret){
-    if(ret==1)
-      this.setState({todayTd:global.todoDao.todayTd});
-    else if(ret==2)
-      this.setState({waitTd:global.todoDao.waitTd});
+  public(ret) {
+    if (ret == 1) this.setState({ todayTd: global.todoDao.todayTd });
+    else if (ret == 2) this.setState({ waitTd: global.todoDao.waitTd });
   }
 
-  delete(ret){
-    if(ret==1)
-      this.setState({todayTd:global.todoDao.todayTd});
-    else if(ret==2)
-      this.setState({waitTd:global.todoDao.waitTd});
-    else if(ret==3)
-      this.setState({doneTd:global.todoDao.doneTd});
+  delete(ret) {
+    if (ret == 1) this.setState({ todayTd: global.todoDao.todayTd });
+    else if (ret == 2) this.setState({ waitTd: global.todoDao.waitTd });
+    else if (ret == 3) this.setState({ doneTd: global.todoDao.doneTd });
   }
 
   render() {
-    return(
-      <ScrollView style={styles.container}
-        keyboardShouldPersistTaps = {true}
-      >
-        <this.renderFold/>
-        <TodoInput ref={r => (this.todoinput = r)}
-          public={this.public.bind(this)}/>
+    return (
+      <ScrollView style={styles.container} keyboardShouldPersistTaps={true}>
+        <this.renderFold />
+        <TodoInput
+          ref={r => (this.todoinput = r)}
+          public={this.public.bind(this)}
+        />
       </ScrollView>
     );
   }
@@ -158,21 +242,21 @@ export default class TodoList extends Component {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    flex: 1
   },
   listcontainer: {
-    flex:1
+    flex: 1
   },
   itemcontainer: {
     backgroundColor: 'white',
-    width:Dimensions.get('window').width,
+    width: Dimensions.get('window').width
     //marginLeft:15,
   },
-  foldView:{
-    flexDirection:'row',
-    width:Dimensions.get('window').width,
-    height:30,
-    alignItems: 'center',
+  foldView: {
+    flexDirection: 'row',
+    width: Dimensions.get('window').width,
+    height: 30,
+    alignItems: 'center'
     //marginLeft:13,
   }
 });

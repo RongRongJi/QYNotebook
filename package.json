@@ -32,6 +32,7 @@
     "react-native-webview": "^5.7.1",
     "react-native-webview-bridge-updated": "^1.1.1",
     "react-navigation": "^3.5.1",
+    "rn-fetch-blob": "^0.10.15",
     "rn-textinputlayout": "^1.0.5"
   },
   "devDependencies": {

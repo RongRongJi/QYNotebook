@@ -128,7 +128,7 @@ export default class Todo_Dao {
       if (typeStr == 'everyday') tdObj.date = getToday();
       else tdObj.date = dateStr;
       let tdJson = JSON.stringify(tdObj);
-      let path = TodoListDirectoryPath + '/' + uuidStr + '.json';
+      let path = TodoListDirectoryPath + '/' + uuidStr;
       RNFS.writeFile(path, tdJson, 'utf8')
         .then(success => {
           if (global.username != '') {
@@ -182,7 +182,7 @@ export default class Todo_Dao {
    * 并云同步
    */
   finishTodo(item, statusStr) {
-    let path = TodoListDirectoryPath + '/' + item.uuid + '.json';
+    let path = TodoListDirectoryPath + '/' + item.uuid;
     //修改Storage
     item.status = statusStr;
     if (item.type == 'everyday') {
@@ -223,7 +223,7 @@ export default class Todo_Dao {
    */
   deleteTodo(uuid) {
     var p = new Promise(function(resolve, reject) {
-      let path = TodoListDirectoryPath + '/' + uuid + '.json';
+      let path = TodoListDirectoryPath + '/' + uuid;
       //删除Storage
       storage.remove({
         key: 'todolist',

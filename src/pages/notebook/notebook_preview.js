@@ -47,14 +47,14 @@ export default class NotebookPreview extends Component {
       selectedItem: 'About',
       rawData: false,
       readOnly: true,
-      text: this.item.title,
+      text: this.item.title
     };
 
     this.data = {
       create_date: this.item.created,
       last_date: this.item.last_date,
       type: this.item.type,
-      lock: this.item.lock,
+      lock: this.item.lock
     };
   }
 
@@ -81,14 +81,12 @@ export default class NotebookPreview extends Component {
   };
 
   //加密操作
-  Encrypthion(){
-
+  Encrypthion() {
     ToastShort('解锁成功!');
   }
 
   //解密操作
-  Unencryption(){
-
+  Unencryption() {
     ToastShort('解锁成功!');
   }
 
@@ -102,7 +100,7 @@ export default class NotebookPreview extends Component {
             text: '取消',
             onPress: () => {
               global.goback = null;
-              DeviceEventEmitter.emit('notebookrefresh',true);
+              DeviceEventEmitter.emit('notebookrefresh', true);
               resolve(this.props.navigation.pop);
             },
             style: 'cancel'
@@ -112,13 +110,13 @@ export default class NotebookPreview extends Component {
             onPress: () => {
               //你要执行的函数
               //this.postMessage();
-              if(this.state.text==''){
-                this.editor.save(getToday());
-              }else{
+              if (this.state.text == '') {
+                this.editor.save('');
+              } else {
                 this.editor.save(this.state.text);
               }
               global.goback = null;
-              DeviceEventEmitter.emit('notebookrefresh',true);
+              DeviceEventEmitter.emit('notebookrefresh', true);
               resolve(this.props.navigation.pop);
             }
           }
@@ -130,35 +128,37 @@ export default class NotebookPreview extends Component {
     });
   }
 
-  renderTitle = () =>(
-    <View style={{
-      width:WIDTH-56,
-      borderBottomWidth:2,
-      borderBottomColor:getColorType()['TabShadow'],
-      marginLeft:28
-    }}>
+  renderTitle = () => (
+    <View
+      style={{
+        width: WIDTH - 56,
+        borderBottomWidth: 2,
+        borderBottomColor: getColorType()['TabShadow'],
+        marginLeft: 28
+      }}
+    >
       <TextInput
         placeholder={' 标题'}
         placeholderTextColor={getColorType()['LineColor']}
-        onChangeText={(text)=>this.setState({text:text})}
+        onChangeText={text => this.setState({ text: text })}
         value={this.state.text}
         editable={!this.state.readOnly}
         style={{
-          height:50,
-          backgroundColor:getColorType()['Background'],
-          color:getColorType()['TitleColor'],
-          fontSize:17,
-          fontWeight:'bold'
+          height: 50,
+          backgroundColor: getColorType()['Background'],
+          color: getColorType()['TitleColor'],
+          fontSize: 17,
+          fontWeight: 'bold'
         }}
       />
     </View>
-  )
+  );
 
   renderHeader = () => (
     <View
       style={[
         styles.row,
-        { 
+        {
           backgroundColor: getColorType()['Background'],
           borderBottomWidth: 1,
           borderBottomColor: getColorType()['LineColor']
@@ -171,24 +171,28 @@ export default class NotebookPreview extends Component {
       >
         <Image
           style={{ width: 20, height: 20 }}
-          source={global.colorType=='day'?
-            require('../../config/images/back_day.png'):
-            require('../../config/images/back_night.png')}
+          source={
+            global.colorType == 'day'
+              ? require('../../config/images/back_day.png')
+              : require('../../config/images/back_night.png')
+          }
         />
       </TouchableOpacity>
       <TouchableOpacity
         style={{ position: 'absolute', right: 70 }}
         onPress={() => {
           this.editor.unReadOnly();
-          this.setState({readOnly:false});
-          global.goback=this.goback.bind(this);
+          this.setState({ readOnly: false });
+          global.goback = this.goback.bind(this);
         }}
       >
         <Image
           style={{ width: 20, height: 20 }}
-          source={global.colorType=='day'?
-            require('./images/editor_day.png'):
-            require('./images/editor_night.png')}
+          source={
+            global.colorType == 'day'
+              ? require('./images/editor_day.png')
+              : require('./images/editor_night.png')
+          }
         />
       </TouchableOpacity>
       <TouchableOpacity
@@ -197,15 +201,17 @@ export default class NotebookPreview extends Component {
       >
         <Image
           style={{ width: 20, height: 20 }}
-          source={global.colorType=='day'?
-            require('./images/more_day.png'):
-            require('./images/more_night.png')}
+          source={
+            global.colorType == 'day'
+              ? require('./images/more_day.png')
+              : require('./images/more_night.png')
+          }
         />
       </TouchableOpacity>
     </View>
   );
 
-  renderSaveHeader=()=>(
+  renderSaveHeader = () => (
     <NaviBar
       style={{
         safeView: {
@@ -224,14 +230,14 @@ export default class NotebookPreview extends Component {
         <TouchableOpacity
           onPress={() => {
             return new Promise((resolve, reject) => {
-              if(this.state.text==''){
-                this.editor.save(getToday());
-              }else{
+              if (this.state.text == '') {
+                this.editor.save('');
+              } else {
                 this.editor.save(this.state.text);
               }
               this.editor.readOnly();
-              this.setState({readOnly:true});
-              DeviceEventEmitter.emit('notebookrefresh',true);
+              this.setState({ readOnly: true });
+              DeviceEventEmitter.emit('notebookrefresh', true);
               resolve(ToastShort('保存成功'));
             });
           }}
@@ -267,7 +273,7 @@ export default class NotebookPreview extends Component {
       navbarHeight={50}
       title={''}
     />
-  )
+  );
 
   render() {
     const menu = (
@@ -290,9 +296,13 @@ export default class NotebookPreview extends Component {
             { backgroundColor: getColorType()['Background'] }
           ]}
         >
-          {this.state.readOnly?<this.renderHeader />:<this.renderSaveHeader/>}
+          {this.state.readOnly ? (
+            <this.renderHeader />
+          ) : (
+            <this.renderSaveHeader />
+          )}
           <KeyboardAwareScrollView contentContainerStyle={styles.container}>
-            <this.renderTitle/>
+            <this.renderTitle />
             <Editor
               ref={editor => {
                 this.editor = editor;
@@ -327,7 +337,7 @@ export default class NotebookPreview extends Component {
             onPress: () => {
               //你要执行的函数
               //this.postMessage();
-              DeviceEventEmitter.emit('notebookrefresh',true);
+              DeviceEventEmitter.emit('notebookrefresh', true);
               this.editor.delete();
               this.props.navigation.pop();
             }
@@ -338,11 +348,10 @@ export default class NotebookPreview extends Component {
         }
       );
     });
-  }
-    
+  };
 
   renderLockDialog = () => {
-    if(global.lock_pwd==''){
+    if (global.lock_pwd == '') {
       return new Promise((resolve, reject) => {
         Alert.alert(
           '加密笔记',
@@ -361,7 +370,7 @@ export default class NotebookPreview extends Component {
           }
         );
       });
-    }else if(!this.item.lock){
+    } else if (!this.item.lock) {
       return new Promise((resolve, reject) => {
         Alert.alert(
           '加密笔记',
@@ -379,7 +388,7 @@ export default class NotebookPreview extends Component {
               onPress: () => {
                 //你要执行的函数
                 this.Encrypthion();
-                DeviceEventEmitter.emit('notebookrefresh',true);
+                DeviceEventEmitter.emit('notebookrefresh', true);
               }
             }
           ],
@@ -388,7 +397,7 @@ export default class NotebookPreview extends Component {
           }
         );
       });
-    }else{
+    } else {
       return new Promise((resolve, reject) => {
         Alert.alert(
           '解锁笔记',
@@ -406,7 +415,7 @@ export default class NotebookPreview extends Component {
               onPress: () => {
                 //你要执行的函数
                 this.Unencryption();
-                DeviceEventEmitter.emit('notebookrefresh',true);
+                DeviceEventEmitter.emit('notebookrefresh', true);
               }
             }
           ],
@@ -415,9 +424,8 @@ export default class NotebookPreview extends Component {
           }
         );
       });
-    } 
-  }
-    
+    }
+  };
 }
 
 const styles = StyleSheet.create({

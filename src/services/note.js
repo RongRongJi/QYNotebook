@@ -3,7 +3,7 @@ import RNFS from 'react-native-fs';
 import { ToastShort } from '../utils/toast_util';
 import { config } from 'rx';
 import { getToday } from '../utils/date';
-import { URL, PostFile } from '../utils/fetch';
+import { URL, PostFile, Get } from '../utils/fetch';
 
 /*
  * 笔记的增删改查操作
@@ -186,6 +186,17 @@ export default class Note {
       })
       .catch(err => {
         console.log(`delete ${this.path} error`, err);
+      });
+    Get(URL.note_delete + `/${this.uuid}`)
+      .then(res => {
+        if (res.ret == 0) {
+          console.log('delete success');
+        } else {
+          console.log('delete failed');
+        }
+      })
+      .catch(err => {
+        console.log(err);
       });
   };
   readContent = async () => {

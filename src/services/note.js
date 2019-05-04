@@ -3,6 +3,7 @@ import RNFS from 'react-native-fs';
 import { ToastShort } from '../utils/toast_util';
 import { config } from 'rx';
 import { getToday } from '../utils/date';
+import { URL, PostFile } from '../utils/fetch';
 
 /*
  * 笔记的增删改查操作
@@ -152,6 +153,28 @@ export default class Note {
       .catch(err => {
         console.log(`write ${this.path}/${this.note.raw} error`, err);
       });
+    if (global.username != '') {
+      console.log(`upload note ${this.uuid}...`);
+      let data = {
+        usernum: global.username,
+        note: this.note,
+        info: this.info,
+        uuid: this.uuid
+      };
+      let files = [
+        `file:///${this.path}/${this.note.html}`,
+        `file:///${this.path}/${this.note.raw}`,
+        `file:///${this.path}/config.json`
+      ];
+      let names = [this.note.html, this.note.raw, 'config'];
+      PostFile(URL.note_upload, data, files, names)
+        .then(res => {
+          console.log(res);
+        })
+        .catch(err => {
+          console.log(err);
+        });
+    }
   };
 
   delete = async () => {

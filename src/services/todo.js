@@ -2,7 +2,7 @@ import getUUID from './uuid';
 import RNFS from 'react-native-fs';
 import { ToastShort } from '../utils/toast_util';
 import { getToday, getYesterday } from '../utils/date';
-import { URL, PostFile } from '../utils/fetch';
+import { URL, PostFile, Get } from '../utils/fetch';
 import { file } from '@babel/types';
 /*
  * 待办列表的增删改查操作
@@ -241,7 +241,17 @@ export default class Todo_Dao {
           alert(err.message);
           console.log(err.message);
         });
-      //云同步
+      Get(URL.todo_delete + `/${uuid}`)
+        .then(res => {
+          if (res.ret == 0) {
+            console.log('delete success');
+          } else {
+            console.log('delete failed');
+          }
+        })
+        .catch(err => {
+          console.log(err);
+        });
     });
     return p;
   }

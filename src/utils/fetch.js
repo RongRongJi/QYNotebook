@@ -10,7 +10,11 @@ export const URL = {
   update: baseUrl + 'user/update',
   todo_upload: baseUrl + 'todo/upload',
   todo_get_all_uuid: baseUrl + 'todo/getalluuid',
-  todo_download: baseUrl + 'todo/download'
+  todo_download: baseUrl + 'todo/download',
+  todo_delete: baseUrl + 'todo/delete',
+  note_upload: baseUrl + 'note/upload',
+  note_download: baseUrl + 'note/download',
+  note_get_all_uuid: baseUrl + 'note/getalluuid',
 };
 
 /**

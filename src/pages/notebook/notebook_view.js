@@ -29,6 +29,8 @@ import { ToastShort } from '../../utils/toast_util';
 import { getToday } from '../../utils/date';
 import { WIDTH } from '../../config/styles';
 import NoteBook_Dao from '../../services/notebook';
+import { GetWithParams, URL } from '../../utils/fetch';
+import { zip, unzip, unzipAssets, subscribe } from 'react-native-zip-archive';
 
 export default class NotebookView extends Component {
   constructor(props) {
@@ -37,10 +39,69 @@ export default class NotebookView extends Component {
     this.type = this.props.navigation.getParam('type', false);
     console.log(this.uuid);
     global.goback = this.goback.bind(this);
-    this.state={
-      text:''
+    this.state = {
+      text: ''
     };
   }
+
+  note_download = uuid => {
+    let NBInfoDirectoryPath =
+      RNFS.ExternalDirectoryPath + '/' + global.username + '/nbInfo';
+    let tmp = RNFS.ExternalDirectoryPath + '/' + global.username + '/tmp';
+    let path = NBInfoDirectoryPath + `/${uuid}`;
+    let tmp_path = tmp + `/${uuid}` + Date.now().toString();
+    let fetch = RNFetchBlob.config({
+      // response data will be saved to this path if it has access right.
+      path: tmp_path
+    });
+    fetch
+      .fetch('GET', URL.note_download + `/${uuid}`, {
+        //some headers ..
+      })
+      .then(res => {
+        // the path should be dirs.DocumentDir + 'path-to-file.anything'
+        console.log('The file saved to ', res.path());
+        let _unzip = unzip(tmp_path, path);
+        _unzip
+          .then(res => {
+            console.log(`unzip completed at ${res}`);
+            DeviceEventEmitter.emit('notebookrefresh', true);
+          })
+          .catch(error => {
+            console.log(error);
+          });
+      });
+  };
+
+  componentDidMount = async () => {
+    if (global.username != '') {
+      let NBInfoDirectoryPath =
+        RNFS.ExternalDirectoryPath + '/' + global.username + '/nbInfo';
+      let notelist;
+      await RNFS.readdir(NBInfoDirectoryPath)
+        .then(res => {
+          notelist = res;
+          GetWithParams(URL.note_get_all_uuid, { usernum: global.username })
+            .then(res => {
+              console.log(res);
+              if (res.ret == 0) {
+                for (let uuid of res.uuid) {
+                  if (!notelist.includes(uuid)) {
+                    console.log(`download ${uuid}...`);
+                    this.note_download(uuid);
+                  }
+                }
+              }
+            })
+            .catch(err => {
+              console.log(err);
+            });
+        })
+        .catch(err => {
+          console.log(err);
+        });
+    }
+  };
 
   goback() {
     return new Promise((resolve, reject) => {
@@ -52,7 +113,7 @@ export default class NotebookView extends Component {
             text: '取消',
             onPress: () => {
               global.goback = null;
-              DeviceEventEmitter.emit('notebookrefresh',true);
+              DeviceEventEmitter.emit('notebookrefresh', true);
               resolve(this.props.navigation.pop);
             },
             style: 'cancel'
@@ -62,12 +123,12 @@ export default class NotebookView extends Component {
             onPress: () => {
               //你要执行的函数
               //this.postMessage();
-              if(this.state.text==''){
+              if (this.state.text == '') {
                 this.editor.save(getToday());
-              }else{
+              } else {
                 this.editor.save(this.state.text);
               }
-              DeviceEventEmitter.emit('notebookrefresh',true);
+              DeviceEventEmitter.emit('notebookrefresh', true);
               global.goback = null;
               resolve(this.props.navigation.pop);
             }
@@ -80,28 +141,30 @@ export default class NotebookView extends Component {
     });
   }
 
-  renderTitle = () =>(
-    <View style={{
-      width:WIDTH-56,
-      borderBottomWidth:2,
-      borderBottomColor:getColorType()['TabShadow'],
-      marginLeft:28
-    }}>
+  renderTitle = () => (
+    <View
+      style={{
+        width: WIDTH - 56,
+        borderBottomWidth: 2,
+        borderBottomColor: getColorType()['TabShadow'],
+        marginLeft: 28
+      }}
+    >
       <TextInput
         placeholder={' 标题'}
         placeholderTextColor={getColorType()['LineColor']}
-        onChangeText={(text)=>this.setState({text:text})}
+        onChangeText={text => this.setState({ text: text })}
         value={this.state.text}
         style={{
-          height:50,
-          backgroundColor:getColorType()['Background'],
-          color:getColorType()['TitleColor'],
-          fontSize:17,
-          fontWeight:'bold'
+          height: 50,
+          backgroundColor: getColorType()['Background'],
+          color: getColorType()['TitleColor'],
+          fontSize: 17,
+          fontWeight: 'bold'
         }}
       />
     </View>
-  )
+  );
 
   render() {
     // if (this.props.type === 'richtext') {
@@ -109,7 +172,12 @@ export default class NotebookView extends Component {
     let type = this.type;
 
     return (
-      <KeyboardAwareScrollView contentContainerStyle={[styles.container,{backgroundColor:getColorType()['Background']}]}>
+      <KeyboardAwareScrollView
+        contentContainerStyle={[
+          styles.container,
+          { backgroundColor: getColorType()['Background'] }
+        ]}
+      >
         <NaviBar
           style={{
             safeView: {
@@ -128,12 +196,12 @@ export default class NotebookView extends Component {
             <TouchableOpacity
               onPress={() => {
                 return new Promise((resolve, reject) => {
-                  if(this.state.text==''){
+                  if (this.state.text == '') {
                     this.editor.save(getToday());
-                  }else{
+                  } else {
                     this.editor.save(this.state.text);
                   }
-                  DeviceEventEmitter.emit('notebookrefresh',true);
+                  DeviceEventEmitter.emit('notebookrefresh', true);
                   resolve(ToastShort('保存成功'));
                 });
               }}
@@ -169,7 +237,7 @@ export default class NotebookView extends Component {
           navbarHeight={50}
           title={'青鱼笔记'}
         />
-        <this.renderTitle/>
+        <this.renderTitle />
         <Editor
           type={type}
           ref={editor => {

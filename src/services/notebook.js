@@ -22,6 +22,7 @@ import Note from './note';
 const ExternalDirectoryPath = RNFS.ExternalDirectoryPath;
 //notebook Information文件夹
 let NBInfoDirectoryPath;
+let tmpPath;
 
 export default class NoteBook_Dao {
   //构造函数
@@ -45,6 +46,30 @@ export default class NoteBook_Dao {
           console.log('exits');
         } else {
           RNFS.mkdir(NBInfoDirectoryPath)
+            .then(r => {
+              console.log('succeed');
+            })
+            .catch(err => {
+              console.log('err', err);
+            });
+        }
+      })
+      .catch(err => {
+        console.log('err', err);
+      });
+    
+    //是否存在tmp文件夹
+    if(global.username==''){
+      tmpPath = ExternalDirectoryPath+'/tmp';
+    }else{
+      tmpPath = ExternalDirectoryPath+'/'+global.username+'/tmp';
+    }
+    RNFS.exists(tmpPath)
+      .then(res => {
+        if (res) {
+          console.log('exits');
+        } else {
+          RNFS.mkdir(tmpPath)
             .then(r => {
               console.log('succeed');
             })

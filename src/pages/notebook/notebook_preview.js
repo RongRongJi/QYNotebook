@@ -18,6 +18,7 @@ import {
   Modal,
   Alert,
   TextInput,
+  DeviceEventEmitter
 } from 'react-native';
 import NaviBar from 'react-native-pure-navigation-bar';
 import { getColorType } from '../../config/color_type';
@@ -101,6 +102,7 @@ export default class NotebookPreview extends Component {
             text: '取消',
             onPress: () => {
               global.goback = null;
+              DeviceEventEmitter.emit('notebookrefresh',true);
               resolve(this.props.navigation.pop);
             },
             style: 'cancel'
@@ -116,6 +118,7 @@ export default class NotebookPreview extends Component {
                 this.editor.save(this.state.text);
               }
               global.goback = null;
+              DeviceEventEmitter.emit('notebookrefresh',true);
               resolve(this.props.navigation.pop);
             }
           }
@@ -227,6 +230,7 @@ export default class NotebookPreview extends Component {
                 this.editor.save(this.state.text);
               }
               this.setState({readOnly:true});
+              DeviceEventEmitter.emit('notebookrefresh',true);
               resolve(ToastShort('保存成功'));
             });
           }}
@@ -322,6 +326,7 @@ export default class NotebookPreview extends Component {
             onPress: () => {
               //你要执行的函数
               //this.postMessage();
+              DeviceEventEmitter.emit('notebookrefresh',true);
               this.editor.delete();
               this.props.navigation.pop();
             }
@@ -373,6 +378,7 @@ export default class NotebookPreview extends Component {
               onPress: () => {
                 //你要执行的函数
                 this.Encrypthion();
+                DeviceEventEmitter.emit('notebookrefresh',true);
               }
             }
           ],
@@ -399,6 +405,7 @@ export default class NotebookPreview extends Component {
               onPress: () => {
                 //你要执行的函数
                 this.Unencryption();
+                DeviceEventEmitter.emit('notebookrefresh',true);
               }
             }
           ],

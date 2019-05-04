@@ -246,4 +246,22 @@ export default class NoteBook_Dao {
     let uuidArray = global.storage.getIdsForKey('todolist');
     alert(uuidArray.length);
   }
+
+  //刷新列表
+  deleteData(uuid) {
+    for (i in this.notebookList) {
+      if (this.notebookList[i].uuid == uuid) {
+        this.notebookList.splice(i, 1);
+        return 1;
+      }
+    }
+    for (i in this.lockList) {
+      if (this.lockList[i].uuid == uuid) {
+        this.lockList.splice(i, 1);
+        return 2;
+      }
+    }
+    return 0;
+  }
+
 }

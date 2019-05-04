@@ -28,6 +28,7 @@ import { getColorType } from '../../config/color_type';
 import { ToastShort } from '../../utils/toast_util';
 import { getToday } from '../../utils/date';
 import { WIDTH } from '../../config/styles';
+import NoteBook_Dao from '../../services/notebook';
 
 export default class NotebookView extends Component {
   constructor(props) {
@@ -51,6 +52,7 @@ export default class NotebookView extends Component {
             text: '取消',
             onPress: () => {
               global.goback = null;
+              DeviceEventEmitter.emit('notebookrefresh',true);
               resolve(this.props.navigation.pop);
             },
             style: 'cancel'

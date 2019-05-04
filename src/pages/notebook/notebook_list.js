@@ -14,7 +14,8 @@ import {
   View,
   TouchableOpacity,
   TouchableNativeFeedback,
-  DeviceEventEmitter
+  DeviceEventEmitter,
+  FlatList
 } from 'react-native';
 import RefreshListView, { RefreshState } from 'react-native-refresh-list-view';
 import NotebookLabel from './notebook_label';
@@ -54,10 +55,11 @@ export default class NotebookList extends Component {
   }
 
   componentDidMount(){
-    this.subscription=DeviceEventEmitter.addListener('notebookrefresh',async (ret)=>{
-      if(ret){
-        await this.onRefresh();
-      }
+    this.subscription=DeviceEventEmitter.addListener('notebookrefresh',(ret)=>{
+      console.log('notebookrefresh'+global.nbDao.notebookList);
+      setTimeout(() => {
+        this.onRefresh();
+      },300);
     });
   }
 
@@ -75,6 +77,18 @@ export default class NotebookList extends Component {
     });
   }
 
+  /**
+   * <RefreshListView
+          data={[]}
+          renderItem={this.renderItem.bind(this)}
+          refreshState={this.state.refreshState}
+          onHeaderRefresh={this.onRefresh.bind(this)}
+          keyExtracotr={(item,index)=>index}
+          footerFailureText="数据加载失败，下拉刷新"
+          footerEmptyDataText="没有更多笔记啦~"
+        />
+   */
+
   renderList() {
     return (
       <View>
@@ -83,6 +97,7 @@ export default class NotebookList extends Component {
           renderItem={this.renderItem.bind(this)}
           refreshState={this.state.refreshState}
           onHeaderRefresh={this.onRefresh.bind(this)}
+          keyExtracotr={(item,index)=>index}
           footerFailureText="数据加载失败，下拉刷新"
           footerEmptyDataText="没有更多笔记啦~"
         />
@@ -112,8 +127,20 @@ export default class NotebookList extends Component {
     );
   }
 
+  renderBlank = () =>(
+    <View style={[styles.blank,{backgroundColor:getColorType()['ViewColor']}]}>
+      <Text style={[styles.welcome,{color:getColorType()['TextColor']}]}>当前笔记列表为空</Text>
+      <Text style={[styles.welcome,{color:getColorType()['TextColor']}]}>赶快动手创建自己的笔记吧！</Text>
+
+    </View>
+  )
+
   render() {
-    return <View style={styles.container}>{this.renderList()}</View>;
+    return (
+      <View style={styles.container}>
+        {global.nbDao.notebookList.length==0?<this.renderBlank/>:this.renderList()}
+      </View>
+    );
   }
 }
 
@@ -124,5 +151,19 @@ const styles = StyleSheet.create({
   listcontainer: {
     flex: 1,
     marginTop: Platform.OS == 'ios' ? 20 : 0
+  },
+  blank: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  welcome: {
+    fontSize: 20,
+    textAlign: 'center',
+    margin: 10
+  },
+  instructions: {
+    textAlign: 'center',
+    marginBottom: 5
   }
 });

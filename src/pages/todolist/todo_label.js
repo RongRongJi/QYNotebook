@@ -15,6 +15,7 @@ import {
   Image,
   TouchableOpacity,
   TouchableNativeFeedback,
+  TouchableWithoutFeedback
 } from 'react-native';
 import Dialog, {
   DialogTitle,
@@ -73,7 +74,7 @@ export default class Todolabel extends Component {
     let type = this.item.type;
     let date = type=='everyday'?'今天':this.item.date;
     return (
-      <TouchableNativeFeedback onLongPress={()=>this.setState({deleteDialog:true})}>
+      <TouchableWithoutFeedback onLongPress={()=>this.setState({deleteDialog:true})}>
         <View
           ref={r => (this.label = r)}
           style={[styles.container, 
@@ -108,7 +109,7 @@ export default class Todolabel extends Component {
           </View>
           <this.renderDeleteDialog/>
         </View>
-      </TouchableNativeFeedback>
+      </TouchableWithoutFeedback>
     );
   }
 

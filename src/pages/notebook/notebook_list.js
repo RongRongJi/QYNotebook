@@ -31,12 +31,10 @@ export default class NotebookList extends Component {
     super(props);
     this.state = {
       refreshState: RefreshState.Idle,
-      isBlank: false
+      data:[],
     };
     NoteBook_Dao.getInitData().then((ret)=>{
       this.setState({data:global.nbDao.notebookList});
-      if(global.nbDao.notebookList.length==0) this.setState({isBlank: true});
-      else this.setState({isBlank: false});
       //this.state.data= global.nbDao.NotebookList;
     });
     this.refresh = this.props.refresh;
@@ -53,13 +51,15 @@ export default class NotebookList extends Component {
     //测试数据
     NoteBook_Dao.getInitData().then((ret)=>{
       this.setState({data: global.nbDao.notebookList});
-      if(global.nbDao.notebookList.length==0) this.setState({isBlank: true});
-      else this.setState({isBlank: false});
       //结束刷新
       this.setState({
         refreshState: RefreshState.Idle
       });
     });
+    //超时
+    setTimeout(()=>this.setState({
+      refreshState: RefreshState.Idle
+    }),500);
   }
 
   componentDidMount() {
@@ -171,6 +171,7 @@ export default class NotebookList extends Component {
           keyExtracotr={(item, index) => index}
           footerFailureText="数据加载失败，下拉刷新"
           footerEmptyDataText="没有更多笔记啦~"
+          footerEmptyDataComponent={<this.renderBlank/>}
         />
       </View>
     );
@@ -214,7 +215,7 @@ export default class NotebookList extends Component {
   render() {
     return (
       <View style={styles.container}>
-        {this.state.isBlank?<this.renderBlank/>:this.renderList()}
+        {this.state.data.length==0?<this.renderBlank/>:this.renderList()}
       </View>
     );
   }

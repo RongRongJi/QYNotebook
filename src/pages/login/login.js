@@ -25,12 +25,21 @@ import Button from 'apsl-react-native-button';
 import { setHeader } from '../../config/header';
 import { getUserData } from '../../utils/login_util';
 import { URL, PostJSON } from '../../utils/fetch';
+import { ToastShort } from '../../utils/toast_util';
+
+const phoneh_0 = '手机号';
+const phoneh_1 = '请输入正确的手机号';
+const pw_0 = '密码';
+const pw_1 = '密码长度应在6~20位之间';
 
 export default class Login extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      isLoad: false
+      isLoad: false,
+      //账号密码提示
+      phonehint: phoneh_0,
+      pwhint: pw_0
     };
   }
 
@@ -43,8 +52,30 @@ export default class Login extends Component {
     }, 1000);
   }
 
+  //检查电话号码
+  checkPN = (text) => {
+    if (text == null || text.length != 11) {
+      this.setState({ phonehint: phoneh_1 });
+      return false;
+    } else {
+      this.setState({ phonehint: phoneh_0 });
+      return true;
+    }
+  }
+  //检查密码
+  checkPW = (text) => {
+    if (text == null || text.length < 6 || text.length > 20) {
+      this.setState({ pwhint: pw_1 });
+      return false;
+    } else {
+      this.setState({ pwhint: pw_0 });
+      return true;
+    }
+  }
+
   Login = () => {
-    if (this.password == '' || this.phonenumber == '') {
+    if (!this.checkPN(this.phonenumber) || !this.checkPW(this.password)) {
+      ToastShort('用户名或密码不正确');
       return;
     }
     PostJSON(URL.login, {
@@ -70,13 +101,11 @@ export default class Login extends Component {
       <TextInputLayout
         style={styles.layout}
         focusColor="#049F9A"
-        checkValid={text => {
-          return true;
-        }}
+        checkValid={text => this.checkPN(text)}
       >
         <TextInput
           style={styles.input}
-          placeholder={'手机号'}
+          placeholder={this.state.phonehint}
           keyboardType="numeric"
           maxLength={11}
           onChangeText={text => (this.phonenumber = text)}
@@ -85,13 +114,11 @@ export default class Login extends Component {
       <TextInputLayout
         style={styles.layout}
         focusColor="#049F9A"
-        checkValid={text => {
-          return true;
-        }}
+        checkValid={text => this.checkPW(text)}
       >
         <TextInput
           style={styles.input}
-          placeholder={'请输入密码'}
+          placeholder={this.state.pwhint}
           secureTextEntry={true}
           maxLength={20}
           onChangeText={text => (this.password = text)}

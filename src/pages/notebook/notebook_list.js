@@ -26,10 +26,13 @@ export default class NotebookList extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      refreshState: RefreshState.Idle
+      refreshState: RefreshState.Idle,
+      isBlank: false
     };
     NoteBook_Dao.getInitData().then((ret)=>{
       this.setState({data:global.nbDao.notebookList});
+      if(global.nbDao.notebookList.length==0) this.setState({isBlank: true});
+      else this.setState({isBlank: false});
       //this.state.data= global.nbDao.NotebookList;
     });
     this.refresh = this.props.refresh;
@@ -46,6 +49,8 @@ export default class NotebookList extends Component {
     //测试数据
     NoteBook_Dao.getInitData().then((ret)=>{
       this.setState({data: global.nbDao.notebookList});
+      if(global.nbDao.notebookList.length==0) this.setState({isBlank: true});
+      else this.setState({isBlank: false});
       //结束刷新
       this.setState({
         refreshState: RefreshState.Idle
@@ -138,7 +143,7 @@ export default class NotebookList extends Component {
   render() {
     return (
       <View style={styles.container}>
-        {global.nbDao.notebookList.length==0?<this.renderBlank/>:this.renderList()}
+        {this.state.isBlank?<this.renderBlank/>:this.renderList()}
       </View>
     );
   }

@@ -187,7 +187,7 @@ export default class Note {
       .catch(err => {
         console.log(`delete ${this.path} error`, err);
       });
-    Get(URL.note_delete + `/${uuid}`)
+    Get(URL.note_delete + `/${this.uuid}`)
       .then(res => {
         if (res.ret == 0) {
           console.log('delete success');

@@ -29,8 +29,6 @@ import { ToastShort } from '../../utils/toast_util';
 import { getToday } from '../../utils/date';
 import { WIDTH } from '../../config/styles';
 import NoteBook_Dao from '../../services/notebook';
-import { GetWithParams, URL } from '../../utils/fetch';
-import { zip, unzip, unzipAssets, subscribe } from 'react-native-zip-archive';
 
 export default class NotebookView extends Component {
   constructor(props) {
@@ -43,65 +41,6 @@ export default class NotebookView extends Component {
       text: ''
     };
   }
-
-  note_download = uuid => {
-    let NBInfoDirectoryPath =
-      RNFS.ExternalDirectoryPath + '/' + global.username + '/nbInfo';
-    let tmp = RNFS.ExternalDirectoryPath + '/' + global.username + '/tmp';
-    let path = NBInfoDirectoryPath + `/${uuid}`;
-    let tmp_path = tmp + `/${uuid}` + Date.now().toString();
-    let fetch = RNFetchBlob.config({
-      // response data will be saved to this path if it has access right.
-      path: tmp_path
-    });
-    fetch
-      .fetch('GET', URL.note_download + `/${uuid}`, {
-        //some headers ..
-      })
-      .then(res => {
-        // the path should be dirs.DocumentDir + 'path-to-file.anything'
-        console.log('The file saved to ', res.path());
-        let _unzip = unzip(tmp_path, path);
-        _unzip
-          .then(res => {
-            console.log(`unzip completed at ${res}`);
-            DeviceEventEmitter.emit('notebookrefresh', true);
-          })
-          .catch(error => {
-            console.log(error);
-          });
-      });
-  };
-
-  componentDidMount = async () => {
-    if (global.username != '') {
-      let NBInfoDirectoryPath =
-        RNFS.ExternalDirectoryPath + '/' + global.username + '/nbInfo';
-      let notelist;
-      await RNFS.readdir(NBInfoDirectoryPath)
-        .then(res => {
-          notelist = res;
-          GetWithParams(URL.note_get_all_uuid, { usernum: global.username })
-            .then(res => {
-              console.log(res);
-              if (res.ret == 0) {
-                for (let uuid of res.uuid) {
-                  if (!notelist.includes(uuid)) {
-                    console.log(`download ${uuid}...`);
-                    this.note_download(uuid);
-                  }
-                }
-              }
-            })
-            .catch(err => {
-              console.log(err);
-            });
-        })
-        .catch(err => {
-          console.log(err);
-        });
-    }
-  };
 
   goback() {
     return new Promise((resolve, reject) => {
@@ -124,7 +63,7 @@ export default class NotebookView extends Component {
               //你要执行的函数
               //this.postMessage();
               if (this.state.text == '') {
-                this.editor.save(getToday());
+                this.editor.save('');
               } else {
                 this.editor.save(this.state.text);
               }
@@ -197,7 +136,7 @@ export default class NotebookView extends Component {
               onPress={() => {
                 return new Promise((resolve, reject) => {
                   if (this.state.text == '') {
-                    this.editor.save(getToday());
+                    this.editor.save('');
                   } else {
                     this.editor.save(this.state.text);
                   }

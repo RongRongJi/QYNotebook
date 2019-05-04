@@ -15,6 +15,7 @@ export const URL = {
   note_upload: baseUrl + 'note/upload',
   note_download: baseUrl + 'note/download',
   note_get_all_uuid: baseUrl + 'note/getalluuid',
+  note_delete: baseUrl + 'note/delete'
 };
 
 /**

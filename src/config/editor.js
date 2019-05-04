@@ -11,6 +11,7 @@ import { Platform, StyleSheet, Text, View } from 'react-native';
 import { WebView } from 'react-native-webview';
 import Note from '../services/note';
 import { getColorType } from './color_type';
+import { getToday } from '../utils/date';
 export default class Editor extends Component {
   constructor(props) {
     super(props);
@@ -103,11 +104,15 @@ export default class Editor extends Component {
           let config = JSON.parse(event.nativeEvent.data);
           console.log(config);
           if (
-            (this.props.type == 'markdown' && config.html == '') ||
-            (this.props.type == 'richtext' && config.html == '<p></p>')
+            ((this.props.type == 'markdown' && config.html == '') ||
+              (this.props.type == 'richtext' && config.html == '<p></p>')) &&
+            this.note.title == ''
           ) {
             console.log('no edit note');
             return;
+          }
+          if (this.note.title == '') {
+            this.note.setTitle(getToday());
           }
           config.html = config.html.replace(/(<img.*?)>/gi, ''); //去掉所有的img标记
           this.note.save(config.html, config.raw);

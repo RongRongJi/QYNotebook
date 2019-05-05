@@ -66,6 +66,16 @@ export default class Editor extends Component {
     this.webView.injectJavaScript(save);
   };
 
+  unEncryption = () =>{
+    this.note.unEncrypt();
+  }
+
+  encryption = () =>{
+    this.note.encrypt();
+  }
+
+
+
   render() {
     const source =
       Platform.OS == 'ios'

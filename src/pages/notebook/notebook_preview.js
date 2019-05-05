@@ -82,11 +82,13 @@ export default class NotebookPreview extends Component {
 
   //加密操作
   Encrypthion() {
-    ToastShort('解锁成功!');
+    this.editor.encryption();
+    ToastShort('加密成功!');
   }
 
   //解密操作
   Unencryption() {
+    this.editor.unEncryption();
     ToastShort('解锁成功!');
   }
 
@@ -351,6 +353,7 @@ export default class NotebookPreview extends Component {
   };
 
   renderLockDialog = () => {
+    console.log('pwd: '+global.lock_pwd);
     if (global.lock_pwd == '') {
       return new Promise((resolve, reject) => {
         Alert.alert(

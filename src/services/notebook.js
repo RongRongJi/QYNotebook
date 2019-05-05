@@ -88,13 +88,15 @@ export default class NoteBook_Dao {
     var p = new Promise(function(resolve,reject){
       NoteBook_Dao.getNotebook().then(async (ret)=>{
         let allData = ret;
+        global.nbDao.lockList=[];
+        global.nbDao.notebookList=[];
         let nblist = [];
         let locklist=[];
         for(var i=0;i<allData.length;i++){
           let note = await new Note(allData[i].uuid,allData[i].type);
           let content = await note.readHtmlContent();
           allData[i].note=content;
-          if(allData.lock==true){
+          if(allData[i].lock==true){
             locklist.push(allData[i]);
             global.nbDao.lockList=locklist;
           }else{
@@ -103,7 +105,6 @@ export default class NoteBook_Dao {
           }
         }
         global.nbDao.init=true;
-        //console.log(global.nbDao.notebookList);
         resolve(true);
       });
     });

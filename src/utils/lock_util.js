@@ -54,10 +54,12 @@ export function setLockState() {
       switch (err.name) {
       case 'NotFoundError':
         console.log('NotFoundError');
+        global.lock_pwd='';
         //alert('err');
         break;
       case 'ExpiredError':
         console.log('ExpiredErrorLock');
+        global.lock_pwd='';
         break;
       }
     });

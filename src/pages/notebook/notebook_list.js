@@ -66,7 +66,6 @@ export default class NotebookList extends Component {
     this.subscription = DeviceEventEmitter.addListener(
       'notebookrefresh',
       ret => {
-        console.log('notebookrefresh' + global.nbDao.notebookList);
         setTimeout(() => {
           this.onRefresh();
         }, 300);

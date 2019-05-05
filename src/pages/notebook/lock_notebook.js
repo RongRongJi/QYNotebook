@@ -27,7 +27,7 @@ export default class LockNotebook extends Component {
   constructor(props){
     super(props);
     this.state = {
-      data: this.props.data,
+      data: [],
       refreshState: RefreshState.Idle,
     };
     NoteBook_Dao.getInitData().then((ret)=>{
@@ -35,6 +35,17 @@ export default class LockNotebook extends Component {
       //this.state.data= global.nbDao.NotebookList;
     });
     this.refresh = this.props.refresh;
+  }
+
+  componentDidMount() {
+    this.subscription = DeviceEventEmitter.addListener(
+      'notebookrefresh',
+      ret => {
+        setTimeout(() => {
+          this.onRefresh();
+        }, 300);
+      }
+    );
   }
 
 
@@ -57,8 +68,13 @@ export default class LockNotebook extends Component {
   }
 
   //获取数据并跳转
-  _getItemData(){
-    this.props.navigation.navigate('nbpreview');
+  _getItemData(item){
+    this.props.navigation.navigate('nbpreview', {
+      uuid: item.uuid,
+      type: item.type,
+      item: item
+    });
+
   }
 
 
@@ -101,12 +117,21 @@ export default class LockNotebook extends Component {
     );
   }
 
+  renderBlank = () => (
+    <View
+      style={[styles.blank, { backgroundColor: getColorType()['ViewColor'] }]}
+    >
+      <Text style={[styles.welcome, { color: getColorType()['TextColor'] }]}>
+        当前无加密笔记
+      </Text>
+    </View>
+  );
 
   render() {
     return (
       <View style={[styles.container,{backgroundColor:getColorType()['Background']}]}>
         <NaviBar title='加密笔记'/>
-        {this.renderList()}
+        {this.state.data.length==0?<this.renderBlank/>:this.renderList()}
       </View>
     );
   }
@@ -127,4 +152,18 @@ const styles = StyleSheet.create({
     borderBottomWidth: 2,
     borderBottomColor: '#bdbdbd',
   },
+  blank: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  welcome: {
+    fontSize: 20,
+    textAlign: 'center',
+    margin: 10
+  },
+  instructions: {
+    textAlign: 'center',
+    marginBottom: 5
+  }
 });

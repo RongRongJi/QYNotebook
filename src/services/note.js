@@ -184,6 +184,9 @@ export default class Note {
   encrypt = () => {
     if (!this.lock) {
       this.lock = true;
+
+      this.saveConfig();
+
       RNFS.readFile(`${this.path}/${this.note.html}`)
         .then(res => {
           RNFS.writeFile(
@@ -217,12 +220,17 @@ export default class Note {
         .catch(err => {
           console.log(`read ${this.path}/${this.note.raw} error`, err);
         });
+
+      
     }
   };
 
   unEncrypt = () => {
     if (this.lock) {
       this.lock = false;
+
+      this.saveConfig();
+
       RNFS.readFile(`${this.path}/${this.note.html}`)
         .then(res => {
           RNFS.writeFile(
@@ -256,6 +264,8 @@ export default class Note {
         .catch(err => {
           console.log(`read ${this.path}/${this.note.raw} error`, err);
         });
+
+      
     }
   };
   delete = async () => {

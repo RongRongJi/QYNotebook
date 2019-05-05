@@ -135,13 +135,17 @@ export default class Note {
     this.title = title;
   };
 
-  save = async (html, raw) => {
-    await this.saveConfig();
-    console.log('saving to note...');
+  save = (html, raw) => {
     if (this.lock) {
       html = CryptoJS.AES.encrypt(html, global.lock_pwd).toString();
       raw = CryptoJS.AES.encrypt(raw, global.lock_pwd).toString();
     }
+    this.save(html, raw);
+  };
+
+  _save = async (html, raw) => {
+    await this.saveConfig();
+    console.log('saving to note...');
 
     await RNFS.writeFile(`${this.path}/${this.note.html}`, html)
       .then(() => {
@@ -181,91 +185,56 @@ export default class Note {
         });
     }
   };
-  encrypt = () => {
+  encrypt = async () => {
     if (!this.lock) {
       this.lock = true;
-
-      this.saveConfig();
-
-      RNFS.readFile(`${this.path}/${this.note.html}`)
+      let html;
+      let raw;
+      await RNFS.readFile(`${this.path}/${this.note.html}`)
         .then(res => {
-          RNFS.writeFile(
-            `${this.path}/${this.note.html}`,
-            CryptoJS.AES.encrypt(res, global.lock_pwd).toString()
-          )
-            .then(res => {
-              console.log(`encrypt ${this.path}/${this.note.html} success`);
-            })
-            .catch(err => {
-              console.log(err);
-            });
+          html = CryptoJS.AES.encrypt(res, global.lock_pwd).toString();
         })
         .catch(err => {
           console.log(`read ${this.path}/${this.note.html} error`, err);
         });
-
-      RNFS.readFile(`${this.path}/${this.note.raw}`)
+      await RNFS.readFile(`${this.path}/${this.note.raw}`)
         .then(res => {
-          RNFS.writeFile(
-            `${this.path}/${this.note.raw}`,
-            CryptoJS.AES.encrypt(res, global.lock_pwd).toString()
-          )
-            .then(res => {
-              console.log(`encrypt ${this.path}/${this.note.raw} success`);
-            })
-            .catch(err => {
-              console.log(err);
-            });
+          raw = CryptoJS.AES.encrypt(res, global.lock_pwd).toString();
         })
         .catch(err => {
           console.log(`read ${this.path}/${this.note.raw} error`, err);
         });
+
+      await this._save(html, raw);
     }
   };
 
-  unEncrypt = () => {
+  unEncrypt = async () => {
     if (this.lock) {
       this.lock = false;
+      let html;
+      let raw;
 
-      this.saveConfig();
-
-      RNFS.readFile(`${this.path}/${this.note.html}`)
+      await RNFS.readFile(`${this.path}/${this.note.html}`)
         .then(res => {
-          RNFS.writeFile(
-            `${this.path}/${this.note.html}`,
-            CryptoJS.AES.decrypt(res, global.lock_pwd).toString(
-              CryptoJS.enc.Utf8
-            )
-          )
-            .then(res => {
-              console.log(`decrypt ${this.path}/${this.note.html} success`);
-            })
-            .catch(err => {
-              console.log(err);
-            });
+          html = CryptoJS.AES.decrypt(res, global.lock_pwd).toString(
+            CryptoJS.enc.Utf8
+          );
         })
         .catch(err => {
           console.log(`read ${this.path}/${this.note.html} error`, err);
         });
 
-      RNFS.readFile(`${this.path}/${this.note.raw}`)
+      await RNFS.readFile(`${this.path}/${this.note.raw}`)
         .then(res => {
-          RNFS.writeFile(
-            `${this.path}/${this.note.raw}`,
-            CryptoJS.AES.decrypt(res, global.lock_pwd).toString(
-              CryptoJS.enc.Utf8
-            )
-          )
-            .then(res => {
-              console.log(`decrypt ${this.path}/${this.note.raw} success`);
-            })
-            .catch(err => {
-              console.log(err);
-            });
+          raw = CryptoJS.AES.decrypt(res, global.lock_pwd).toString(
+            CryptoJS.enc.Utf8
+          );
         })
         .catch(err => {
           console.log(`read ${this.path}/${this.note.raw} error`, err);
         });
+      await this._save(html, raw);
     }
   };
   delete = async () => {

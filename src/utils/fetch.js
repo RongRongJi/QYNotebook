@@ -8,6 +8,7 @@ export const URL = {
   register: baseUrl + 'user/register',
   login: baseUrl + 'user/login',
   update: baseUrl + 'user/update',
+  get_user_info: baseUrl + '/user/getuserinfo',
   todo_upload: baseUrl + 'todo/upload',
   todo_get_all_uuid: baseUrl + 'todo/getalluuid',
   todo_download: baseUrl + 'todo/download',

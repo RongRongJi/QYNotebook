@@ -82,11 +82,11 @@ export function getUserData(username) {
         LogIn(res.username, res.lock, res.color);
         resolve(res);
       })
-      .catch(err => {
+      .catch(async err => {
         switch (err.name) {
         case 'NotFoundError':
           console.log('NotFoundError_getUserData');
-          InitSetting(username);
+          await InitSetting(username);
 
           console.log('getUserData' + global.username);
           //初始化notebook文件夹

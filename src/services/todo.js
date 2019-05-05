@@ -205,6 +205,25 @@ export default class Todo_Dao {
     console.log('path:' + path + ' json:' + json);
     RNFS.writeFile(path, json, 'utf8')
       .then(success => {
+        if (global.username != '') {
+          let files = [`file:///${path}`];
+          let names = ['file'];
+          PostFile(
+            URL.todo_upload,
+            { usernum: global.username, uuid: item.uuid },
+            files,
+            names
+          )
+            .then(res => {
+              console.log(res);
+              if (res.ret == 0) {
+                console.log('success');
+              }
+            })
+            .catch(err => {
+              console.log(err);
+            });
+        }
         console.log('FILE WRITTEN!');
         console.log(json);
       })

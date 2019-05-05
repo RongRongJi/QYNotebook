@@ -72,13 +72,17 @@ export function getUserData(username) {
       .load({
         key: username
       })
-      .then(res => {
+      .then(async res => {
         global.username = res.username;
         global.lock_pwd = res.lock;
         global.colorType = res.color;
         console.log('getUserData' + username);
         //初始化notebook文件夹
-        if (!global.nbDao) global.nbDao = new NoteBook_Dao();
+        if(!global.nbDao)
+        {
+          global.nbDao = new NoteBook_Dao();
+          await global.nbDao.init();
+        }
         LogIn(res.username, res.lock, res.color);
         resolve(res);
       })
@@ -87,10 +91,13 @@ export function getUserData(username) {
         case 'NotFoundError':
           console.log('NotFoundError_getUserData');
           await InitSetting(username);
-
           console.log('getUserData' + global.username);
           //初始化notebook文件夹
-          if (!global.nbDao) global.nbDao = new NoteBook_Dao();
+          if(!global.nbDao)
+          {
+            global.nbDao = new NoteBook_Dao();
+            await global.nbDao.init();
+          }
           LogIn(username, '', 'day');
           resolve(false);
           break;

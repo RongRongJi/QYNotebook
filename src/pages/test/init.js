@@ -31,7 +31,10 @@ export default class Init extends Component {
 
       //初始化notebook文件夹
       if(!global.nbDao)
+      {
         global.nbDao = new NoteBook_Dao();
+        await global.nbDao.init();
+      }
       
       //界面跳转
       setTimeout(() => {

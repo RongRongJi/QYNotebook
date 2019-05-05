@@ -26,7 +26,7 @@ let tmpPath;
 
 export default class NoteBook_Dao {
   //构造函数
-  constructor(props) {
+  constructor() {
     //类变量初始化
     this.notebookList = [];
     this.lockList = [];
@@ -36,16 +36,20 @@ export default class NoteBook_Dao {
     }else{
       NBInfoDirectoryPath = ExternalDirectoryPath+'/'+global.username+'/nbInfo';
     }
+  }
+
+  //
+  async init(){
     /**
      * 是否存在nbInfo文件夹
      * 如果不存在即创建
      */
-    RNFS.exists(NBInfoDirectoryPath)
-      .then(res => {
+    await RNFS.exists(NBInfoDirectoryPath)
+      .then(async res => {
         if (res) {
           console.log('exits');
         } else {
-          RNFS.mkdir(NBInfoDirectoryPath)
+          await RNFS.mkdir(NBInfoDirectoryPath)
             .then(r => {
               console.log('succeed');
             })
@@ -64,12 +68,12 @@ export default class NoteBook_Dao {
     }else{
       tmpPath = ExternalDirectoryPath+'/'+global.username+'/tmp';
     }
-    RNFS.exists(tmpPath)
-      .then(res => {
+    await RNFS.exists(tmpPath)
+      .then(async res => {
         if (res) {
           console.log('exits');
         } else {
-          RNFS.mkdir(tmpPath)
+          await RNFS.mkdir(tmpPath)
             .then(r => {
               console.log('succeed');
             })

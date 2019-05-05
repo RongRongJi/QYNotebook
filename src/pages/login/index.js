@@ -26,11 +26,14 @@ export default class Index extends Component {
   }
 
   //本地登录
-  Skip(){
+  async Skip(){
     global.username='';
     //初始化notebook文件夹
     if(!global.nbDao)
+    {
       global.nbDao = new NoteBook_Dao();
+      await global.nbDao.init();
+    }
     this.props.navigation.navigate('initial');
   }
 

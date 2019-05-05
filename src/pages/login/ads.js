@@ -26,8 +26,8 @@ export default class Advertise extends Component {
     super(props);
   }
 
-  initData(){
-    DirectLogin().then((res)=>{
+  async initData(){
+    DirectLogin().then(async (res)=>{
       console.log('res= '+res.color);
       if(res==false){
         this.props.navigation.pop();
@@ -41,7 +41,11 @@ export default class Advertise extends Component {
         console.log(global.colorType);
         //初始化notebook文件夹
         if(!global.nbDao)
+        {
           global.nbDao = new NoteBook_Dao();
+          await global.nbDao.init();
+        }
+
         this.props.navigation.pop();
         this.props.navigation.navigate('main');
       }

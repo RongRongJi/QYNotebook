@@ -15,14 +15,9 @@ import {
   Image,
   TouchableOpacity,
   TouchableNativeFeedback,
-  TouchableWithoutFeedback
+  TouchableWithoutFeedback,
+  Alert
 } from 'react-native';
-import Dialog, {
-  DialogTitle,
-  DialogContent,
-  DialogFooter,
-  DialogButton,
-} from 'react-native-popup-dialog';
 import { getDateString } from '../../utils/date';
 import Todo_Dao from '../../services/todo';
 import { getColorType } from '../../config/color_type';
@@ -37,7 +32,6 @@ export default class Todolabel extends Component {
     this.state = {
       Height: 60,
       ifPass: this.props.item.status=='wait-to-do'?false:true,
-      deleteDialog: false,
     };
   }
 
@@ -74,7 +68,7 @@ export default class Todolabel extends Component {
     let type = this.item.type;
     let date = type=='everyday'?'今天':this.item.date;
     return (
-      <TouchableWithoutFeedback onLongPress={()=>this.setState({deleteDialog:true})}>
+      <TouchableWithoutFeedback onLongPress={()=>this.renderDeleteDialog()}>
         <View
           ref={r => (this.label = r)}
           style={[styles.container, 
@@ -107,67 +101,43 @@ export default class Todolabel extends Component {
                 :null}
             </View>
           </View>
-          <this.renderDeleteDialog/>
         </View>
       </TouchableWithoutFeedback>
     );
   }
 
-  //删除提示
-  renderDeleteDialog = () =>(
-    <Dialog
-      onDismiss={() => {
-        this.setState({ deleteDialog: false });
-      }}
-      width={0.9}
-      visible={this.state.deleteDialog}
-      rounded
-      actionsBordered
-      dialogTitle={
-        <DialogTitle
-          title="删除待办"
-          style={{
-            backgroundColor: '#F7F7F8',
-          }}
-          hasTitleBar={false}
-          align="left"
-        />
-      }
-      footer={
-        <DialogFooter>
-          <DialogButton
-            text="取消"
-            bordered
-            onPress={() => {
-              this.setState({ deleteDialog: false });
-            }}
-            key="button-1"
-          />
-          <DialogButton
-            text="删除"
-            bordered
-            onPress={() => {
-              this.setState({ deleteDialog: false });
+  renderDeleteDialog = () => {
+    return new Promise((resolve, reject) => {
+      Alert.alert(
+        '删除待办',
+        '您是否要删除该待办事项?',
+        [
+          {
+            text: '取消',
+            onPress: () => {
+              resolve(false);
+            },
+            style: 'cancel'
+          },
+          {
+            text: '确定',
+            onPress: () => {
+              //你要执行的函数
+              //this.postMessage();
               global.todoDao.deleteTodo(this.item.uuid).then((ret)=>{
                 this.props.delete(ret);
               });
-            }}
-            key="button-2"
-          />
-        </DialogFooter>
-      }
-    >
-      <DialogContent
-        style={{
-          backgroundColor: '#F7F7F8',
-        }}
-      >
-        <Text>您确定要删除该待办事项?</Text>
-      </DialogContent>
-    </Dialog>
-  )
+            }
+          }
+        ],
+        {
+          cancelable: true
+        }
+      );
+    });
+  };
 
-
+  
 
 
 }

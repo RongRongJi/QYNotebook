@@ -45,11 +45,15 @@ export default class Login extends Component {
 
   init() {
     //登录成功后进行初始化操作
-    getUserData(this.phonenumber).then(ret => setHeader());
-    setTimeout(() => {
+    getUserData(this.phonenumber).then(ret => {
+      setHeader();
       this.props.navigation.pop();
       this.props.navigation.navigate('main');
-    }, 1000);
+    });
+    /*setTimeout(() => {
+      this.props.navigation.pop();
+      this.props.navigation.navigate('main');
+    }, 1000);*/
   }
 
   //检查电话号码
@@ -78,6 +82,7 @@ export default class Login extends Component {
       ToastShort('用户名或密码不正确');
       return;
     }
+    this.setState({ isLoad: true });
     PostJSON(URL.login, {
       usernum: this.phonenumber,
       password: this.password
@@ -85,13 +90,14 @@ export default class Login extends Component {
       .then(res => {
         console.log(res);
         if (res.ret == 0) {
-          this.setState({ isLoad: true });
           //登录检测逻辑
           //存储初始化
           this.init();
         }
       })
       .catch(err => {
+        this.setState({ isLoad: false});
+        ToastShort(err);
         console.log(err);
       });
   };

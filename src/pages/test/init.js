@@ -38,7 +38,7 @@ export default class Init extends Component {
         this.props.navigation.navigate('main');
       },500);
     }catch(e){
-      alert(e);
+      console.log(e);
     }
   }
 

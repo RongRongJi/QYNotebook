@@ -48,6 +48,10 @@ export default class LockNotebook extends Component {
     );
   }
 
+  componentWillUnMount() {
+    this.subscription.remove();
+  }
+
 
   //刷新
   async onRefresh(){

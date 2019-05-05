@@ -3,7 +3,7 @@
  */
 ('use strict');
 
-let baseUrl = 'http://192.168.137.1:8000/';
+let baseUrl = 'https://www.nodict.tk/';
 export const URL = {
   register: baseUrl + 'user/register',
   login: baseUrl + 'user/login',

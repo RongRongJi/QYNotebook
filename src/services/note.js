@@ -140,7 +140,7 @@ export default class Note {
       html = CryptoJS.AES.encrypt(html, global.lock_pwd).toString();
       raw = CryptoJS.AES.encrypt(raw, global.lock_pwd).toString();
     }
-    this.save(html, raw);
+    this._save(html, raw);
   };
 
   _save = async (html, raw) => {
@@ -265,10 +265,13 @@ export default class Note {
     console.log(`${this.path}/${this.note.html}`);
     await RNFS.readFile(`${this.path}/${this.note.html}`)
       .then(res => {
+        console.log('res1==='+res);
+        console.log('lock==='+this.lock);
         if (this.lock) {
           res = CryptoJS.AES.decrypt(res, global.lock_pwd).toString(
             CryptoJS.enc.Utf8
           );
+          console.log('res2==='+res);
         }
         config.html = res;
       })

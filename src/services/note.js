@@ -220,8 +220,6 @@ export default class Note {
         .catch(err => {
           console.log(`read ${this.path}/${this.note.raw} error`, err);
         });
-
-      
     }
   };
 
@@ -235,7 +233,9 @@ export default class Note {
         .then(res => {
           RNFS.writeFile(
             `${this.path}/${this.note.html}`,
-            CryptoJS.AES.decrypt(res, global.lock_pwd).toString()
+            CryptoJS.AES.decrypt(res, global.lock_pwd).toString(
+              CryptoJS.enc.Utf8
+            )
           )
             .then(res => {
               console.log(`decrypt ${this.path}/${this.note.html} success`);
@@ -252,7 +252,9 @@ export default class Note {
         .then(res => {
           RNFS.writeFile(
             `${this.path}/${this.note.raw}`,
-            CryptoJS.AES.decrypt(res, global.lock_pwd).toString()
+            CryptoJS.AES.decrypt(res, global.lock_pwd).toString(
+              CryptoJS.enc.Utf8
+            )
           )
             .then(res => {
               console.log(`decrypt ${this.path}/${this.note.raw} success`);
@@ -264,8 +266,6 @@ export default class Note {
         .catch(err => {
           console.log(`read ${this.path}/${this.note.raw} error`, err);
         });
-
-      
     }
   };
   delete = async () => {
@@ -297,7 +297,9 @@ export default class Note {
     await RNFS.readFile(`${this.path}/${this.note.html}`)
       .then(res => {
         if (this.lock) {
-          res = CryptoJS.AES.decrypt(res, global.lock_pwd).toString();
+          res = CryptoJS.AES.decrypt(res, global.lock_pwd).toString(
+            CryptoJS.enc.Utf8
+          );
         }
         config.html = res;
       })
@@ -314,7 +316,9 @@ export default class Note {
     await RNFS.readFile(`${this.path}/${this.note.raw}`)
       .then(res => {
         if (this.lock) {
-          res = CryptoJS.AES.decrypt(res, global.lock_pwd).toString();
+          res = CryptoJS.AES.decrypt(res, global.lock_pwd).toString(
+            CryptoJS.enc.Utf8
+          );
         }
         config.raw = res;
       })

@@ -4,6 +4,7 @@ import { ToastShort } from '../utils/toast_util';
 import { config } from 'rx';
 import { getToday } from '../utils/date';
 import { URL, PostFile, Get } from '../utils/fetch';
+import CryptoJS from 'crypto-js';
 
 /*
  * 笔记的增删改查操作
@@ -137,6 +138,10 @@ export default class Note {
   save = async (html, raw) => {
     await this.saveConfig();
     console.log('saving to note...');
+    if (this.lock) {
+      html = CryptoJS.AES.encrypt(html, global.lock_pwd).toString();
+      raw = CryptoJS.AES.encrypt(raw, global.lock_pwd).toString();
+    }
 
     await RNFS.writeFile(`${this.path}/${this.note.html}`, html)
       .then(() => {
@@ -176,7 +181,83 @@ export default class Note {
         });
     }
   };
+  encrypt = () => {
+    if (!this.lock) {
+      this.lock = true;
+      RNFS.readFile(`${this.path}/${this.note.html}`)
+        .then(res => {
+          RNFS.writeFile(
+            `${this.path}/${this.note.html}`,
+            CryptoJS.AES.encrypt(res, global.lock_pwd).toString()
+          )
+            .then(res => {
+              console.log(`encrypt ${this.path}/${this.note.html} success`);
+            })
+            .catch(err => {
+              console.log(err);
+            });
+        })
+        .catch(err => {
+          console.log(`read ${this.path}/${this.note.html} error`, err);
+        });
 
+      RNFS.readFile(`${this.path}/${this.note.raw}`)
+        .then(res => {
+          RNFS.writeFile(
+            `${this.path}/${this.note.raw}`,
+            CryptoJS.AES.encrypt(res, global.lock_pwd).toString()
+          )
+            .then(res => {
+              console.log(`encrypt ${this.path}/${this.note.raw} success`);
+            })
+            .catch(err => {
+              console.log(err);
+            });
+        })
+        .catch(err => {
+          console.log(`read ${this.path}/${this.note.raw} error`, err);
+        });
+    }
+  };
+
+  unEncrypt = () => {
+    if (this.lock) {
+      this.lock = false;
+      RNFS.readFile(`${this.path}/${this.note.html}`)
+        .then(res => {
+          RNFS.writeFile(
+            `${this.path}/${this.note.html}`,
+            CryptoJS.AES.decrypt(res, global.lock_pwd).toString()
+          )
+            .then(res => {
+              console.log(`decrypt ${this.path}/${this.note.html} success`);
+            })
+            .catch(err => {
+              console.log(err);
+            });
+        })
+        .catch(err => {
+          console.log(`read ${this.path}/${this.note.html} error`, err);
+        });
+
+      RNFS.readFile(`${this.path}/${this.note.raw}`)
+        .then(res => {
+          RNFS.writeFile(
+            `${this.path}/${this.note.raw}`,
+            CryptoJS.AES.decrypt(res, global.lock_pwd).toString()
+          )
+            .then(res => {
+              console.log(`decrypt ${this.path}/${this.note.raw} success`);
+            })
+            .catch(err => {
+              console.log(err);
+            });
+        })
+        .catch(err => {
+          console.log(`read ${this.path}/${this.note.raw} error`, err);
+        });
+    }
+  };
   delete = async () => {
     console.log('delete note...');
 
@@ -199,33 +280,15 @@ export default class Note {
         console.log(err);
       });
   };
-  readContent = async () => {
-    console.log('read content files...' + this.note);
-    let config = {};
-    console.log(`${this.path}/${this.note.html}`);
-    await RNFS.readFile(`${this.path}/${this.note.html}`)
-      .then(res => {
-        config.html = res;
-      })
-      .catch(err => {
-        console.log(`read ${this.path}/config.json error`, err);
-      });
-
-    await RNFS.readFile(`${this.path}/${this.note.raw}`)
-      .then(res => {
-        config.raw = res;
-      })
-      .catch(err => {
-        console.log(`read ${this.path}/config.json error`, err);
-      });
-    return config;
-  };
   readHtmlContent = async () => {
     console.log('read content files...' + this.note);
     let config = {};
     console.log(`${this.path}/${this.note.html}`);
     await RNFS.readFile(`${this.path}/${this.note.html}`)
       .then(res => {
+        if (this.lock) {
+          res = CryptoJS.AES.decrypt(res, global.lock_pwd).toString();
+        }
         config.html = res;
       })
       .catch(err => {
@@ -240,6 +303,9 @@ export default class Note {
 
     await RNFS.readFile(`${this.path}/${this.note.raw}`)
       .then(res => {
+        if (this.lock) {
+          res = CryptoJS.AES.decrypt(res, global.lock_pwd).toString();
+        }
         config.raw = res;
       })
       .catch(err => {

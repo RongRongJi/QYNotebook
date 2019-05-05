@@ -98,7 +98,6 @@ export function getUserData(username) {
             global.nbDao = new NoteBook_Dao();
             await global.nbDao.init();
           }
-          LogIn(username, '', 'day');
           resolve(false);
           break;
         case 'ExpiredError':
@@ -137,4 +136,5 @@ export async function InitSetting(username) {
   global.username = username;
   global.lock_pwd = lock;
   global.colorType = color;
+  LogIn(username, lock, color);
 }

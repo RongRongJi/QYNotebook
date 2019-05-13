@@ -110,6 +110,8 @@ export default class Register extends Component {
         if (res.ret == 0) {
           this.init();
         } else {
+          this.setState({ isLoad: false});
+          ToastShort(res.msg);
         }
       })
       .catch(err => {

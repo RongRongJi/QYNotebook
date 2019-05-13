@@ -93,6 +93,9 @@ export default class Login extends Component {
           //登录检测逻辑
           //存储初始化
           this.init();
+        }else{
+          this.setState({ isLoad: false});
+          ToastShort(res.msg);
         }
       })
       .catch(err => {

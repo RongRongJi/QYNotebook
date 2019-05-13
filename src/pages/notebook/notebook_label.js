@@ -57,6 +57,7 @@ export default class NotebookLabel extends Component {
         ]}
       >
         <Text
+          numberOfLines={1}
           style={[styles.titlefont, { color: getColorType()['TitleColor'] }]}
         >
           {title}
